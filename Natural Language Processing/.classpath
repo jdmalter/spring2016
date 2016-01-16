@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Apache OpenNLP/apache-opennlp-1.6.0/lib/opennlp-tools-1.6.0.jar" sourcepath="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Apache OpenNLP/apache-opennlp-1.6.0-src/opennlp-tools"/>
+	<classpathentry kind="lib" path="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Apache OpenNLP/apache-opennlp-1.6.0/lib/opennlp-uima-1.6.0.jar" sourcepath="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Apache OpenNLP/apache-opennlp-1.6.0-src/opennlp-uima"/>
+	<classpathentry kind="lib" path="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Standford NLP/stanford-corenlp-full-2015-04-20/stanford-corenlp-3.5.2.jar" sourcepath="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Standford NLP/stanford-corenlp-full-2015-04-20/stanford-corenlp-3.5.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Lingpipe/lingpipe-4.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Boilerpipe/boilerpipe-1.2.0-bin.tar/boilerpipe-1.2.0-bin/boilerpipe-1.2.0/boilerpipe-1.2.0.jar" sourcepath="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Boilerpipe/boilerpipe-1.2.0-bin.tar/boilerpipe-1.2.0-bin/boilerpipe-1.2.0/boilerpipe-sources-1.2.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/Jacob/Desktop/Classes/Computer%20Science/Reading%20and%20Code/Java/Libraries%20and%20APIs/Boilerpipe/boilerpipe-1.2.0-bin.tar/boilerpipe-1.2.0-bin/boilerpipe-1.2.0/boilerpipe-javadoc-1.2.0.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Xerces/Xerces-J-bin.2.11.0/xerces-2_11_0/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/xmlbeans-2.3.0.jar/xmlbeans-2.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jacob/Desktop/Classes/Computer Science/Reading and Code/Java/Libraries and APIs/Apache POI/poi-bin-3.14-beta1-20151223/poi-3.14-beta1/poi-ooxml-schemas-3.14-beta1-20151223.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

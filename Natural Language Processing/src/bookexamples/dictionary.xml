@@ -1,0 +1,8 @@
+<dictionary case_sensitive="false">
+    <entry tags="JJ VB">
+       <token>strong</token>
+    </entry>
+    <entry tags="NN VBP VB">
+       <token>force</token>
+    </entry>
+</dictionary>
