@@ -131,15 +131,12 @@ public class Fundamentals {
 			for (int col = 0; col < forward[row].length; col++)
 				forward[row][col] = a[row][col];
 
-		int diagonal = a.length;
-		for (int diag = 0; diag < diagonal - 1; diag++) {
-			double divisor = forward[diag][diag];
-			if (divisor == 0)
+		for (int diag = 0; diag < a.length - 1; diag++) {
+			if (forward[diag][diag] == 0)
 				throw new ArithmeticException("divide by 0");
 
-			for (int row = diag + 1; row < diagonal; row++) {
-				double dividend = forward[row][diag];
-				double quotient = dividend / divisor;
+			for (int row = diag + 1; row < a.length; row++) {
+				double quotient = forward[row][diag] / forward[diag][diag];
 
 				for (int col = 0; col < forward[row].length; col++)
 					forward[row][col] -= (quotient * forward[diag][col]);
@@ -193,15 +190,12 @@ public class Fundamentals {
 			for (int col = 0; col < backward[row].length; col++)
 				backward[row][col] = a[row][col];
 
-		int diagonal = a.length;
-		for (int diag = diagonal - 1; diag > 0; diag--) {
-			double divisor = backward[diag][diag];
-			if (divisor == 0)
+		for (int diag = a.length - 1; diag > 0; diag--) {
+			if (backward[diag][diag] == 0)
 				throw new ArithmeticException("divide by 0");
 
 			for (int row = diag - 1; row >= 0; row--) {
-				double dividend = backward[row][diag];
-				double quotient = dividend / divisor;
+				double quotient = backward[row][diag] / backward[diag][diag];
 
 				for (int col = 0; col < backward[row].length; col++)
 					backward[row][col] -= (quotient * backward[diag][col]);
@@ -217,7 +211,7 @@ public class Fundamentals {
 	 * by 1 array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@link GaussJordan#augment(double[][], double[][])},
+	 * {@link Fundamentals#augment(double[][], double[][])},
 	 * {@code (a.length != a[row].length)} where length is number of rows and
 	 * a[row].length is number of columns on any row, or
 	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
@@ -274,7 +268,7 @@ public class Fundamentals {
 	 * by 1 array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@link GaussJordan#augment(double[][], double[][])}.
+	 * {@link Fundamentals#augment(double[][], double[][])}.
 	 * 
 	 * @param a
 	 *            n by n array of double
@@ -314,17 +308,16 @@ public class Fundamentals {
 
 		double[][] cramer = new double[a.length][1];
 		for (int col = 0; col < a.length; col++) {
+			double[][] copy = new double[a.length][a.length];
 
-			double[][] duplicate = new double[a.length][a.length];
-			for (int drow = 0; drow < duplicate.length; drow++)
-				for (int dcol = 0; dcol < duplicate.length; dcol++)
-					duplicate[drow][dcol] = a[drow][dcol];
+			for (int drow = 0; drow < copy.length; drow++)
+				for (int dcol = 0; dcol < copy.length; dcol++)
+					copy[drow][dcol] = a[drow][dcol];
 
-			for (int row = 0; row < duplicate.length; row++)
-				duplicate[row][col] = b[row][0];
+			for (int row = 0; row < copy.length; row++)
+				copy[row][col] = b[row][0];
 
-			double numerator = Matrices.determinant(duplicate);
-			cramer[col][0] = numerator / denominator;
+			cramer[col][0] = Matrices.determinant(copy) / denominator;
 		}
 
 		return cramer;
@@ -367,18 +360,18 @@ public class Fundamentals {
 		double[][] adjugate = new double[a.length][a.length];
 		for (int row = 0; row < a.length; row++)
 			for (int col = 0; col < a.length; col++) {
-				double[][] minor = Matrices.minor(a, row, col);
+				double det = Matrices.determinant(Matrices.minor(a, row, col));
 
 				if ((row + col) % 2 == 0)
-					adjugate[col][row] = Matrices.determinant(minor);
+					adjugate[col][row] = det;
 
 				else
-					adjugate[col][row] = -Matrices.determinant(minor);
+					adjugate[col][row] = -det;
 			}
 
 		for (int row = 0; row < a.length; row++)
 			for (int col = 0; col < a.length; col++)
-				adjugate[row][col] *= (1 / determinant);
+				adjugate[row][col] /= determinant;
 
 		return adjugate;
 	}

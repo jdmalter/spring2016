@@ -32,10 +32,14 @@ public class MatricesTest {
 		expectedDet = 0;
 		actualDet = Matrices.determinant(a);
 
+		assertEquals(expectedDet, actualDet, DELTA);
+
 		// first test on 1 component matrix
 		a = new double[][] { new double[] { 3 } };
 		expectedDet = 3;
 		actualDet = Matrices.determinant(a);
+
+		assertEquals(expectedDet, actualDet, DELTA);
 
 		// second test on 2 component matrix
 		a = new double[][] { new double[] { 3, 8 }, new double[] { 4, 6 } };

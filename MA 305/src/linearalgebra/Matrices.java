@@ -226,15 +226,13 @@ public class Matrices {
 		double[][] mul = new double[a.length][bcol];
 
 		for (int row = 0; row < mul.length; row++) {
-			double[] ar = a[row];
-
 			for (int col = 0; col < mul[row].length; col++) {
-				double[] bc = new double[b.length];
+				double sum = 0;
 
 				for (int brow = 0; brow < b.length; brow++)
-					bc[brow] = b[brow][col];
+					sum += a[row][brow] * b[brow][col];
 
-				mul[row][col] = dotProduct(ar, bc);
+				mul[row][col] = sum;
 			}
 		}
 
