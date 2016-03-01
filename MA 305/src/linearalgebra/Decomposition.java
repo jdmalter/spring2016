@@ -141,8 +141,8 @@ public class Decomposition {
 			for (int lrow = row + 1; lrow < a.length; lrow++) {
 				double lsum = 0;
 
-				for (int p = 0; p < row; ++p)
-					lsum += l[lrow][p] * l[row][p];
+				for (int lcol = 0; lcol < row; ++lcol)
+					lsum += l[lrow][lcol] * l[row][lcol];
 
 				if (l[row][row] == 0)
 					throw new ArithmeticException("divide by 0");
@@ -199,10 +199,9 @@ public class Decomposition {
 		double[][] r = new double[acol][acol];
 
 		for (int col = 0; col < acol; col++) {
-
 			for (int rrow = 0; rrow < col; rrow++)
-				for (int arow = 0; arow < a.length; arow++)
-					r[rrow][col] += q[arow][rrow] * a[arow][col];
+				for (int row = 0; row < a.length; row++)
+					r[rrow][col] += q[row][rrow] * a[row][col];
 
 			double[] w = new double[a.length];
 			for (int row = 0; row < a.length; row++) {
@@ -218,7 +217,6 @@ public class Decomposition {
 
 			for (int row = 0; row < a.length; row++)
 				q[row][col] = w[row] / r[col][col];
-
 		}
 
 		double[][] qr = new double[a.length + acol][acol];
@@ -237,10 +235,11 @@ public class Decomposition {
 	// Related to Eigen Decomposition
 
 	/**
-	 * Assumes row by columnn array representation of matrix. Given that v is
-	 * resulting matrix, v is some basis vector, and l is lambda, a*v (through
-	 * matrix multiplication) equals l*v (through matrix multiplication), or the
-	 * determinant of (l*I - A) equals 0 where I is identity matrix. Returns n
+	 * Assumes row by columnn array representation of matrix. Given that l is
+	 * rows 0 through n of the resulting matrix, and v is rows n through n+n of
+	 * the resulting matrix, v being some basis vector, a*v (through matrix
+	 * multiplication) equals l*v (through matrix multiplication), or the
+	 * determinant of (l*I - A) equals 0 where I is identity matrix. Returns n+n
 	 * by n array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
@@ -248,9 +247,12 @@ public class Decomposition {
 	 * {@code (acol != a[row].length)} where acol is number of columns on first
 	 * row and a[row].length is number of columns.
 	 * 
+	 * Credit to http://www.1728.org/cubic2.htm for solving eigen values on 3 by
+	 * 3 matrix.
+	 * 
 	 * @param a
 	 *            n by n array of double
-	 * @return n by n array of double
+	 * @return n+n by n array of double
 	 */
 	public static double[][] eigen(double[][] a) {
 		if (null == a)
@@ -265,11 +267,239 @@ public class Decomposition {
 				throw new IllegalArgumentException(
 						"matrix a number of rows and columns must be equal");
 
-		double[][] v = new double[a.length][a.length];
+		double[][] lv = new double[a.length + a.length][a.length];
 
-		// TODO learn more about eigen decomposition
+		if (a.length == 1) {
+			// assumed double a = -1;
+			double b = a[0][0];
 
-		return v;
+			lv[0][0] = b;
+
+			lv[1][0] = 1;
+
+		} else if (a.length == 2) {
+			// assumed double a = 1;
+			double b = -a[0][0] - a[1][1];
+			double c = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+			double sqrt = Math.sqrt((b * b) - (4 * c));
+
+			lv[0][0] = (-b + sqrt) / 2;
+			lv[1][1] = (-b - sqrt) / 2;
+
+			for (int row = 0; row < a.length; row++) {
+				lv[2][row] = -a[0][1] / (a[0][0] - lv[row][row]);
+				lv[3][row] = 1;
+			}
+
+			for (int row = 0; row < a.length; row++) {
+				double mag = Math.sqrt((lv[2][row] * lv[2][row]) + 1);
+				lv[2][row] /= mag;
+				lv[3][row] /= mag;
+			}
+
+		} else if (a.length == 3) {
+			// assumed double a = -1;
+			double b = a[0][0] + a[1][1] + a[2][2];
+			double c = -(a[0][0] * a[1][1]) - (a[0][0] * a[2][2])
+					- (a[1][1] * a[2][2]) + (a[0][1] * a[1][0])
+					+ (a[0][2] * a[2][0]) + (a[1][2] * a[2][1]);
+			double d = (a[2][0] * a[0][1] * a[1][2])
+					+ (a[1][0] * a[2][1] * a[0][2])
+					- (a[0][0] * a[2][1] * a[1][2])
+					- (a[1][1] * a[2][0] * a[0][2])
+					- (a[2][2] * a[1][0] * a[0][1])
+					+ (a[0][0] * a[1][1] * a[2][2]);
+
+			double f = (-(3 * c) - (b * b)) / 3;
+			double g = (-(2 * b * b * b) - (9 * b * c) - (27 * d)) / 27;
+			double h = (g * g / 4) + (f * f * f / 27);
+
+			double i = Math.sqrt((g * g / 4) - h);
+			double j = Math.pow(i, 1d / 3);
+			double k = Math.acos(-g / (2 * i));
+			double l = -j;
+			double m = Math.cos(k / 3);
+			double n = Math.sqrt(3) * Math.sin(k / 3);
+			double p = (b / 3);
+
+			double x1 = 2 * j * Math.cos(k / 3) + (b / 3);
+			double x2 = l * (m + n) + p;
+			double x3 = l * (m - n) + p;
+
+			if (x1 > x2 && x1 > x3) {
+				lv[0][0] = x1;
+
+				if (x2 > x3) {
+					lv[1][1] = x2;
+					lv[2][2] = x3;
+
+				} else {
+					lv[1][1] = x3;
+					lv[2][2] = x2;
+				}
+
+			} else if (x2 > x3) {
+				lv[0][0] = x2;
+
+				if (x1 > x3) {
+					lv[1][1] = x1;
+					lv[2][2] = x3;
+
+				} else {
+					lv[1][1] = x3;
+					lv[2][2] = x1;
+				}
+
+			} else {
+				lv[0][0] = x3;
+
+				if (x1 > x2) {
+					lv[1][1] = x1;
+					lv[2][2] = x2;
+
+				} else {
+					lv[1][1] = x2;
+					lv[2][2] = x1;
+				}
+			}
+
+			for (int row = 0; row < a.length; row++) {
+				double[][] x = new double[a.length - 1][a.length];
+				for (int xrow = 0; xrow < x.length; xrow++)
+					for (int xcol = 0; xcol < a.length; xcol++) {
+						x[xrow][xcol] = a[xrow][xcol];
+						if (xrow == xcol)
+							x[xrow][xcol] -= lv[row][row];
+					}
+
+				for (int diag = 0; diag < x.length - 1; diag++) {
+					if (x[diag][diag] == 0)
+						throw new ArithmeticException("divide by 0");
+
+					for (int xrow = diag + 1; xrow < x.length; xrow++) {
+						double quotient = x[xrow][diag] / x[diag][diag];
+
+						for (int xcol = 0; xcol < x[xrow].length; xcol++)
+							x[xrow][xcol] -= (quotient * x[diag][xcol]);
+					}
+				}
+
+				for (int diag = x.length - 1; diag > 0; diag--) {
+					if (x[diag][diag] == 0)
+						throw new ArithmeticException("divide by 0");
+
+					for (int xrow = diag - 1; xrow >= 0; xrow--) {
+						double quotient = x[xrow][diag] / x[diag][diag];
+
+						for (int xcol = 0; xcol < x[xrow].length; xcol++)
+							x[xrow][xcol] -= (quotient * x[diag][xcol]);
+					}
+				}
+
+				lv[3][row] = -x[0][2] / x[0][0];
+				lv[4][row] = -x[1][2] / x[1][1];
+				lv[5][row] = 1;
+			}
+
+			for (int row = 0; row < a.length; row++) {
+				double mag = Math.sqrt((lv[3][row] * lv[3][row])
+						+ (lv[4][row] * lv[4][row]) + 1);
+				lv[3][row] /= mag;
+				lv[4][row] /= mag;
+				lv[5][row] /= mag;
+			}
+
+			return lv;
+
+		} else
+			throw new UnsupportedOperationException(
+					"Cannot handle matrices larger than 3 by 3");
+
+		return lv;
+	}
+
+	// Related to Singular Value Decomposition
+
+	/**
+	 * Assumes row by columnn array representation of matrix. Given the
+	 * resulting array, rows 0 to m belong to matrix u, rows m to m+n belong to
+	 * matrix s, and rows m+n to m+n+n belong to matrix v. Input array a equals
+	 * u*s*(v^-1) (through matrix multiplication and inverse of matrix). Given
+	 * that ut is tranpose of u, ut*u (through matrix multiplication) equals I
+	 * where I is identity matrix, and given that vt is tranpose of v, vt*v
+	 * (through matrix multiplication) equals I where I is identity matrix.
+	 * Resulting matrix s is diagonal such that elements on diagonal are
+	 * non-zero and element not on diagonal equal zero. Returns m+n+n by n array
+	 * of double.
+	 * 
+	 * Throws IllegalArgumentException if any of the following is true:
+	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row,
+	 * {@code (a.length < acol)} where length is number rows and acol is number
+	 * of columns on first row, or {@code (acol != a[row].length)} where acol is
+	 * number of columns on first row and a[row].length is number of columns.
+	 * 
+	 * There is a special condition where divide by 0 occurs when l matrix from
+	 * eigen decomposition of (at*a given at is transpose of a matrix multiplied
+	 * by a) contains 0 along diagonal.
+	 * 
+	 * @param a
+	 *            m by n array of double where m >= n
+	 * @return m+n+n by n array of double
+	 */
+	public static double[][] singularValue(double[][] a) {
+		if (null == a)
+			throw new IllegalArgumentException("matrix a must not be null");
+
+		int acol = -1;
+
+		for (int row = 0; row < a.length; row++)
+			if (null == a[row])
+				throw new IllegalArgumentException(
+						"matrix a must not contain null column");
+
+			else if (row == 0) {
+				acol = a[0].length;
+				if (a.length < acol)
+					throw new IllegalArgumentException(
+							"matrix a must contain as many or more rows than columns");
+			}
+
+			else if (acol != a[row].length)
+				throw new IllegalArgumentException(
+						"matrix a row width must remain constant");
+
+		double[][] usv = new double[a.length + acol + acol][acol];
+
+		double[][] lv = Decomposition.eigen(Matrices.multiply(
+				Matrices.transpose(a), a));
+
+		for (int row = a.length + acol; row < a.length + acol + acol; row++)
+			for (int col = 0; col < acol; col++)
+				usv[row][col] = lv[row - a.length - acol][col];
+
+		for (int row = a.length; row < a.length + acol; row++)
+			for (int col = 0; col < acol; col++)
+				usv[row][col] = Math.sqrt(lv[row - a.length][col]);
+
+		double[][] v = new double[acol][acol];
+
+		for (int row = 0; row < acol; row++)
+			for (int col = 0; col < acol; col++)
+				v[row][col] = lv[row + acol][col];
+
+		double[][] sInv = new double[acol][acol];
+
+		for (int row = a.length; row < a.length + acol; row++)
+			for (int col = 0; col < acol; col++)
+				sInv[row - a.length][col] = 1 / usv[row][col];
+
+		double[][] u = Matrices.multiply(Matrices.multiply(a, v), sInv);
+
+		for (int row = 0; row < a.length; row++)
+			for (int col = 0; col < acol; col++)
+				usv[row][col] = u[row][col];
+
+		return usv;
 	}
 
 }
