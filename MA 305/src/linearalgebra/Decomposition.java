@@ -237,10 +237,8 @@ public class Decomposition {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
 	 * rows 0 through n of the resulting matrix, and v is rows n through n+n of
-	 * the resulting matrix, v being some basis vector, a*v (through matrix
-	 * multiplication) equals l*v (through matrix multiplication), or the
-	 * determinant of (l*I - A) equals 0 where I is identity matrix. Returns n+n
-	 * by n array of double.
+	 * the resulting matrix, a*v (through matrix multiplication) equals v*l
+	 * (through matrix multiplication). Returns n+n by n array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or

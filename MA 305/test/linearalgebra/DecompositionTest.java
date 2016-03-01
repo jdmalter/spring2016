@@ -432,6 +432,10 @@ public class DecompositionTest {
 	public void testEigen() {
 		// variables required for testing
 		double[][] a;
+		double[][] actualL;
+		double[][] actualV;
+		double[][] actualAV;
+		double[][] actualLV;
 		double[][] expectedEig;
 		double[][] actualEig;
 		double[][] testEig = null;
@@ -448,19 +452,58 @@ public class DecompositionTest {
 				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
 		}
 
+		actualL = new double[a.length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualEig.length; row++)
+			for (int col = 0; col < actualEig[row].length; col++)
+				if (row < a.length)
+					actualL[row][col] = actualEig[row][col];
+
+				else
+					actualV[row - a.length][col] = actualEig[row][col];
+		actualAV = Matrices.multiply(a, actualV);
+		actualLV = Matrices.multiply(actualV, actualL);
+
+		assertEquals(actualAV.length, actualLV.length);
+		for (int row = 0; row < actualAV.length; row++) {
+			assertEquals(actualAV[row].length, actualLV[row].length);
+			for (int col = 0; col < actualAV[row].length; col++)
+				assertEquals(actualAV[row][col], actualLV[row][col], DELTA);
+		}
+
 		// second test on 2 by 2 array
 		a = new double[][] { new double[] { -1, 6 }, new double[] { -2, 6 } };
 		expectedEig = new double[][] { new double[] { 3, 0 },
 				new double[] { 0, 2 },
-				new double[] { 3 / Math.sqrt(13), 2 / Math.sqrt(5) },
-				new double[] { 2 / Math.sqrt(13), 1 / Math.sqrt(5) } };
+				new double[] { 3 / Math.sqrt(13d), 2 / Math.sqrt(5d) },
+				new double[] { 2 / Math.sqrt(13d), 1 / Math.sqrt(5d) } };
 		actualEig = Decomposition.eigen(a);
 
 		assertEquals(expectedEig.length, actualEig.length);
 		for (int row = 0; row < expectedEig.length; row++) {
 			assertEquals(expectedEig[row].length, actualEig[row].length);
-			for (int col = 0; col < expectedEig[row].length; col++)
+			for (int col = 0; col < expectedEig[row].length; col++) {
 				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
+			}
+		}
+
+		actualL = new double[a.length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualEig.length; row++)
+			for (int col = 0; col < actualEig[row].length; col++)
+				if (row < a.length)
+					actualL[row][col] = actualEig[row][col];
+
+				else
+					actualV[row - a.length][col] = actualEig[row][col];
+		actualAV = Matrices.multiply(a, actualV);
+		actualLV = Matrices.multiply(actualV, actualL);
+
+		assertEquals(actualAV.length, actualLV.length);
+		for (int row = 0; row < actualAV.length; row++) {
+			assertEquals(actualAV[row].length, actualLV[row].length);
+			for (int col = 0; col < actualAV[row].length; col++)
+				assertEquals(actualAV[row][col], actualLV[row][col], DELTA);
 		}
 
 		// third test on 2 by 2 array
@@ -476,6 +519,25 @@ public class DecompositionTest {
 			assertEquals(expectedEig[row].length, actualEig[row].length);
 			for (int col = 0; col < expectedEig[row].length; col++)
 				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
+		}
+
+		actualL = new double[a.length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualEig.length; row++)
+			for (int col = 0; col < actualEig[row].length; col++)
+				if (row < a.length)
+					actualL[row][col] = actualEig[row][col];
+
+				else
+					actualV[row - a.length][col] = actualEig[row][col];
+		actualAV = Matrices.multiply(a, actualV);
+		actualLV = Matrices.multiply(actualV, actualL);
+
+		assertEquals(actualAV.length, actualLV.length);
+		for (int row = 0; row < actualAV.length; row++) {
+			assertEquals(actualAV[row].length, actualLV[row].length);
+			for (int col = 0; col < actualAV[row].length; col++)
+				assertEquals(actualAV[row][col], actualLV[row][col], DELTA);
 		}
 
 		// fourth test on 3 by 3 array
@@ -498,6 +560,25 @@ public class DecompositionTest {
 				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
 		}
 
+		actualL = new double[a.length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualEig.length; row++)
+			for (int col = 0; col < actualEig[row].length; col++)
+				if (row < a.length)
+					actualL[row][col] = actualEig[row][col];
+
+				else
+					actualV[row - a.length][col] = actualEig[row][col];
+		actualAV = Matrices.multiply(a, actualV);
+		actualLV = Matrices.multiply(actualV, actualL);
+
+		assertEquals(actualAV.length, actualLV.length);
+		for (int row = 0; row < actualAV.length; row++) {
+			assertEquals(actualAV[row].length, actualLV[row].length);
+			for (int col = 0; col < actualAV[row].length; col++)
+				assertEquals(actualAV[row][col], actualLV[row][col], DELTA);
+		}
+
 		// fifth test on 3 by 3 array
 		a = new double[][] { new double[] { 3, 2, 2 },
 				new double[] { -1, -4, 2 }, new double[] { -2, -2, -1 } };
@@ -518,6 +599,25 @@ public class DecompositionTest {
 			assertEquals(expectedEig[row].length, actualEig[row].length);
 			for (int col = 0; col < expectedEig[row].length; col++)
 				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
+		}
+
+		actualL = new double[a.length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualEig.length; row++)
+			for (int col = 0; col < actualEig[row].length; col++)
+				if (row < a.length)
+					actualL[row][col] = actualEig[row][col];
+
+				else
+					actualV[row - a.length][col] = actualEig[row][col];
+		actualAV = Matrices.multiply(a, actualV);
+		actualLV = Matrices.multiply(actualV, actualL);
+
+		assertEquals(actualAV.length, actualLV.length);
+		for (int row = 0; row < actualAV.length; row++) {
+			assertEquals(actualAV[row].length, actualLV[row].length);
+			for (int col = 0; col < actualAV[row].length; col++)
+				assertEquals(actualAV[row][col], actualLV[row][col], DELTA);
 		}
 
 		try {
@@ -566,6 +666,11 @@ public class DecompositionTest {
 	public void testSingularValue() {
 		// variables required for testing
 		double[][] a;
+		double[][] actualA;
+		double[][] actualU;
+		double[][] actualS;
+		double[][] actualV;
+		double[][] actualI;
 		double[][] expectedSing;
 		double[][] actualSing;
 		double[][] testSing = null;
@@ -586,6 +691,58 @@ public class DecompositionTest {
 						DELTA);
 		}
 
+		actualU = new double[a.length][a[0].length];
+		actualS = new double[a[0].length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualSing.length; row++)
+			for (int col = 0; col < actualSing[row].length; col++)
+				if (row < a.length)
+					actualU[row][col] = actualSing[row][col];
+
+				else if (row < a.length + a[0].length)
+					actualS[row - a.length][col] = actualSing[row][col];
+
+				else
+					actualV[row - a.length - a[0].length][col] = actualSing[row][col];
+
+		actualA = Matrices.multiply(Matrices.multiply(actualU, actualS),
+				Matrices.transpose(actualV));
+
+		assertEquals(a.length, actualA.length);
+		for (int row = 0; row < actualA.length; row++) {
+			assertEquals(a[row].length, actualA[row].length);
+			for (int col = 0; col < actualA[row].length; col++)
+				assertEquals(a[row][col], actualA[row][col], DELTA);
+		}
+
+		actualI = Matrices.multiply(Matrices.transpose(actualU), actualU);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		actualI = Matrices.multiply(Matrices.transpose(actualV), actualV);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		for (int row = 0; row < actualS.length; row++)
+			for (int col = 0; col < actualS[row].length; col++)
+				if (row == col)
+					assertNotEquals(0, actualS[row][col], DELTA);
+
+				else
+					assertEquals(0, actualS[row][col], DELTA);
+
 		// second test on 2 by 3 array
 		a = new double[][] { new double[] { 18, 26 }, new double[] { 18, 1 },
 				new double[] { -27, -14 } };
@@ -603,6 +760,58 @@ public class DecompositionTest {
 				assertEquals(expectedSing[row][col], actualSing[row][col],
 						DELTA);
 		}
+
+		actualU = new double[a.length][a[0].length];
+		actualS = new double[a[0].length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualSing.length; row++)
+			for (int col = 0; col < actualSing[row].length; col++)
+				if (row < a.length)
+					actualU[row][col] = actualSing[row][col];
+
+				else if (row < a.length + a[0].length)
+					actualS[row - a.length][col] = actualSing[row][col];
+
+				else
+					actualV[row - a.length - a[0].length][col] = actualSing[row][col];
+
+		actualA = Matrices.multiply(Matrices.multiply(actualU, actualS),
+				Matrices.transpose(actualV));
+
+		assertEquals(a.length, actualA.length);
+		for (int row = 0; row < actualA.length; row++) {
+			assertEquals(a[row].length, actualA[row].length);
+			for (int col = 0; col < actualA[row].length; col++)
+				assertEquals(a[row][col], actualA[row][col], DELTA);
+		}
+
+		actualI = Matrices.multiply(Matrices.transpose(actualU), actualU);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		actualI = Matrices.multiply(Matrices.transpose(actualV), actualV);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		for (int row = 0; row < actualS.length; row++)
+			for (int col = 0; col < actualS[row].length; col++)
+				if (row == col)
+					assertNotEquals(0, actualS[row][col], DELTA);
+
+				else
+					assertEquals(0, actualS[row][col], DELTA);
 
 		// third test on 3 by 3 array
 		a = new double[][] { new double[] { 6, 6, 3 },
@@ -624,6 +833,58 @@ public class DecompositionTest {
 						DELTA);
 		}
 
+		actualU = new double[a.length][a[0].length];
+		actualS = new double[a[0].length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualSing.length; row++)
+			for (int col = 0; col < actualSing[row].length; col++)
+				if (row < a.length)
+					actualU[row][col] = actualSing[row][col];
+
+				else if (row < a.length + a[0].length)
+					actualS[row - a.length][col] = actualSing[row][col];
+
+				else
+					actualV[row - a.length - a[0].length][col] = actualSing[row][col];
+
+		actualA = Matrices.multiply(Matrices.multiply(actualU, actualS),
+				Matrices.transpose(actualV));
+
+		assertEquals(a.length, actualA.length);
+		for (int row = 0; row < actualA.length; row++) {
+			assertEquals(a[row].length, actualA[row].length);
+			for (int col = 0; col < actualA[row].length; col++)
+				assertEquals(a[row][col], actualA[row][col], DELTA);
+		}
+
+		actualI = Matrices.multiply(Matrices.transpose(actualU), actualU);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		actualI = Matrices.multiply(Matrices.transpose(actualV), actualV);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		for (int row = 0; row < actualS.length; row++)
+			for (int col = 0; col < actualS[row].length; col++)
+				if (row == col)
+					assertNotEquals(0, actualS[row][col], DELTA);
+
+				else
+					assertEquals(0, actualS[row][col], DELTA);
+
 		// fourth test on 4 by 2 array
 		a = new double[][] { new double[] { 18, 1 }, new double[] { 18, 1 },
 				new double[] { 6, 17 }, new double[] { -6, -17 } };
@@ -641,6 +902,58 @@ public class DecompositionTest {
 				assertEquals(expectedSing[row][col], actualSing[row][col],
 						DELTA);
 		}
+
+		actualU = new double[a.length][a[0].length];
+		actualS = new double[a[0].length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualSing.length; row++)
+			for (int col = 0; col < actualSing[row].length; col++)
+				if (row < a.length)
+					actualU[row][col] = actualSing[row][col];
+
+				else if (row < a.length + a[0].length)
+					actualS[row - a.length][col] = actualSing[row][col];
+
+				else
+					actualV[row - a.length - a[0].length][col] = actualSing[row][col];
+
+		actualA = Matrices.multiply(Matrices.multiply(actualU, actualS),
+				Matrices.transpose(actualV));
+
+		assertEquals(a.length, actualA.length);
+		for (int row = 0; row < actualA.length; row++) {
+			assertEquals(a[row].length, actualA[row].length);
+			for (int col = 0; col < actualA[row].length; col++)
+				assertEquals(a[row][col], actualA[row][col], DELTA);
+		}
+
+		actualI = Matrices.multiply(Matrices.transpose(actualU), actualU);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		actualI = Matrices.multiply(Matrices.transpose(actualV), actualV);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		for (int row = 0; row < actualS.length; row++)
+			for (int col = 0; col < actualS[row].length; col++)
+				if (row == col)
+					assertNotEquals(0, actualS[row][col], DELTA);
+
+				else
+					assertEquals(0, actualS[row][col], DELTA);
 
 		// fifth test on 4 by 3 array
 		a = new double[][] { new double[] { 11, 8, 2 },
@@ -663,6 +976,58 @@ public class DecompositionTest {
 				assertEquals(expectedSing[row][col], actualSing[row][col],
 						DELTA);
 		}
+
+		actualU = new double[a.length][a[0].length];
+		actualS = new double[a[0].length][a[0].length];
+		actualV = new double[a[0].length][a[0].length];
+		for (int row = 0; row < actualSing.length; row++)
+			for (int col = 0; col < actualSing[row].length; col++)
+				if (row < a.length)
+					actualU[row][col] = actualSing[row][col];
+
+				else if (row < a.length + a[0].length)
+					actualS[row - a.length][col] = actualSing[row][col];
+
+				else
+					actualV[row - a.length - a[0].length][col] = actualSing[row][col];
+
+		actualA = Matrices.multiply(Matrices.multiply(actualU, actualS),
+				Matrices.transpose(actualV));
+
+		assertEquals(a.length, actualA.length);
+		for (int row = 0; row < actualA.length; row++) {
+			assertEquals(a[row].length, actualA[row].length);
+			for (int col = 0; col < actualA[row].length; col++)
+				assertEquals(a[row][col], actualA[row][col], DELTA);
+		}
+
+		actualI = Matrices.multiply(Matrices.transpose(actualU), actualU);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		actualI = Matrices.multiply(Matrices.transpose(actualV), actualV);
+
+		for (int row = 0; row < actualI.length; row++)
+			for (int col = 0; col < actualI[row].length; col++)
+				if (row == col)
+					assertEquals(1, actualI[row][col], DELTA);
+
+				else
+					assertEquals(0, actualI[row][col], DELTA);
+
+		for (int row = 0; row < actualS.length; row++)
+			for (int col = 0; col < actualS[row].length; col++)
+				if (row == col)
+					assertNotEquals(0, actualS[row][col], DELTA);
+
+				else
+					assertEquals(0, actualS[row][col], DELTA);
 
 		try {
 			// matrix a is null
