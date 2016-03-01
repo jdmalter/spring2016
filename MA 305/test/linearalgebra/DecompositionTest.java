@@ -436,7 +436,19 @@ public class DecompositionTest {
 		double[][] actualEig;
 		double[][] testEig = null;
 
-		// first test on 2 by 2 array
+		// first test on 1 by 1 array
+		a = new double[][] { new double[] { 7 } };
+		expectedEig = new double[][] { new double[] { 7 }, new double[] { 1 } };
+		actualEig = Decomposition.eigen(a);
+
+		assertEquals(expectedEig.length, actualEig.length);
+		for (int row = 0; row < expectedEig.length; row++) {
+			assertEquals(expectedEig[row].length, actualEig[row].length);
+			for (int col = 0; col < expectedEig[row].length; col++)
+				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
+		}
+
+		// second test on 2 by 2 array
 		a = new double[][] { new double[] { -1, 6 }, new double[] { -2, 6 } };
 		expectedEig = new double[][] { new double[] { 3, 0 },
 				new double[] { 0, 2 },
@@ -451,7 +463,22 @@ public class DecompositionTest {
 				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
 		}
 
-		// second test on 3 by 3 array
+		// third test on 2 by 2 array
+		a = new double[][] { new double[] { -2, -2 }, new double[] { 2, 3 } };
+		expectedEig = new double[][] { new double[] { 2, 0 },
+				new double[] { 0, -1 },
+				new double[] { -1 / Math.sqrt(5), -2 / Math.sqrt(5) },
+				new double[] { 2 / Math.sqrt(5), 1 / Math.sqrt(5) } };
+		actualEig = Decomposition.eigen(a);
+
+		assertEquals(expectedEig.length, actualEig.length);
+		for (int row = 0; row < expectedEig.length; row++) {
+			assertEquals(expectedEig[row].length, actualEig[row].length);
+			for (int col = 0; col < expectedEig[row].length; col++)
+				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
+		}
+
+		// fourth test on 3 by 3 array
 		a = new double[][] { new double[] { 2, 3, -3 },
 				new double[] { -2, -1, 2 }, new double[] { 2, 4, -3 } };
 		expectedEig = new double[][] {
@@ -462,6 +489,28 @@ public class DecompositionTest {
 				new double[] { 1 / Math.sqrt(2), 0, -2 / Math.sqrt(185) },
 				new double[] { 1 / Math.sqrt(2), 1 / Math.sqrt(2),
 						10 / Math.sqrt(185) } };
+		actualEig = Decomposition.eigen(a);
+
+		assertEquals(expectedEig.length, actualEig.length);
+		for (int row = 0; row < expectedEig.length; row++) {
+			assertEquals(expectedEig[row].length, actualEig[row].length);
+			for (int col = 0; col < expectedEig[row].length; col++)
+				assertEquals(expectedEig[row][col], actualEig[row][col], DELTA);
+		}
+
+		// fifth test on 3 by 3 array
+		a = new double[][] { new double[] { 3, 2, 2 },
+				new double[] { -1, -4, 2 }, new double[] { -2, -2, -1 } };
+		expectedEig = new double[][] {
+				new double[] { 1, 0, 0 },
+				new double[] { 0, -1, 0 },
+				new double[] { 0, 0, -2 },
+				new double[] { -7 / Math.sqrt(74), -1 / Math.sqrt(3),
+						-2 / Math.sqrt(17) },
+				new double[] { 3 / Math.sqrt(74), 1 / Math.sqrt(3),
+						3 / Math.sqrt(17) },
+				new double[] { 4 / Math.sqrt(74), 1 / Math.sqrt(3),
+						2 / Math.sqrt(17) } };
 		actualEig = Decomposition.eigen(a);
 
 		assertEquals(expectedEig.length, actualEig.length);
@@ -496,6 +545,16 @@ public class DecompositionTest {
 		} catch (IllegalArgumentException ex) {
 			assertNull(testEig);
 		}
+
+		try {
+			// matrix a is too large
+			testEig = Decomposition.eigen(new double[][] {
+					new double[] { 0, 0, 0, 0 }, new double[] { 0, 0, 0, 0 },
+					new double[] { 0, 0, 0, 0 }, new double[] { 0, 0, 0, 0 } });
+			fail();
+		} catch (UnsupportedOperationException ex) {
+			assertNull(testEig);
+		}
 	}
 
 	// Related to Singular Value Decomposition
@@ -507,16 +566,27 @@ public class DecompositionTest {
 	public void testSingularValue() {
 		// variables required for testing
 		double[][] a;
-		double[][] actualU;
-		double[][] actualS;
-		double[][] actualV;
-		double[][] actualA;
-		double[][] actualI;
 		double[][] expectedSing;
 		double[][] actualSing;
 		double[][] testSing = null;
 
-		// first test on 2 by 3 array
+		// first test on 2 by 2 array
+		a = new double[][] { new double[] { 8, 6 }, new double[] { 3, -4 } };
+		expectedSing = new double[][] { new double[] { 1, 0 },
+				new double[] { 0, -1 }, new double[] { 10, 0 },
+				new double[] { 0, 5 }, new double[] { 0.8, -0.6 },
+				new double[] { 0.6, 0.8 } };
+		actualSing = Decomposition.singularValue(a);
+
+		assertEquals(expectedSing.length, actualSing.length);
+		for (int row = 0; row < expectedSing.length; row++) {
+			assertEquals(expectedSing[row].length, actualSing[row].length);
+			for (int col = 0; col < expectedSing[row].length; col++)
+				assertEquals(expectedSing[row][col], actualSing[row][col],
+						DELTA);
+		}
+
+		// second test on 2 by 3 array
 		a = new double[][] { new double[] { 18, 26 }, new double[] { 18, 1 },
 				new double[] { -27, -14 } };
 		expectedSing = new double[][] { new double[] { 2d / 3, 2d / 3 },
@@ -534,54 +604,65 @@ public class DecompositionTest {
 						DELTA);
 		}
 
-		actualU = new double[a.length][a[0].length];
-		actualS = new double[a[0].length][a[0].length];
-		actualV = new double[a[0].length][a[0].length];
-		for (int row = 0; row < actualSing.length; row++)
-			for (int col = 0; col < actualSing[0].length; col++)
-				if (row < a.length)
-					actualU[row][col] = actualSing[row][col];
+		// third test on 3 by 3 array
+		a = new double[][] { new double[] { 6, 6, 3 },
+				new double[] { -1, 2, -2 }, new double[] { 4, -2, -4 } };
+		expectedSing = new double[][] { new double[] { 1, 0, 0 },
+				new double[] { 0, 0, -1 }, new double[] { 0, -1, 0 },
+				new double[] { 9, 0, 0 }, new double[] { 0, 6, 0 },
+				new double[] { 0, 0, 3 },
+				new double[] { 2d / 3, -2d / 3, 1d / 3 },
+				new double[] { 2d / 3, 1d / 3, -2d / 3 },
+				new double[] { 1d / 3, 2d / 3, 2d / 3 } };
+		actualSing = Decomposition.singularValue(a);
 
-				else if (row < a.length + a[0].length)
-					actualS[row - a.length][col] = actualSing[row][col];
-
-				else
-					actualV[row - a.length - a[0].length][col] = actualSing[row][col];
-		actualA = Matrices.multiply(Matrices.multiply(actualU, actualS),
-				actualV);
-
-		assertEquals(a.length, actualA.length);
-		for (int row = 0; row < a.length; row++) {
-			assertEquals(a[row].length, actualA[row].length);
-			for (int col = 0; col < a[row].length; col++)
-				assertEquals(a[row][col], actualA[row][col], DELTA);
+		assertEquals(expectedSing.length, actualSing.length);
+		for (int row = 0; row < expectedSing.length; row++) {
+			assertEquals(expectedSing[row].length, actualSing[row].length);
+			for (int col = 0; col < expectedSing[row].length; col++)
+				assertEquals(expectedSing[row][col], actualSing[row][col],
+						DELTA);
 		}
 
-		actualI = Matrices.multiply(Matrices.transpose(actualU), actualU);
-		for (int row = 0; row < actualI.length; row++)
-			for (int col = 0; col < actualI[row].length; col++)
-				if (row == col)
-					assertEquals(1, actualI[row][col], DELTA);
+		// fourth test on 4 by 2 array
+		a = new double[][] { new double[] { 18, 1 }, new double[] { 18, 1 },
+				new double[] { 6, 17 }, new double[] { -6, -17 } };
+		expectedSing = new double[][] { new double[] { 0.5, -0.5 },
+				new double[] { 0.5, -0.5 }, new double[] { 0.5, 0.5 },
+				new double[] { -0.5, -0.5 }, new double[] { 30, 0 },
+				new double[] { 0, 20 }, new double[] { 0.8, -0.6 },
+				new double[] { 0.6, 0.8 } };
+		actualSing = Decomposition.singularValue(a);
 
-				else
-					assertEquals(0, actualI[row][col], DELTA);
+		assertEquals(expectedSing.length, actualSing.length);
+		for (int row = 0; row < expectedSing.length; row++) {
+			assertEquals(expectedSing[row].length, actualSing[row].length);
+			for (int col = 0; col < expectedSing[row].length; col++)
+				assertEquals(expectedSing[row][col], actualSing[row][col],
+						DELTA);
+		}
 
-		actualI = Matrices.multiply(Matrices.transpose(actualV), actualV);
-		for (int row = 0; row < actualI.length; row++)
-			for (int col = 0; col < actualI[row].length; col++)
-				if (row == col)
-					assertEquals(1, actualI[row][col], DELTA);
+		// fifth test on 4 by 3 array
+		a = new double[][] { new double[] { 11, 8, 2 },
+				new double[] { 13, 4, -2 }, new double[] { 3, 12, -6 },
+				new double[] { -5, -8, 10 } };
+		expectedSing = new double[][] { new double[] { -0.5, 0.5, 0.5 },
+				new double[] { -0.5, 0.5, -0.5 },
+				new double[] { -0.5, -0.5, 0.5 },
+				new double[] { 0.5, 0.5, 0.5 }, new double[] { 24, 0, 0 },
+				new double[] { 0, 12, 0 }, new double[] { 0, 0, 6 },
+				new double[] { -2d / 3, 2d / 3, -1d / 3 },
+				new double[] { -2d / 3, -1d / 3, 2d / 3 },
+				new double[] { 1d / 3, 2d / 3, 2d / 3 } };
+		actualSing = Decomposition.singularValue(a);
 
-				else
-					assertEquals(0, actualI[row][col], DELTA);
-
-		for (int row = 0; row < actualS.length; row++)
-			for (int col = 0; col < actualS[0].length; col++)
-				if (row == col)
-					assertNotEquals(0, actualI[row][col], DELTA);
-
-				else
-					assertEquals(0, actualI[row][col], DELTA);
+		assertEquals(expectedSing.length, actualSing.length);
+		for (int row = 0; row < expectedSing.length; row++) {
+			assertEquals(expectedSing[row].length, actualSing[row].length);
+			for (int col = 0; col < expectedSing[row].length; col++)
+				assertEquals(expectedSing[row][col], actualSing[row][col],
+						DELTA);
+		}
 
 		try {
 			// matrix a is null

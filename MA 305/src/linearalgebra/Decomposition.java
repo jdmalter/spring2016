@@ -475,7 +475,7 @@ public class Decomposition {
 
 		for (int row = a.length + acol; row < a.length + acol + acol; row++)
 			for (int col = 0; col < acol; col++)
-				usv[row][col] = lv[row - a.length - acol][col];
+				usv[row][col] = lv[row - a.length][col];
 
 		for (int row = a.length; row < a.length + acol; row++)
 			for (int col = 0; col < acol; col++)
@@ -490,8 +490,12 @@ public class Decomposition {
 		double[][] sInv = new double[acol][acol];
 
 		for (int row = a.length; row < a.length + acol; row++)
-			for (int col = 0; col < acol; col++)
-				sInv[row - a.length][col] = 1 / usv[row][col];
+			for (int col = 0; col < acol; col++) {
+				if (usv[row][col] == 0)
+					sInv[row - a.length][col] = 0;
+				else
+					sInv[row - a.length][col] = 1 / usv[row][col];
+			}
 
 		double[][] u = Matrices.multiply(Matrices.multiply(a, v), sInv);
 
