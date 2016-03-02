@@ -44,15 +44,19 @@ public class Matrices {
 						"matrix a number of rows and columns must be equal");
 
 		if (a.length == 0)
+			// point with no dimensions
 			return 0;
 
 		else if (a.length == 1)
+			// length of line
 			return a[0][0];
 
 		else if (a.length == 2)
+			// area between vectors
 			return a[0][0] * a[1][1] - a[0][1] * a[1][0];
 
 		else if (a.length == 3)
+			// volume inside triple product of vectors
 			return (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
 					- (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
 					+ (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
@@ -67,6 +71,7 @@ public class Matrices {
 				determinant -= a[0][col] * determinant(minor(a, 0, col));
 		}
 
+		// other dimensional "sofu"
 		return determinant;
 	}
 
@@ -95,6 +100,8 @@ public class Matrices {
 					"matrix a and b number of components must be equal");
 
 		double sum = 0;
+
+		// multiply respective components and accumulate
 
 		for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
 			sum += (a[cmpnt] * b[cmpnt]);
@@ -157,14 +164,18 @@ public class Matrices {
 				throw new IllegalArgumentException(
 						"skipCol must not be greater than or equal to number of columns");
 
+		// minor has one less row and column than original
+
 		double[][] minor = new double[a.length - 1][a.length - 1];
 
 		for (int row = 0, srow = 0; row < minor.length; row++, srow++) {
 			if (skipRow == row)
+				// ignore row being skipped and access a from new row
 				srow++;
 
 			for (int col = 0, scol = 0; col < minor.length; col++, scol++) {
 				if (skipCol == col)
+					// ignore column being skipped and access a from new col
 					scol++;
 				minor[row][col] = a[srow][scol];
 			}
@@ -225,8 +236,13 @@ public class Matrices {
 
 		double[][] mul = new double[a.length][bcol];
 
+		// find dot products of every row and column combination
+
 		for (int row = 0; row < mul.length; row++) {
 			for (int col = 0; col < mul[row].length; col++) {
+
+				// inline dot product
+
 				double sum = 0;
 
 				for (int brow = 0; brow < b.length; brow++)
@@ -276,6 +292,7 @@ public class Matrices {
 
 		for (int row = 0; row < a.length; row++)
 			for (int col = 0; col < acol; col++)
+				// row becomes column; column becomes row
 				at[col][row] = a[row][col];
 
 		return at;
@@ -312,8 +329,51 @@ public class Matrices {
 				throw new IllegalArgumentException(
 						"matrix a row width must remain constant");
 
-		return Math.sqrt(Matrices.determinant(Matrices.multiply(
-				Matrices.transpose(a), a)));
+		// inline matrix multiplication
+
+		double[][] mul = new double[a[0].length][a[0].length];
+
+		for (int row = 0; row < mul.length; row++) {
+			for (int col = 0; col < mul[row].length; col++) {
+				double sum = 0;
+
+				for (int brow = 0; brow < a.length; brow++)
+					sum += a[brow][row] * a[brow][col];
+
+				mul[row][col] = sum;
+			}
+		}
+
+		// inline determinant whose result is placed under square root
+
+		if (mul.length == 0)
+			return 0;
+
+		else if (mul.length == 1)
+			return Math.sqrt(mul[0][0]);
+
+		else if (mul.length == 2)
+			return Math.sqrt(mul[0][0] * mul[1][1] - mul[0][1] * mul[1][0]);
+
+		else if (a.length == 3)
+			return Math.sqrt((mul[0][0] * (mul[1][1] * mul[2][2] - mul[1][2]
+					* mul[2][1]))
+					- (mul[0][1] * (mul[1][0] * mul[2][2] - mul[1][2]
+							* mul[2][0]))
+					+ (mul[0][2] * (mul[1][0] * mul[2][1] - mul[1][1]
+							* mul[2][0])));
+
+		double determinant = 0;
+
+		for (int col = 0; col < mul.length; col++) {
+			if (col % 2 == 0)
+				determinant += mul[0][col] * determinant(minor(mul, 0, col));
+
+			else
+				determinant -= mul[0][col] * determinant(minor(mul, 0, col));
+		}
+
+		return Math.sqrt(determinant);
 	}
 
 }

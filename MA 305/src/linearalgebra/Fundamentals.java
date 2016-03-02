@@ -74,9 +74,13 @@ public class Fundamentals {
 
 		double[][] aug = new double[a.length][acol + bcol];
 
+		// fill in left rows of augment
+
 		for (int row = 0; row < a.length; row++)
 			for (int col = 0; col < acol; col++)
 				aug[row][col] = a[row][col];
+
+		// fill in right rows of augment
 
 		for (int row = 0; row < b.length; row++)
 			for (int col = 0; col < bcol; col++)
@@ -123,6 +127,8 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix a row width must remain constant");
 
+		// copy array a into forward
+
 		double[][] forward = new double[a.length][acol];
 		for (int row = 0; row < forward.length; row++)
 			for (int col = 0; col < forward[row].length; col++)
@@ -130,6 +136,7 @@ public class Fundamentals {
 
 		for (int diag = 0; diag < a.length - 1; diag++) {
 			if (forward[diag][diag] == 0)
+				// prevent divide by 0 a few lines later
 				throw new ArithmeticException("divide by 0");
 
 			for (int row = diag + 1; row < a.length; row++) {
@@ -181,6 +188,8 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix a row width must remain constant");
 
+		// copy a into backward
+
 		double[][] backward = new double[a.length][acol];
 		for (int row = 0; row < backward.length; row++)
 			for (int col = 0; col < backward[row].length; col++)
@@ -188,6 +197,7 @@ public class Fundamentals {
 
 		for (int diag = a.length - 1; diag > 0; diag--) {
 			if (backward[diag][diag] == 0)
+				// prevent divide by 0 a few lines later
 				throw new ArithmeticException("divide by 0");
 
 			for (int row = diag - 1; row >= 0; row--) {
@@ -234,18 +244,25 @@ public class Fundamentals {
 						"matrix a row width must remain constant");
 
 		if (a.length == 0)
+			// there are no numbers to work with
 			return new double[][] {};
 
 		else if (a.length == 1)
 			if (a[0][0] == 0)
+				// prevent 0 from dividing by itself
 				return new double[][] { new double[] { 0 } };
 			else
+				// otherwise, result is always 1
 				return new double[][] { new double[] { 1 } };
+
+		// copy array a into array c
 
 		double[][] c = new double[acol - 1][acol];
 		for (int row = 0; row < c.length; row++)
 			for (int col = 0; col < acol; col++)
 				c[row][col] = a[row][col];
+
+		// inline forward elimination
 
 		for (int diag = 0; diag < c.length - 1; diag++) {
 			if (c[diag][diag] == 0)
@@ -259,6 +276,8 @@ public class Fundamentals {
 			}
 		}
 
+		// inline backward elimination
+
 		for (int diag = c.length - 1; diag > 0; diag--) {
 			if (c[diag][diag] == 0)
 				throw new ArithmeticException("divide by 0");
@@ -270,6 +289,8 @@ public class Fundamentals {
 					c[row][col] -= (quotient * c[diag][col]);
 			}
 		}
+
+		// normalize c
 
 		double[][] rref = new double[a.length][acol];
 
@@ -330,6 +351,8 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix b must contain only one column");
 
+		// inline augment
+
 		double[][] ab = new double[a.length][a[0].length + b[0].length];
 
 		for (int row = 0; row < a.length; row++)
@@ -340,6 +363,8 @@ public class Fundamentals {
 			for (int col = 0; col < b[0].length; col++)
 				ab[row][col + a[0].length] = b[row][col];
 
+		// inline rref
+
 		if (ab.length == 0)
 			return new double[][] {};
 
@@ -349,10 +374,14 @@ public class Fundamentals {
 			else
 				return new double[][] { new double[] { 1 } };
 
+		// copy array ab into array c
+
 		double[][] c = new double[ab[0].length - 1][ab[0].length];
 		for (int row = 0; row < c.length; row++)
 			for (int col = 0; col < ab[0].length; col++)
 				c[row][col] = ab[row][col];
+
+		// inline forward elimination
 
 		for (int diag = 0; diag < c.length - 1; diag++) {
 			if (c[diag][diag] == 0)
@@ -366,6 +395,8 @@ public class Fundamentals {
 			}
 		}
 
+		// inline backward elimination
+
 		for (int diag = c.length - 1; diag > 0; diag--) {
 			if (c[diag][diag] == 0)
 				throw new ArithmeticException("divide by 0");
@@ -378,6 +409,8 @@ public class Fundamentals {
 			}
 		}
 
+		// normalize c
+
 		double[][] rref = new double[a.length][ab[0].length];
 
 		for (int row = 0; row < c.length; row++) {
@@ -385,6 +418,8 @@ public class Fundamentals {
 					/ c[row][row];
 			rref[row][row] = 1;
 		}
+
+		// copy last column of results into array x
 
 		double[][] x = new double[a.length][1];
 		for (int row = 0; row < x.length; row++)
@@ -438,6 +473,8 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix b must contain only one column");
 
+		// inline augment
+
 		double[][] ab = new double[a.length][a[0].length + b[0].length];
 
 		for (int row = 0; row < a.length; row++)
@@ -448,12 +485,18 @@ public class Fundamentals {
 			for (int col = 0; col < b[0].length; col++)
 				ab[row][col + a[0].length] = b[row][col];
 
+		// keep track of columns ignore in computation
+
 		int zeroCol = 0;
+
+		// inline forward elimination
 
 		for (int diag = 0; diag < a.length - 1; diag++) {
 			if (ab[diag][diag] == 0) {
 				if (ab[diag][a[0].length + b[0].length - 1] != 0)
+					// implies 0 != 0 therefore throw a fit
 					throw new ArithmeticException("No solution");
+
 				zeroCol++;
 				continue;
 			}
@@ -466,10 +509,14 @@ public class Fundamentals {
 			}
 		}
 
+		// inline backward elimination
+
 		for (int diag = a.length - 1 - zeroCol; diag > 0; diag--) {
 			if (ab[diag][diag] == 0) {
 				if (ab[diag][a[0].length + b[0].length - 1] != 0)
+					// implies 0 != 0 therefore throw a fit
 					throw new ArithmeticException("No solution");
+
 				zeroCol++;
 				continue;
 			}
@@ -482,15 +529,25 @@ public class Fundamentals {
 			}
 		}
 
+		// normalize and deal with ignored columns
+
 		for (int row = 0; row < ab.length; row++) {
 			if (row < ab.length - zeroCol) {
+
+				// columns not being ignored
+
 				for (int col = 0; col < a.length; col++)
 					if (row != col)
+						// avoid changing diagonal or last element
 						ab[row][col] /= -ab[row][row];
+
 				ab[row][a.length] /= ab[row][row];
 				ab[row][row] = 1;
 
 			} else {
+
+				// columns being ignored
+
 				for (int col = 0; col < ab[row].length; col++)
 					if (row != col)
 						ab[row][col] = 0;
@@ -544,16 +601,49 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix b must contain only one column");
 
-		double denominator = Matrices.determinant(a);
+		// inline determinant
+
+		double denominator;
+
+		if (a.length == 0)
+			denominator = 0;
+
+		else if (a.length == 1)
+			denominator = a[0][0];
+
+		else if (a.length == 2)
+			denominator = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+
+		else if (a.length == 3)
+			denominator = (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
+					- (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
+					+ (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
+
+		else {
+			denominator = 0;
+
+			for (int col = 0; col < a.length; col++) {
+				if (col % 2 == 0)
+					denominator += a[0][col]
+							* Matrices.determinant(Matrices.minor(a, 0, col));
+
+				else
+					denominator -= a[0][col]
+							* Matrices.determinant(Matrices.minor(a, 0, col));
+			}
+		}
 
 		double[][] cramer = new double[a.length][1];
+
 		for (int col = 0; col < a.length; col++) {
 			double[][] copy = new double[a.length][a.length];
 
+			// copy array a into array copy
 			for (int drow = 0; drow < copy.length; drow++)
 				for (int dcol = 0; dcol < copy.length; dcol++)
 					copy[drow][dcol] = a[drow][dcol];
 
+			// copy array b into array copy at appropriate row
 			for (int row = 0; row < copy.length; row++)
 				copy[row][col] = b[row][0];
 
@@ -591,11 +681,45 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix a number of rows and columns must be equal");
 
-		double determinant = Matrices.determinant(a);
+		// inline determinant
+
+		double determinant;
+
+		if (a.length == 0)
+			determinant = 0;
+
+		else if (a.length == 1)
+			determinant = a[0][0];
+
+		else if (a.length == 2)
+			determinant = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+
+		else if (a.length == 3)
+			determinant = (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
+					- (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
+					+ (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
+
+		else {
+			determinant = 0;
+
+			for (int col = 0; col < a.length; col++) {
+				double minorDet = Matrices.determinant(Matrices
+						.minor(a, 0, col));
+
+				if (col % 2 == 0)
+					determinant += a[0][col] * minorDet;
+
+				else
+					determinant -= a[0][col] * minorDet;
+			}
+		}
+
 		if (determinant == 0)
+			// matrix is singular
 			throw new ArithmeticException("divide by 0");
 
 		double[][] adjugate = new double[a.length][a.length];
+
 		for (int row = 0; row < a.length; row++)
 			for (int col = 0; col < a.length; col++) {
 				double det = Matrices.determinant(Matrices.minor(a, row, col));
@@ -606,6 +730,8 @@ public class Fundamentals {
 				else
 					adjugate[col][row] = -det;
 			}
+
+		// divide adjugate elements by determinant
 
 		for (int row = 0; row < a.length; row++)
 			for (int col = 0; col < a.length; col++)
