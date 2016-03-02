@@ -431,8 +431,11 @@ public class Fundamentals {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
 	 * column n+1 in resulting matrix, a*x (through matrix multiplication)
-	 * equals b. Supports multiple solutions for linear equations. Returns n by
-	 * n+1 array of double.
+	 * equals b. Each column, or variable, besides the furthest right column,
+	 * has a lead variable of 1. Above the 1 in each column, any variable may
+	 * have non-zero numbers which can be multipled by any value of their
+	 * respective variable while maintaining row echlon form. Supports multiple
+	 * solutions for linear equations. Returns n by n+1 array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@link Fundamentals#gaussJordan(double[][], double[][])}.
@@ -442,7 +445,7 @@ public class Fundamentals {
 	 * @param a
 	 *            n by n array of double
 	 * @param b
-	 *            n by n array of double
+	 *            n by 1 array of double
 	 * @return n by n+1 array of double
 	 */
 	public static double[][] gaussJordanMany(double[][] a, double[][] b) {

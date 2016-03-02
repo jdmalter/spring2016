@@ -138,7 +138,7 @@ public class Decomposition {
 		for (int row = 0; row < a.length; row++) {
 			double sum = 0;
 
-			// inline dot product
+			// inline determinant on vector
 
 			for (int col = 0; col < row; col++)
 				sum += l[row][col] * l[row][col];
@@ -215,7 +215,7 @@ public class Decomposition {
 					w[row] -= (r[wrow][col] * q[row][wrow]);
 			}
 
-			// inline dot product
+			// inline determinant on vector
 
 			for (int row = 0; row < a.length; row++)
 				r[col][col] += w[row] * w[row];
@@ -448,11 +448,15 @@ public class Decomposition {
 			// normalize by row
 
 			for (int row = 0; row < a.length; row++) {
-				double mag = Math.sqrt((lv[3][row] * lv[3][row])
+
+				// determinant on vector
+
+				double det = Math.sqrt((lv[3][row] * lv[3][row])
 						+ (lv[4][row] * lv[4][row]) + 1);
-				lv[3][row] /= mag;
-				lv[4][row] /= mag;
-				lv[5][row] /= mag;
+
+				lv[3][row] /= det;
+				lv[4][row] /= det;
+				lv[5][row] /= det;
 			}
 
 			return lv;
@@ -719,11 +723,14 @@ public class Decomposition {
 			// normalize by row
 
 			for (int row = 0; row < sig.length; row++) {
-				double mag = Math.sqrt((lv[3][row] * lv[3][row])
+
+				// determinant on vector
+
+				double det = Math.sqrt((lv[3][row] * lv[3][row])
 						+ (lv[4][row] * lv[4][row]) + 1);
-				lv[3][row] /= mag;
-				lv[4][row] /= mag;
-				lv[5][row] /= mag;
+				lv[3][row] /= det;
+				lv[4][row] /= det;
+				lv[5][row] /= det;
 			}
 
 		} else

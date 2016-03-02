@@ -311,7 +311,7 @@ public class Matrices {
 	 * @return amount of "sofu" defined by n vectors enclosing a linear object
 	 *         in m-th dimensional space with m components
 	 */
-	public static double volume(double[][] a) {
+	public static double sofu(double[][] a) {
 		if (null == a)
 			throw new IllegalArgumentException("matrix a must not be null");
 

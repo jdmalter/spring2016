@@ -446,10 +446,10 @@ public class MatricesTest {
 	}
 
 	/**
-	 * Test method for {@link Matrices#volume(double[][])}.
+	 * Test method for {@link Matrices#sofu(double[][])}.
 	 */
 	@Test
-	public void testVolume() {
+	public void testSofu() {
 		// variables required for testing
 		double[][] a;
 		double expectedVol;
@@ -459,7 +459,7 @@ public class MatricesTest {
 		// first test on 2 by 1 array
 		a = new double[][] { new double[] { 3 }, new double[] { -4 } };
 		expectedVol = 5;
-		actualVol = Matrices.volume(a);
+		actualVol = Matrices.sofu(a);
 
 		assertEquals(expectedVol, actualVol, DELTA);
 
@@ -467,7 +467,7 @@ public class MatricesTest {
 		a = new double[][] { new double[] { -2, -4 }, new double[] { 3, 1 },
 				new double[] { 2, -1 } };
 		expectedVol = 15;
-		actualVol = Matrices.volume(a);
+		actualVol = Matrices.sofu(a);
 
 		assertEquals(expectedVol, actualVol, DELTA);
 
@@ -476,13 +476,13 @@ public class MatricesTest {
 				new double[] { -1, -4, -1, -1 }, new double[] { 5, 4, -4, 4 },
 				new double[] { -2, 1, -2, 1 }, new double[] { -3, 3, 5, -5 } };
 		expectedVol = 526.49786324352732362438329844498;
-		actualVol = Matrices.volume(a);
+		actualVol = Matrices.sofu(a);
 
 		assertEquals(expectedVol, actualVol, DELTA);
 
 		try {
 			// matrix a is null
-			testVol = Matrices.volume(null);
+			testVol = Matrices.sofu(null);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertEquals(0, testVol, DELTA);
@@ -490,7 +490,7 @@ public class MatricesTest {
 
 		try {
 			// matrix a does contain null column
-			testVol = Matrices.volume(new double[][] { null });
+			testVol = Matrices.sofu(new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertEquals(0, testVol, DELTA);
@@ -498,7 +498,7 @@ public class MatricesTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testVol = Matrices.volume(new double[][] { new double[] { 0, 0 },
+			testVol = Matrices.sofu(new double[][] { new double[] { 0, 0 },
 					new double[] { 0 } });
 			fail();
 		} catch (IllegalArgumentException ex) {
