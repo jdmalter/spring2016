@@ -14,8 +14,6 @@ public class Fundamentals {
 	private Fundamentals() {
 	}
 
-	// Related to Gauss Jordan method
-
 	/**
 	 * Assumes row by columnn array representation of matrix. Rows of elements
 	 * remain unchanged. Columns 0 (inclusive) through x (exclusive) of
@@ -97,8 +95,7 @@ public class Fundamentals {
 	 * of columns on first row, or {@code (acol != a[row].length)} where acol is
 	 * number of columns on first row and a[row].length is number of columns.
 	 * 
-	 * There is a special condition where ArithmeticException if divide by 0
-	 * occurs.
+	 * Throws ArithmeticException if there is 0 on diagonal.
 	 * 
 	 * @param a
 	 *            n by m array of double
@@ -156,8 +153,7 @@ public class Fundamentals {
 	 * of columns on first row, or {@code (acol != a[row].length)} where acol is
 	 * number of columns on first row and a[row].length is number of columns.
 	 * 
-	 * There is a special condition where ArithmeticException if divide by 0
-	 * occurs.
+	 * Throws ArithmeticException if there is 0 on diagonal.
 	 * 
 	 * @param a
 	 *            n by m array of double
@@ -206,6 +202,86 @@ public class Fundamentals {
 	}
 
 	/**
+	 * Assumes row by columnn array representation of matrix. Returns n by m
+	 * array of double.
+	 * 
+	 * Throws IllegalArgumentException if any of the following is true:
+	 * {@link Fundamentals#forwardEliminate(double[][])}.
+	 * 
+	 * @param a
+	 *            n by m array of double
+	 * @return n by m array of double
+	 */
+	public static double[][] rref(double[][] a) {
+		if (null == a)
+			throw new IllegalArgumentException("matrix a must not be null");
+
+		int acol = -1;
+
+		for (int row = 0; row < a.length; row++)
+			if (null == a[row])
+				throw new IllegalArgumentException(
+						"matrix a must not contain null column");
+
+			else if (row == 0) {
+				acol = a[0].length;
+				if (a.length > acol)
+					throw new IllegalArgumentException(
+							"matrix a must contain as many or more columns than rows");
+
+			} else if (acol != a[row].length)
+				throw new IllegalArgumentException(
+						"matrix a row width must remain constant");
+
+		if (a.length == 0)
+			return new double[][] {};
+
+		else if (a.length == 1)
+			if (a[0][0] == 0)
+				return new double[][] { new double[] { 0 } };
+			else
+				return new double[][] { new double[] { 1 } };
+
+		double[][] c = new double[acol - 1][acol];
+		for (int row = 0; row < c.length; row++)
+			for (int col = 0; col < acol; col++)
+				c[row][col] = a[row][col];
+
+		for (int diag = 0; diag < c.length - 1; diag++) {
+			if (c[diag][diag] == 0)
+				throw new ArithmeticException("divide by 0");
+
+			for (int row = diag + 1; row < c.length; row++) {
+				double quotient = c[row][diag] / c[diag][diag];
+
+				for (int col = 0; col < c[row].length; col++)
+					c[row][col] -= (quotient * c[diag][col]);
+			}
+		}
+
+		for (int diag = c.length - 1; diag > 0; diag--) {
+			if (c[diag][diag] == 0)
+				throw new ArithmeticException("divide by 0");
+
+			for (int row = diag - 1; row >= 0; row--) {
+				double quotient = c[row][diag] / c[diag][diag];
+
+				for (int col = 0; col < c[row].length; col++)
+					c[row][col] -= (quotient * c[diag][col]);
+			}
+		}
+
+		double[][] rref = new double[a.length][acol];
+
+		for (int row = 0; row < c.length; row++) {
+			rref[row][acol - 1] = c[row][acol - 1] / c[row][row];
+			rref[row][row] = 1;
+		}
+
+		return rref;
+	}
+
+	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
 	 * resulting matrix, a*x (through matrix multiplication) equals b. Returns n
 	 * by 1 array of double.
@@ -216,6 +292,9 @@ public class Fundamentals {
 	 * a[row].length is number of columns on any row, or
 	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
 	 * any row.
+	 * 
+	 * Throws ArithmeticException if there are no solutions or many solutions
+	 * for x.
 	 * 
 	 * @param a
 	 *            n by n array of double
@@ -251,16 +330,177 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix b must contain only one column");
 
-		double[][] ab = backwardEliminate(forwardEliminate(augment(a, b)));
+		double[][] ab = new double[a.length][a[0].length + b[0].length];
+
+		for (int row = 0; row < a.length; row++)
+			for (int col = 0; col < a[0].length; col++)
+				ab[row][col] = a[row][col];
+
+		for (int row = 0; row < b.length; row++)
+			for (int col = 0; col < b[0].length; col++)
+				ab[row][col + a[0].length] = b[row][col];
+
+		if (ab.length == 0)
+			return new double[][] {};
+
+		else if (ab.length == 1)
+			if (ab[0][0] == 0)
+				return new double[][] { new double[] { 0 } };
+			else
+				return new double[][] { new double[] { 1 } };
+
+		double[][] c = new double[ab[0].length - 1][ab[0].length];
+		for (int row = 0; row < c.length; row++)
+			for (int col = 0; col < ab[0].length; col++)
+				c[row][col] = ab[row][col];
+
+		for (int diag = 0; diag < c.length - 1; diag++) {
+			if (c[diag][diag] == 0)
+				throw new ArithmeticException("divide by 0");
+
+			for (int row = diag + 1; row < c.length; row++) {
+				double quotient = c[row][diag] / c[diag][diag];
+
+				for (int col = 0; col < c[row].length; col++)
+					c[row][col] -= (quotient * c[diag][col]);
+			}
+		}
+
+		for (int diag = c.length - 1; diag > 0; diag--) {
+			if (c[diag][diag] == 0)
+				throw new ArithmeticException("divide by 0");
+
+			for (int row = diag - 1; row >= 0; row--) {
+				double quotient = c[row][diag] / c[diag][diag];
+
+				for (int col = 0; col < c[row].length; col++)
+					c[row][col] -= (quotient * c[diag][col]);
+			}
+		}
+
+		double[][] rref = new double[a.length][ab[0].length];
+
+		for (int row = 0; row < c.length; row++) {
+			rref[row][ab[0].length - 1] = c[row][ab[0].length - 1]
+					/ c[row][row];
+			rref[row][row] = 1;
+		}
 
 		double[][] x = new double[a.length][1];
 		for (int row = 0; row < x.length; row++)
-			x[row][0] = ab[row][ab[row].length - 1] / ab[row][row];
+			x[row][0] = rref[row][rref[row].length - 1] / rref[row][row];
 
 		return x;
 	}
 
-	// Related to Cramer's method
+	/**
+	 * Assumes row by columnn array representation of matrix. Given that x is
+	 * column n+1 in resulting matrix, a*x (through matrix multiplication)
+	 * equals b. Supports multiple solutions for linear equations. Returns n by
+	 * n+1 array of double.
+	 * 
+	 * Throws IllegalArgumentException if any of the following is true:
+	 * {@link Fundamentals#gaussJordan(double[][], double[][])}.
+	 * 
+	 * Throws ArithmeticException if there are no solutions for x.
+	 * 
+	 * @param a
+	 *            n by n array of double
+	 * @param b
+	 *            n by n array of double
+	 * @return n by n+1 array of double
+	 */
+	public static double[][] gaussJordanMany(double[][] a, double[][] b) {
+		if (null == a)
+			throw new IllegalArgumentException("matrix a must not be null");
+
+		else if (null == b)
+			throw new IllegalArgumentException("matrix b must not be null");
+
+		else if (a.length != b.length)
+			throw new IllegalArgumentException(
+					"matrix a and b number of rows must be equal");
+
+		for (int row = 0; row < a.length; row++)
+			if (null == a[row])
+				throw new IllegalArgumentException(
+						"matrix a must not contain null column");
+
+			else if (null == b[row])
+				throw new IllegalArgumentException(
+						"matrix b must not contain null column");
+
+			else if (a.length != a[row].length)
+				throw new IllegalArgumentException(
+						"matrix a number of rows and columns must be equal");
+
+			else if (1 != b[row].length)
+				throw new IllegalArgumentException(
+						"matrix b must contain only one column");
+
+		double[][] ab = new double[a.length][a[0].length + b[0].length];
+
+		for (int row = 0; row < a.length; row++)
+			for (int col = 0; col < a[0].length; col++)
+				ab[row][col] = a[row][col];
+
+		for (int row = 0; row < b.length; row++)
+			for (int col = 0; col < b[0].length; col++)
+				ab[row][col + a[0].length] = b[row][col];
+
+		int zeroCol = 0;
+
+		for (int diag = 0; diag < a.length - 1; diag++) {
+			if (ab[diag][diag] == 0) {
+				if (ab[diag][a[0].length + b[0].length - 1] != 0)
+					throw new ArithmeticException("No solution");
+				zeroCol++;
+				continue;
+			}
+
+			for (int row = diag + 1; row < a.length; row++) {
+				double quotient = ab[row][diag] / ab[diag][diag];
+
+				for (int col = 0; col < ab[row].length; col++)
+					ab[row][col] -= (quotient * ab[diag][col]);
+			}
+		}
+
+		for (int diag = a.length - 1 - zeroCol; diag > 0; diag--) {
+			if (ab[diag][diag] == 0) {
+				if (ab[diag][a[0].length + b[0].length - 1] != 0)
+					throw new ArithmeticException("No solution");
+				zeroCol++;
+				continue;
+			}
+
+			for (int row = diag - 1; row >= 0; row--) {
+				double quotient = ab[row][diag] / ab[diag][diag];
+
+				for (int col = 0; col < ab[row].length; col++)
+					ab[row][col] -= (quotient * ab[diag][col]);
+			}
+		}
+
+		for (int row = 0; row < ab.length; row++) {
+			if (row < ab.length - zeroCol) {
+				for (int col = 0; col < a.length; col++)
+					if (row != col)
+						ab[row][col] /= -ab[row][row];
+				ab[row][a.length] /= ab[row][row];
+				ab[row][row] = 1;
+
+			} else {
+				for (int col = 0; col < ab[row].length; col++)
+					if (row != col)
+						ab[row][col] = 0;
+					else
+						ab[row][row] = 1;
+			}
+		}
+
+		return ab;
+	}
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
@@ -322,8 +562,6 @@ public class Fundamentals {
 
 		return cramer;
 	}
-
-	// Related to matrix inversion
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is

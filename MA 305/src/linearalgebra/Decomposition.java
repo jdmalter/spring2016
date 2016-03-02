@@ -14,8 +14,6 @@ public class Decomposition {
 	private Decomposition() {
 	}
 
-	// Related to LU Decomposition
-
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
 	 * rows 0 through n of resulting matrix and u is rows n through n+n of
@@ -84,8 +82,6 @@ public class Decomposition {
 		return lu;
 	}
 
-	// Related to Cholesky Decomposition
-
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
 	 * resulting matrix and lt is transpose of resulting matrix, l*lt (through
@@ -153,8 +149,6 @@ public class Decomposition {
 
 		return l;
 	}
-
-	// Related to QR Decomposition
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that q is
@@ -231,8 +225,6 @@ public class Decomposition {
 
 		return qr;
 	}
-
-	// Related to Eigen Decomposition
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
@@ -416,8 +408,6 @@ public class Decomposition {
 		return lv;
 	}
 
-	// Related to Singular Value Decomposition
-
 	/**
 	 * Assumes row by columnn array representation of matrix. Given the
 	 * resulting array, rows 0 to m belong to matrix u, rows m to m+n belong to
@@ -468,8 +458,153 @@ public class Decomposition {
 
 		double[][] usv = new double[a.length + acol + acol][acol];
 
-		double[][] lv = Decomposition.eigen(Matrices.multiply(
-				Matrices.transpose(a), a));
+		double[][] s = Matrices.multiply(Matrices.transpose(a), a);
+
+		double[][] lv = new double[s.length + s.length][s.length];
+
+		if (s.length == 1) {
+			// assumed double a = -1;
+			double b = s[0][0];
+
+			lv[0][0] = b;
+
+			lv[1][0] = 1;
+
+		} else if (s.length == 2) {
+			// assumed double a = 1;
+			double b = -s[0][0] - s[1][1];
+			double c = s[0][0] * s[1][1] - s[0][1] * s[1][0];
+			double sqrt = Math.sqrt((b * b) - (4 * c));
+
+			lv[0][0] = (-b + sqrt) / 2;
+			lv[1][1] = (-b - sqrt) / 2;
+
+			for (int row = 0; row < s.length; row++) {
+				lv[2][row] = -s[0][1] / (s[0][0] - lv[row][row]);
+				lv[3][row] = 1;
+			}
+
+			for (int row = 0; row < s.length; row++) {
+				double mag = Math.sqrt((lv[2][row] * lv[2][row]) + 1);
+				lv[2][row] /= mag;
+				lv[3][row] /= mag;
+			}
+
+		} else if (s.length == 3) {
+			// assumed double a = -1;
+			double b = s[0][0] + s[1][1] + s[2][2];
+			double c = -(s[0][0] * s[1][1]) - (s[0][0] * s[2][2])
+					- (s[1][1] * s[2][2]) + (s[0][1] * s[1][0])
+					+ (s[0][2] * s[2][0]) + (s[1][2] * s[2][1]);
+			double d = (s[2][0] * s[0][1] * s[1][2])
+					+ (s[1][0] * s[2][1] * s[0][2])
+					- (s[0][0] * s[2][1] * s[1][2])
+					- (s[1][1] * s[2][0] * s[0][2])
+					- (s[2][2] * s[1][0] * s[0][1])
+					+ (s[0][0] * s[1][1] * s[2][2]);
+
+			double f = (-(3 * c) - (b * b)) / 3;
+			double g = (-(2 * b * b * b) - (9 * b * c) - (27 * d)) / 27;
+			double h = (g * g / 4) + (f * f * f / 27);
+
+			double i = Math.sqrt((g * g / 4) - h);
+			double j = Math.pow(i, 1d / 3);
+			double k = Math.acos(-g / (2 * i));
+			double l = -j;
+			double m = Math.cos(k / 3);
+			double n = Math.sqrt(3) * Math.sin(k / 3);
+			double p = (b / 3);
+
+			double x1 = 2 * j * Math.cos(k / 3) + (b / 3);
+			double x2 = l * (m + n) + p;
+			double x3 = l * (m - n) + p;
+
+			if (x1 > x2 && x1 > x3) {
+				lv[0][0] = x1;
+
+				if (x2 > x3) {
+					lv[1][1] = x2;
+					lv[2][2] = x3;
+
+				} else {
+					lv[1][1] = x3;
+					lv[2][2] = x2;
+				}
+
+			} else if (x2 > x3) {
+				lv[0][0] = x2;
+
+				if (x1 > x3) {
+					lv[1][1] = x1;
+					lv[2][2] = x3;
+
+				} else {
+					lv[1][1] = x3;
+					lv[2][2] = x1;
+				}
+
+			} else {
+				lv[0][0] = x3;
+
+				if (x1 > x2) {
+					lv[1][1] = x1;
+					lv[2][2] = x2;
+
+				} else {
+					lv[1][1] = x2;
+					lv[2][2] = x1;
+				}
+			}
+
+			for (int row = 0; row < s.length; row++) {
+				double[][] x = new double[s.length - 1][s.length];
+				for (int xrow = 0; xrow < x.length; xrow++)
+					for (int xcol = 0; xcol < s.length; xcol++) {
+						x[xrow][xcol] = s[xrow][xcol];
+						if (xrow == xcol)
+							x[xrow][xcol] -= lv[row][row];
+					}
+
+				for (int diag = 0; diag < x.length - 1; diag++) {
+					if (x[diag][diag] == 0)
+						throw new ArithmeticException("divide by 0");
+
+					for (int xrow = diag + 1; xrow < x.length; xrow++) {
+						double quotient = x[xrow][diag] / x[diag][diag];
+
+						for (int xcol = 0; xcol < x[xrow].length; xcol++)
+							x[xrow][xcol] -= (quotient * x[diag][xcol]);
+					}
+				}
+
+				for (int diag = x.length - 1; diag > 0; diag--) {
+					if (x[diag][diag] == 0)
+						throw new ArithmeticException("divide by 0");
+
+					for (int xrow = diag - 1; xrow >= 0; xrow--) {
+						double quotient = x[xrow][diag] / x[diag][diag];
+
+						for (int xcol = 0; xcol < x[xrow].length; xcol++)
+							x[xrow][xcol] -= (quotient * x[diag][xcol]);
+					}
+				}
+
+				lv[3][row] = -x[0][2] / x[0][0];
+				lv[4][row] = -x[1][2] / x[1][1];
+				lv[5][row] = 1;
+			}
+
+			for (int row = 0; row < s.length; row++) {
+				double mag = Math.sqrt((lv[3][row] * lv[3][row])
+						+ (lv[4][row] * lv[4][row]) + 1);
+				lv[3][row] /= mag;
+				lv[4][row] /= mag;
+				lv[5][row] /= mag;
+			}
+
+		} else
+			throw new UnsupportedOperationException(
+					"Cannot handle matrices larger than 3 by 3");
 
 		for (int row = a.length + acol; row < a.length + acol + acol; row++)
 			for (int col = 0; col < acol; col++)
