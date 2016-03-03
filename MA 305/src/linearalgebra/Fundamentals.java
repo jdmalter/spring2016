@@ -429,13 +429,14 @@ public class Fundamentals {
 	}
 
 	/**
-	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * column n+1 in resulting matrix, a*x (through matrix multiplication)
-	 * equals b. Each column, or variable, besides the furthest right column,
-	 * has a lead variable of 1. Above the 1 in each column, any variable may
-	 * have non-zero numbers which can be multipled by any value of their
-	 * respective variable while maintaining row echlon form. Supports multiple
-	 * solutions for linear equations. Returns n by n+1 array of double.
+	 * Assumes row by columnn array representation of matrix. In the first
+	 * element in the returned array, each column, or variable, besides the
+	 * furthest right column, has a lead variable of 1. Above the 1 in each
+	 * column, any variable may have non-zero numbers which can be multipled by
+	 * any value of their respective variable while maintaining row echlon form.
+	 * Supports multiple solutions for linear equations. Given that x is the
+	 * second element in the returned array, a*x (through matrix multiplication)
+	 * equals b. Returns array of n by n and n by 1 array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@link Fundamentals#gaussJordan(double[][], double[][])}.
@@ -446,9 +447,9 @@ public class Fundamentals {
 	 *            n by n array of double
 	 * @param b
 	 *            n by 1 array of double
-	 * @return n by n+1 array of double
+	 * @return array of n by n and n by 1 array of double
 	 */
-	public static double[][] gaussJordanMany(double[][] a, double[][] b) {
+	public static double[][][] gaussJordanMany(double[][] a, double[][] b) {
 		if (null == a)
 			throw new IllegalArgumentException("matrix a must not be null");
 
@@ -534,6 +535,10 @@ public class Fundamentals {
 
 		// normalize and deal with ignored columns
 
+		// copy last column of results into array x
+
+		double[][] x = new double[a.length][1];
+
 		for (int row = 0; row < ab.length; row++) {
 			if (row < ab.length - zeroCol) {
 
@@ -544,7 +549,7 @@ public class Fundamentals {
 						// avoid changing diagonal or last element
 						ab[row][col] /= -ab[row][row];
 
-				ab[row][a.length] /= ab[row][row];
+				x[row][0] = ab[row][a.length] / ab[row][row];
 				ab[row][row] = 1;
 
 			} else {
@@ -559,7 +564,15 @@ public class Fundamentals {
 			}
 		}
 
-		return ab;
+		// Remove last column of ab
+
+		double[][] copyAB = new double[a.length][a.length];
+
+		for (int row = 0; row < a.length; row++)
+			for (int col = 0; col < a.length; col++)
+				copyAB[row][col] = ab[row][col];
+
+		return new double[][][] { copyAB, x };
 	}
 
 	/**

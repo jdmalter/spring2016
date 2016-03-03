@@ -338,6 +338,8 @@ public class Matrices {
 				double sum = 0;
 
 				for (int brow = 0; brow < a.length; brow++)
+					// implicit tranpose going on where row become column and
+					// column becomes row
 					sum += a[brow][row] * a[brow][col];
 
 				mul[row][col] = sum;

@@ -16,9 +16,9 @@ public class Decomposition {
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
-	 * rows 0 through n of resulting matrix and u is rows n through n+n of
-	 * resulting matrix, l*u (through matrix multiplication) equals a. Returns
-	 * n+n by n array of double.
+	 * the first element of the resulting array and u is the second element of
+	 * the resulting array, l*u (through matrix multiplication) equals a.
+	 * Returns array of n by n and n by n array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
@@ -30,9 +30,9 @@ public class Decomposition {
 	 * 
 	 * @param a
 	 *            n by n array of double
-	 * @return n+n by n array of double
+	 * @return array of n by n and n by n array of double
 	 */
-	public static double[][] lu(double[][] a) {
+	public static double[][][] lu(double[][] a) {
 		if (null == a)
 			throw new IllegalArgumentException("matrix a must not be null");
 
@@ -75,19 +75,7 @@ public class Decomposition {
 			}
 		}
 
-		double[][] lu = new double[a.length + a.length][a.length];
-
-		// copy array l and array u into array lu
-
-		for (int row = 0; row < lu.length; row++)
-			for (int col = 0; col < a.length; col++)
-				if (row < a.length)
-					lu[row][col] = l[row][col];
-
-				else
-					lu[row][col] = u[row - a.length][col];
-
-		return lu;
+		return new double[][][] { l, u };
 	}
 
 	/**
@@ -162,10 +150,11 @@ public class Decomposition {
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that q is
-	 * rows 0 through m of resulting matrix and r is rows m through m+n of
-	 * resulting matrix, q*r (through matrix multiplication) equals a. Given
+	 * the first element of the resulting array and r is the second element of
+	 * the resulting array, q*r (through matrix multiplication) equals a. Given
 	 * that qt is tranpose of q, qt*q equals I where I is identity matrix. r
-	 * must be upper triangular. Returns m+n by n array of double.
+	 * must be upper triangular. Returns array of m by n and n by n array of
+	 * double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row,
@@ -175,9 +164,9 @@ public class Decomposition {
 	 * 
 	 * @param a
 	 *            n by m array of double where m >= n
-	 * @return m+n by n array of double
+	 * @return array of m by n and n by n array of double
 	 */
-	public static double[][] qr(double[][] a) {
+	public static double[][][] qr(double[][] a) {
 		if (null == a)
 			throw new IllegalArgumentException("matrix a must not be null");
 
@@ -225,24 +214,15 @@ public class Decomposition {
 				q[row][col] = w[row] / r[col][col];
 		}
 
-		double[][] qr = new double[a.length + acol][acol];
-
-		for (int row = 0; row < qr.length; row++)
-			for (int col = 0; col < acol; col++)
-				if (row < a.length)
-					qr[row][col] = q[row][col];
-
-				else
-					qr[row][col] = r[row - a.length][col];
-
-		return qr;
+		return new double[][][] { q, r };
 	}
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
-	 * rows 0 through n of the resulting matrix, and v is rows n through n+n of
-	 * the resulting matrix, a*v (through matrix multiplication) equals v*l
-	 * (through matrix multiplication). Returns n+n by n array of double.
+	 * the first element of the resulting array and v is the second element of
+	 * the resulting array, a*v (through matrix multiplication) equals v*l
+	 * (through matrix multiplication). Returns array of n by n and n by n array
+	 * of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
@@ -254,9 +234,9 @@ public class Decomposition {
 	 * 
 	 * @param a
 	 *            n by n array of double
-	 * @return n+n by n array of double
+	 * @return array of n by n and n by n array of double
 	 */
-	public static double[][] eigen(double[][] a) {
+	public static double[][][] eigen(double[][] a) {
 		if (null == a)
 			throw new IllegalArgumentException("matrix a must not be null");
 
@@ -269,16 +249,17 @@ public class Decomposition {
 				throw new IllegalArgumentException(
 						"matrix a number of rows and columns must be equal");
 
-		double[][] lv = new double[a.length + a.length][a.length];
+		double[][] l = new double[a.length][a.length];
+		double[][] v = new double[a.length][a.length];
 
 		if (a.length == 1) {
 
 			// assumed double a = -1;
 			double b = a[0][0];
 
-			lv[0][0] = b;
+			l[0][0] = b;
 
-			lv[1][0] = 1;
+			v[0][0] = 1;
 
 		} else if (a.length == 2) {
 
@@ -287,18 +268,18 @@ public class Decomposition {
 			double c = a[0][0] * a[1][1] - a[0][1] * a[1][0];
 			double sqrt = Math.sqrt((b * b) - (4 * c));
 
-			lv[0][0] = (-b + sqrt) / 2;
-			lv[1][1] = (-b - sqrt) / 2;
+			l[0][0] = (-b + sqrt) / 2;
+			l[1][1] = (-b - sqrt) / 2;
 
 			for (int row = 0; row < a.length; row++) {
-				lv[2][row] = -a[0][1] / (a[0][0] - lv[row][row]);
-				lv[3][row] = 1;
+				v[0][row] = -a[0][1] / (a[0][0] - l[row][row]);
+				v[1][row] = 1;
 			}
 
 			for (int row = 0; row < a.length; row++) {
-				double mag = Math.sqrt((lv[2][row] * lv[2][row]) + 1);
-				lv[2][row] /= mag;
-				lv[3][row] /= mag;
+				double mag = Math.sqrt((v[0][row] * v[0][row]) + 1);
+				v[0][row] /= mag;
+				v[1][row] /= mag;
 			}
 
 		} else if (a.length == 3) {
@@ -321,13 +302,13 @@ public class Decomposition {
 			double i = Math.sqrt((g * g / 4) - h);
 			double j = Math.pow(i, 1d / 3);
 			double k = Math.acos(-g / (2 * i));
-			double l = -j;
+
 			double m = Math.cos(k / 3);
 			double n = Math.sqrt(3) * Math.sin(k / 3);
 			double p = (b / 3);
 			double q = 2 * j * Math.cos(k / 3) + (b / 3);
-			double r = l * (m + n) + p;
-			double s = l * (m - n) + p;
+			double r = -j * (m + n) + p;
+			double s = -j * (m - n) + p;
 
 			// 19 variables...
 
@@ -335,63 +316,63 @@ public class Decomposition {
 
 				// q is greatest root
 
-				lv[0][0] = q;
+				l[0][0] = q;
 
 				if (r > s) {
 
 					// s is least root
 
-					lv[1][1] = r;
-					lv[2][2] = s;
+					l[1][1] = r;
+					l[2][2] = s;
 
 				} else {
 
 					// r is least root
 
-					lv[1][1] = s;
-					lv[2][2] = r;
+					l[1][1] = s;
+					l[2][2] = r;
 				}
 
 			} else if (r > s) {
 
 				// r is greatest root
 
-				lv[0][0] = r;
+				l[0][0] = r;
 
 				if (q > s) {
 
 					// s is least root
 
-					lv[1][1] = q;
-					lv[2][2] = s;
+					l[1][1] = q;
+					l[2][2] = s;
 
 				} else {
 
 					// q is least root
 
-					lv[1][1] = s;
-					lv[2][2] = q;
+					l[1][1] = s;
+					l[2][2] = q;
 				}
 
 			} else {
 
 				// s is greatest root
 
-				lv[0][0] = s;
+				l[0][0] = s;
 
 				if (q > r) {
 
 					// r is least root
 
-					lv[1][1] = q;
-					lv[2][2] = r;
+					l[1][1] = q;
+					l[2][2] = r;
 
 				} else {
 
 					// q is least root
 
-					lv[1][1] = r;
-					lv[2][2] = q;
+					l[1][1] = r;
+					l[2][2] = q;
 				}
 			}
 
@@ -407,7 +388,7 @@ public class Decomposition {
 						x[xrow][xcol] = a[xrow][xcol];
 						if (xrow == xcol)
 							// if on the diagonal, then subtract lambda
-							x[xrow][xcol] -= lv[row][row];
+							x[xrow][xcol] -= l[row][row];
 					}
 
 				// inline forward elimination
@@ -440,9 +421,9 @@ public class Decomposition {
 
 				// solve for "z" where z is on row 5
 
-				lv[3][row] = -x[0][2] / x[0][0];
-				lv[4][row] = -x[1][2] / x[1][1];
-				lv[5][row] = 1;
+				v[0][row] = -x[0][2] / x[0][0];
+				v[1][row] = -x[1][2] / x[1][1];
+				v[2][row] = 1;
 			}
 
 			// normalize by row
@@ -451,35 +432,35 @@ public class Decomposition {
 
 				// determinant on vector
 
-				double det = Math.sqrt((lv[3][row] * lv[3][row])
-						+ (lv[4][row] * lv[4][row]) + 1);
+				double det = Math.sqrt((v[0][row] * v[0][row])
+						+ (v[1][row] * v[1][row]) + 1);
 
-				lv[3][row] /= det;
-				lv[4][row] /= det;
-				lv[5][row] /= det;
+				v[0][row] /= det;
+				v[1][row] /= det;
+				v[2][row] /= det;
 			}
 
-			return lv;
+			return new double[][][] { l, v };
 
 		} else
 			// because finding zeros of larger polynomials is difficult
 			throw new UnsupportedOperationException(
 					"Cannot handle matrices larger than 3 by 3");
 
-		return lv;
+		return new double[][][] { l, v };
 	}
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given the
-	 * resulting array, rows 0 to m belong to matrix u, rows m to m+n belong to
-	 * matrix s, and rows m+n to m+n+n belong to matrix v. Input array a equals
+	 * resulting array,the first element is matrix u, the second element is
+	 * matrix s, and the third element is matrix v. Input array a equals
 	 * u*s*(v^-1) (through matrix multiplication and inverse of matrix). Given
 	 * that ut is tranpose of u, ut*u (through matrix multiplication) equals I
 	 * where I is identity matrix, and given that vt is tranpose of v, vt*v
 	 * (through matrix multiplication) equals I where I is identity matrix.
 	 * Resulting matrix s is diagonal such that elements on diagonal are
-	 * non-zero and element not on diagonal equal zero. Returns m+n+n by n array
-	 * of double.
+	 * non-zero and element not on diagonal equal zero. Returns array of m by n,
+	 * n by n, and n by n array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row,
@@ -493,9 +474,9 @@ public class Decomposition {
 	 * 
 	 * @param a
 	 *            m by n array of double where m >= n
-	 * @return m+n+n by n array of double
+	 * @return array of m by n, n by n, and n by n array of double
 	 */
-	public static double[][] singularValue(double[][] a) {
+	public static double[][][] singularValue(double[][] a) {
 		if (null == a)
 			throw new IllegalArgumentException("matrix a must not be null");
 
@@ -526,12 +507,12 @@ public class Decomposition {
 				// row becomes column; column becomes row
 				at[col][row] = a[row][col];
 
-		double[][] sig = new double[acol][acol];
+		double[][] ata = new double[acol][acol];
 
 		// inline matrix multiplication
 
-		for (int row = 0; row < sig.length; row++) {
-			for (int col = 0; col < sig[row].length; col++) {
+		for (int row = 0; row < ata.length; row++) {
+			for (int col = 0; col < ata[row].length; col++) {
 
 				// inline dot product
 
@@ -540,57 +521,58 @@ public class Decomposition {
 				for (int brow = 0; brow < a.length; brow++)
 					sum += at[row][brow] * a[brow][col];
 
-				sig[row][col] = sum;
+				ata[row][col] = sum;
 			}
 		}
 
 		// inline eigen
 
-		double[][] lv = new double[sig.length + sig.length][sig.length];
+		double[][] l = new double[ata.length][ata.length];
+		double[][] v = new double[ata.length][ata.length];
 
-		if (sig.length == 1) {
+		if (ata.length == 1) {
 
 			// assumed double a = -1;
-			double b = sig[0][0];
+			double b = ata[0][0];
 
-			lv[0][0] = b;
+			l[0][0] = b;
 
-			lv[1][0] = 1;
+			v[1][0] = 1;
 
-		} else if (sig.length == 2) {
+		} else if (ata.length == 2) {
 
 			// assumed double a = 1;
-			double b = -sig[0][0] - sig[1][1];
-			double c = sig[0][0] * sig[1][1] - sig[0][1] * sig[1][0];
+			double b = -ata[0][0] - ata[1][1];
+			double c = ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0];
 			double sqrt = Math.sqrt((b * b) - (4 * c));
 
-			lv[0][0] = (-b + sqrt) / 2;
-			lv[1][1] = (-b - sqrt) / 2;
+			l[0][0] = (-b + sqrt) / 2;
+			l[1][1] = (-b - sqrt) / 2;
 
-			for (int row = 0; row < sig.length; row++) {
-				lv[2][row] = -sig[0][1] / (sig[0][0] - lv[row][row]);
-				lv[3][row] = 1;
+			for (int row = 0; row < ata.length; row++) {
+				v[0][row] = -ata[0][1] / (ata[0][0] - l[row][row]);
+				v[1][row] = 1;
 			}
 
-			for (int row = 0; row < sig.length; row++) {
-				double mag = Math.sqrt((lv[2][row] * lv[2][row]) + 1);
-				lv[2][row] /= mag;
-				lv[3][row] /= mag;
+			for (int row = 0; row < ata.length; row++) {
+				double mag = Math.sqrt((v[0][row] * v[0][row]) + 1);
+				v[0][row] /= mag;
+				v[1][row] /= mag;
 			}
 
-		} else if (sig.length == 3) {
+		} else if (ata.length == 3) {
 
 			// assumed double a = -1;
-			double b = sig[0][0] + sig[1][1] + sig[2][2];
-			double c = -(sig[0][0] * sig[1][1]) - (sig[0][0] * sig[2][2])
-					- (sig[1][1] * sig[2][2]) + (sig[0][1] * sig[1][0])
-					+ (sig[0][2] * sig[2][0]) + (sig[1][2] * sig[2][1]);
-			double d = (sig[2][0] * sig[0][1] * sig[1][2])
-					+ (sig[1][0] * sig[2][1] * sig[0][2])
-					- (sig[0][0] * sig[2][1] * sig[1][2])
-					- (sig[1][1] * sig[2][0] * sig[0][2])
-					- (sig[2][2] * sig[1][0] * sig[0][1])
-					+ (sig[0][0] * sig[1][1] * sig[2][2]);
+			double b = ata[0][0] + ata[1][1] + ata[2][2];
+			double c = -(ata[0][0] * ata[1][1]) - (ata[0][0] * ata[2][2])
+					- (ata[1][1] * ata[2][2]) + (ata[0][1] * ata[1][0])
+					+ (ata[0][2] * ata[2][0]) + (ata[1][2] * ata[2][1]);
+			double d = (ata[2][0] * ata[0][1] * ata[1][2])
+					+ (ata[1][0] * ata[2][1] * ata[0][2])
+					- (ata[0][0] * ata[2][1] * ata[1][2])
+					- (ata[1][1] * ata[2][0] * ata[0][2])
+					- (ata[2][2] * ata[1][0] * ata[0][1])
+					+ (ata[0][0] * ata[1][1] * ata[2][2]);
 
 			double f = (-(3 * c) - (b * b)) / 3;
 			double g = (-(2 * b * b * b) - (9 * b * c) - (27 * d)) / 27;
@@ -598,13 +580,13 @@ public class Decomposition {
 			double i = Math.sqrt((g * g / 4) - h);
 			double j = Math.pow(i, 1d / 3);
 			double k = Math.acos(-g / (2 * i));
-			double l = -j;
+
 			double m = Math.cos(k / 3);
 			double n = Math.sqrt(3) * Math.sin(k / 3);
 			double p = (b / 3);
 			double q = 2 * j * Math.cos(k / 3) + (b / 3);
-			double r = l * (m + n) + p;
-			double s = l * (m - n) + p;
+			double r = -j * (m + n) + p;
+			double s = -j * (m - n) + p;
 
 			// more than 19 variables
 
@@ -612,77 +594,77 @@ public class Decomposition {
 
 				// q is greatest root
 
-				lv[0][0] = q;
+				l[0][0] = q;
 
 				if (r > s) {
 
 					// s is least root
 
-					lv[1][1] = r;
-					lv[2][2] = s;
+					l[1][1] = r;
+					l[2][2] = s;
 
 				} else {
 
 					// r is least root
 
-					lv[1][1] = s;
-					lv[2][2] = r;
+					l[1][1] = s;
+					l[2][2] = r;
 				}
 
 			} else if (r > s) {
 
 				// r is greatest root
 
-				lv[0][0] = r;
+				l[0][0] = r;
 
 				if (q > s) {
 
 					// s is least root
 
-					lv[1][1] = q;
-					lv[2][2] = s;
+					l[1][1] = q;
+					l[2][2] = s;
 
 				} else {
 
 					// q is least root
 
-					lv[1][1] = s;
-					lv[2][2] = q;
+					l[1][1] = s;
+					l[2][2] = q;
 				}
 
 			} else {
 
 				// s is greatest root
 
-				lv[0][0] = s;
+				l[0][0] = s;
 
 				if (q > r) {
 
 					// r is least root
 
-					lv[1][1] = q;
-					lv[2][2] = r;
+					l[1][1] = q;
+					l[2][2] = r;
 
 				} else {
 
 					// q is least root
 
-					lv[1][1] = r;
-					lv[2][2] = q;
+					l[1][1] = r;
+					l[2][2] = q;
 				}
 			}
 
-			for (int row = 0; row < sig.length; row++) {
+			for (int row = 0; row < ata.length; row++) {
 
 				// copy array sig into array x
 
-				double[][] x = new double[sig.length - 1][sig.length];
+				double[][] x = new double[ata.length - 1][ata.length];
 				for (int xrow = 0; xrow < x.length; xrow++)
-					for (int xcol = 0; xcol < sig.length; xcol++) {
-						x[xrow][xcol] = sig[xrow][xcol];
+					for (int xcol = 0; xcol < ata.length; xcol++) {
+						x[xrow][xcol] = ata[xrow][xcol];
 						if (xrow == xcol)
 							// if on the diagonal, then subtract lambda
-							x[xrow][xcol] -= lv[row][row];
+							x[xrow][xcol] -= l[row][row];
 					}
 
 				// inline forward elimination
@@ -715,22 +697,22 @@ public class Decomposition {
 
 				// solve for "z" where z is on row 5
 
-				lv[3][row] = -x[0][2] / x[0][0];
-				lv[4][row] = -x[1][2] / x[1][1];
-				lv[5][row] = 1;
+				v[0][row] = -x[0][2] / x[0][0];
+				v[1][row] = -x[1][2] / x[1][1];
+				v[2][row] = 1;
 			}
 
 			// normalize by row
 
-			for (int row = 0; row < sig.length; row++) {
+			for (int row = 0; row < ata.length; row++) {
 
 				// determinant on vector
 
-				double det = Math.sqrt((lv[3][row] * lv[3][row])
-						+ (lv[4][row] * lv[4][row]) + 1);
-				lv[3][row] /= det;
-				lv[4][row] /= det;
-				lv[5][row] /= det;
+				double det = Math.sqrt((v[0][row] * v[0][row])
+						+ (v[1][row] * v[1][row]) + 1);
+				v[0][row] /= det;
+				v[1][row] /= det;
+				v[2][row] /= det;
 			}
 
 		} else
@@ -738,47 +720,33 @@ public class Decomposition {
 			throw new UnsupportedOperationException(
 					"Cannot handle matrices larger than 3 by 3");
 
-		double[][] usv = new double[a.length + acol + acol][acol];
-
 		// copy array v into array usv
 
-		for (int row = a.length + acol; row < a.length + acol + acol; row++)
-			for (int col = 0; col < acol; col++)
-				usv[row][col] = lv[row - a.length][col];
+		double[][] sigma = new double[ata.length][ata.length];
 
-		// copy array l into array usv
+		for (int row = 0; row < ata.length; row++)
+			for (int col = 0; col < ata.length; col++)
+				sigma[row][col] = Math.sqrt(l[row][col]);
 
-		for (int row = a.length; row < a.length + acol; row++)
-			for (int col = 0; col < acol; col++)
-				usv[row][col] = Math.sqrt(lv[row - a.length][col]);
+		double[][] sigmaInv = new double[ata.length][ata.length];
 
-		double[][] v = new double[acol][acol];
-
-		// find array v inside array lv
-
-		for (int row = 0; row < acol; row++)
-			for (int col = 0; col < acol; col++)
-				v[row][col] = lv[row + acol][col];
-
-		double[][] sigInv = new double[acol][acol];
-
-		for (int row = a.length; row < a.length + acol; row++)
-			for (int col = 0; col < acol; col++) {
-				if (usv[row][col] == 0)
+		for (int row = 0; row < ata.length; row++)
+			for (int col = 0; col < ata.length; col++) {
+				if (sigma[row][col] == 0)
 					// prevent divides by 0
-					sigInv[row - a.length][col] = 0;
+					sigmaInv[row][col] = 0;
 
 				else
 					// inverse is simple inverse since sigma is diagonal
-					sigInv[row - a.length][col] = 1 / usv[row][col];
+					sigmaInv[row][col] = 1 / sigma[row][col];
 			}
 
-		double[][] mul = new double[a.length][v[0].length];
+		double[][] av = new double[a.length][v[0].length];
 
 		// inline matrix multiply
 
-		for (int row = 0; row < mul.length; row++) {
-			for (int col = 0; col < mul[row].length; col++) {
+		for (int row = 0; row < av.length; row++) {
+			for (int col = 0; col < av[row].length; col++) {
 
 				// inline dot product
 
@@ -787,11 +755,11 @@ public class Decomposition {
 				for (int brow = 0; brow < v.length; brow++)
 					sum += a[row][brow] * v[brow][col];
 
-				mul[row][col] = sum;
+				av[row][col] = sum;
 			}
 		}
 
-		double[][] u = new double[mul.length][sigInv[0].length];
+		double[][] u = new double[av.length][sigmaInv[0].length];
 
 		// inline matrix multiply
 
@@ -802,22 +770,16 @@ public class Decomposition {
 
 				double sum = 0;
 
-				for (int brow = 0; brow < sigInv.length; brow++)
-					sum += mul[row][brow] * sigInv[brow][col];
+				for (int brow = 0; brow < sigmaInv.length; brow++)
+					sum += av[row][brow] * sigmaInv[brow][col];
 
 				u[row][col] = sum;
 			}
 		}
 
-		// copy array u into array usv
-
-		for (int row = 0; row < a.length; row++)
-			for (int col = 0; col < acol; col++)
-				usv[row][col] = u[row][col];
-
 		// 27 variables NOT counting any variable declared inside for loop
 
-		return usv;
+		return new double[][][] { u, sigma, v };
 	}
 
 }

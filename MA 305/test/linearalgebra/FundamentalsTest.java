@@ -564,18 +564,32 @@ public class FundamentalsTest {
 		// variables required for testing
 		double[][] a;
 		double[][] b;
+		double[][][] actualABX;
 		double[][] expectedX;
 		double[][] actualX;
-		double[][] testX = null;
+		double[][] expectedAB;
+		double[][] actualAB;
+		double[][][] testABX = null;
 
 		// first test on 3 by 3 and 3 by 1 arrays
 		a = new double[][] { new double[] { -3, 1, 2 },
 				new double[] { 9, -4, -8 }, new double[] { -9, 5, 8 } };
 		b = new double[][] { new double[] { -3 }, new double[] { 3 },
 				new double[] { 1 } };
-		expectedX = new double[][] { new double[] { 1, 0, 0, 3 },
-				new double[] { 0, 1, 0, 4 }, new double[] { 0, 0, 1, 1 } };
-		actualX = Fundamentals.gaussJordanMany(a, b);
+		expectedAB = new double[][] { new double[] { 1, 0, 0 },
+				new double[] { 0, 1, 0 }, new double[] { 0, 0, 1 } };
+		expectedX = new double[][] { new double[] { 3 }, new double[] { 4 },
+				new double[] { 1 } };
+		actualABX = Fundamentals.gaussJordanMany(a, b);
+		actualAB = actualABX[0];
+		actualX = actualABX[1];
+
+		assertEquals(expectedAB.length, actualAB.length);
+		for (int row = 0; row < expectedAB.length; row++) {
+			assertEquals(expectedAB[row].length, actualAB[row].length);
+			for (int col = 0; col < expectedAB[row].length; col++)
+				assertEquals(expectedAB[row][col], actualAB[row][col], DELTA);
+		}
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -589,9 +603,20 @@ public class FundamentalsTest {
 				new double[] { -4, 3, -2 }, new double[] { 4, 0, -2 } };
 		b = new double[][] { new double[] { -2 }, new double[] { -1 },
 				new double[] { 0 } };
-		expectedX = new double[][] { new double[] { 1, 0, 0, -1 },
-				new double[] { 0, 1, 0, -3 }, new double[] { 0, 0, 1, -2 } };
-		actualX = Fundamentals.gaussJordanMany(a, b);
+		expectedAB = new double[][] { new double[] { 1, 0, 0 },
+				new double[] { 0, 1, 0 }, new double[] { 0, 0, 1 } };
+		expectedX = new double[][] { new double[] { -1 }, new double[] { -3 },
+				new double[] { -2 } };
+		actualABX = Fundamentals.gaussJordanMany(a, b);
+		actualAB = actualABX[0];
+		actualX = actualABX[1];
+
+		assertEquals(expectedAB.length, actualAB.length);
+		for (int row = 0; row < expectedAB.length; row++) {
+			assertEquals(expectedAB[row].length, actualAB[row].length);
+			for (int col = 0; col < expectedAB[row].length; col++)
+				assertEquals(expectedAB[row][col], actualAB[row][col], DELTA);
+		}
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -605,9 +630,20 @@ public class FundamentalsTest {
 				new double[] { 4, 0, 4 }, new double[] { 16, -16, 0 } };
 		b = new double[][] { new double[] { 4 }, new double[] { 8 },
 				new double[] { 0 } };
-		expectedX = new double[][] { new double[] { 1, 0, -1, 2 },
-				new double[] { 0, 1, -1, 2 }, new double[] { 0, 0, 1, 0 } };
-		actualX = Fundamentals.gaussJordanMany(a, b);
+		expectedAB = new double[][] { new double[] { 1, 0, -1 },
+				new double[] { 0, 1, -1 }, new double[] { 0, 0, 1 } };
+		expectedX = new double[][] { new double[] { 2 }, new double[] { 2 },
+				new double[] { 0 } };
+		actualABX = Fundamentals.gaussJordanMany(a, b);
+		actualAB = actualABX[0];
+		actualX = actualABX[1];
+
+		assertEquals(expectedAB.length, actualAB.length);
+		for (int row = 0; row < expectedAB.length; row++) {
+			assertEquals(expectedAB[row].length, actualAB[row].length);
+			for (int col = 0; col < expectedAB[row].length; col++)
+				assertEquals(expectedAB[row][col], actualAB[row][col], DELTA);
+		}
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -621,9 +657,20 @@ public class FundamentalsTest {
 				new double[] { 6, 18, 12 }, new double[] { 2, 6, 4 } };
 		b = new double[][] { new double[] { -4 }, new double[] { 12 },
 				new double[] { 4 } };
-		expectedX = new double[][] { new double[] { 1, -3, -2, 2 },
-				new double[] { 0, 1, 0, 0 }, new double[] { 0, 0, 1, 0 } };
-		actualX = Fundamentals.gaussJordanMany(a, b);
+		expectedAB = new double[][] { new double[] { 1, -3, -2 },
+				new double[] { 0, 1, 0 }, new double[] { 0, 0, 1 } };
+		expectedX = new double[][] { new double[] { 2 }, new double[] { 0 },
+				new double[] { 0 } };
+		actualABX = Fundamentals.gaussJordanMany(a, b);
+		actualAB = actualABX[0];
+		actualX = actualABX[1];
+
+		assertEquals(expectedAB.length, actualAB.length);
+		for (int row = 0; row < expectedAB.length; row++) {
+			assertEquals(expectedAB[row].length, actualAB[row].length);
+			for (int col = 0; col < expectedAB[row].length; col++)
+				assertEquals(expectedAB[row][col], actualAB[row][col], DELTA);
+		}
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -638,10 +685,21 @@ public class FundamentalsTest {
 				new double[] { -2, -3, 6, -14 }, new double[] { 4, 0, 12, 16 } };
 		b = new double[][] { new double[] { -7 }, new double[] { 10 },
 				new double[] { 13 }, new double[] { -8 } };
-		expectedX = new double[][] { new double[] { 1, 0, -3, -4, -2 },
-				new double[] { 0, 1, 4, -2, -3 },
-				new double[] { 0, 0, 1, 0, 0 }, new double[] { 0, 0, 0, 1, 0 } };
-		actualX = Fundamentals.gaussJordanMany(a, b);
+		expectedAB = new double[][] { new double[] { 1, 0, -3, -4 },
+				new double[] { 0, 1, 4, -2 }, new double[] { 0, 0, 1, 0 },
+				new double[] { 0, 0, 0, 1 } };
+		expectedX = new double[][] { new double[] { -2 }, new double[] { -3 },
+				new double[] { 0 }, new double[] { 0 } };
+		actualABX = Fundamentals.gaussJordanMany(a, b);
+		actualAB = actualABX[0];
+		actualX = actualABX[1];
+
+		assertEquals(expectedAB.length, actualAB.length);
+		for (int row = 0; row < expectedAB.length; row++) {
+			assertEquals(expectedAB[row].length, actualAB[row].length);
+			for (int col = 0; col < expectedAB[row].length; col++)
+				assertEquals(expectedAB[row][col], actualAB[row][col], DELTA);
+		}
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -656,10 +714,21 @@ public class FundamentalsTest {
 				new double[] { 2, 6, 2, 2 } };
 		b = new double[][] { new double[] { -4 }, new double[] { -8 },
 				new double[] { 12 }, new double[] { -4 } };
-		expectedX = new double[][] { new double[] { 1, -3, -1, -1, -2 },
-				new double[] { 0, 1, 0, 0, 0 }, new double[] { 0, 0, 1, 0, 0 },
-				new double[] { 0, 0, 0, 1, 0 } };
-		actualX = Fundamentals.gaussJordanMany(a, b);
+		expectedAB = new double[][] { new double[] { 1, -3, -1, -1 },
+				new double[] { 0, 1, 0, 0 }, new double[] { 0, 0, 1, 0 },
+				new double[] { 0, 0, 0, 1 } };
+		expectedX = new double[][] { new double[] { -2 }, new double[] { 0 },
+				new double[] { 0 }, new double[] { 0 } };
+		actualABX = Fundamentals.gaussJordanMany(a, b);
+		actualAB = actualABX[0];
+		actualX = actualABX[1];
+
+		assertEquals(expectedAB.length, actualAB.length);
+		for (int row = 0; row < expectedAB.length; row++) {
+			assertEquals(expectedAB[row].length, actualAB[row].length);
+			for (int col = 0; col < expectedAB[row].length; col++)
+				assertEquals(expectedAB[row][col], actualAB[row][col], DELTA);
+		}
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -670,83 +739,83 @@ public class FundamentalsTest {
 
 		try {
 			// matrix a is null
-			testX = Fundamentals.gaussJordanMany(null, new double[][] {});
+			testABX = Fundamentals.gaussJordanMany(null, new double[][] {});
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// matrix b is null
-			testX = Fundamentals.gaussJordanMany(new double[][] {}, null);
+			testABX = Fundamentals.gaussJordanMany(new double[][] {}, null);
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// matrix a and b do not have equal number of rows
-			testX = Fundamentals.gaussJordanMany(
+			testABX = Fundamentals.gaussJordanMany(
 					new double[][] { new double[] {} }, new double[][] {});
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// matrix a does contain null column
-			testX = Fundamentals.gaussJordanMany(new double[][] { null },
+			testABX = Fundamentals.gaussJordanMany(new double[][] { null },
 					new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// matrix b does contain null column
-			testX = Fundamentals
+			testABX = Fundamentals
 					.gaussJordanMany(new double[][] { new double[] {} },
 							new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// matrix a row width does not remain constant
-			testX = Fundamentals.gaussJordanMany(new double[][] {
+			testABX = Fundamentals.gaussJordanMany(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0 } },
 					new double[][] { new double[] {}, new double[] {} });
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// matrix b row width does not remain constant
-			testX = Fundamentals.gaussJordanMany(new double[][] {
+			testABX = Fundamentals.gaussJordanMany(new double[][] {
 					new double[] { 0 }, new double[] { 0 } }, new double[][] {
 					new double[] { 0, 0 }, new double[] { 0 } });
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// no solution exists
-			testX = Fundamentals.gaussJordanMany(new double[][] {
+			testABX = Fundamentals.gaussJordanMany(new double[][] {
 					new double[] { -2, 6, -4 }, new double[] { 2, -4, 2 },
 					new double[] { 2, -4, 2 } }, new double[][] {
 					new double[] { -8 }, new double[] { -6 },
 					new double[] { -2 } });
 			fail();
 		} catch (ArithmeticException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// no solution exists
-			testX = Fundamentals.gaussJordanMany(new double[][] {
+			testABX = Fundamentals.gaussJordanMany(new double[][] {
 					new double[] { 3, 2, -2, 8 },
 					new double[] { 12, 7, -12, 19 },
 					new double[] { -12, -6, 18, 0 },
@@ -755,12 +824,12 @@ public class FundamentalsTest {
 					new double[] { -6 }, new double[] { 2 } });
 			fail();
 		} catch (ArithmeticException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 
 		try {
 			// no solution exists
-			testX = Fundamentals.gaussJordanMany(new double[][] {
+			testABX = Fundamentals.gaussJordanMany(new double[][] {
 					new double[] { -2, 2, 2, -4 },
 					new double[] { 2, -2, -2, 4 },
 					new double[] { 8, -8, -8, 16 },
@@ -769,7 +838,7 @@ public class FundamentalsTest {
 					new double[] { -8 }, new double[] { -4 } });
 			fail();
 		} catch (ArithmeticException ex) {
-			assertNull(testX);
+			assertNull(testABX);
 		}
 	}
 
