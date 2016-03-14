@@ -216,7 +216,10 @@ public class Fundamentals {
 	 * array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@link Fundamentals#forwardEliminate(double[][])}.
+	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row,
+	 * {@code (a.length > acol)} where length is number rows and acol is number
+	 * of columns on first row, or {@code (acol != a[row].length)} where acol is
+	 * number of columns on first row and a[row].length is number of columns.
 	 * 
 	 * @param a
 	 *            n by m array of double
@@ -308,7 +311,13 @@ public class Fundamentals {
 	 * by 1 array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@link Fundamentals#augment(double[][], double[][])},
+	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+	 * where length is number of rows, {@code (null == a[row])} where a[row] is
+	 * any row, {@code (null == b[row])} where b[row] is any row,
+	 * {@code (acol != a[row].length)} where acol is number of columns on first
+	 * row and a[row].length is number of columns, or
+	 * {@code (bcol != b[row].length)} where bcol is number of columns on first
+	 * row and b[row].length is number of columns on any row,
 	 * {@code (a.length != a[row].length)} where length is number of rows and
 	 * a[row].length is number of columns on any row, or
 	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
@@ -439,7 +448,17 @@ public class Fundamentals {
 	 * equals b. Returns array of n by n and n by 1 array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@link Fundamentals#gaussJordan(double[][], double[][])}.
+	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+	 * where length is number of rows, {@code (null == a[row])} where a[row] is
+	 * any row, {@code (null == b[row])} where b[row] is any row,
+	 * {@code (acol != a[row].length)} where acol is number of columns on first
+	 * row and a[row].length is number of columns, or
+	 * {@code (bcol != b[row].length)} where bcol is number of columns on first
+	 * row and b[row].length is number of columns on any row,
+	 * {@code (a.length != a[row].length)} where length is number of rows and
+	 * a[row].length is number of columns on any row, or
+	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
+	 * any row.
 	 * 
 	 * Throws ArithmeticException if there are no solutions for x.
 	 * 
@@ -581,7 +600,13 @@ public class Fundamentals {
 	 * by 1 array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@link Fundamentals#augment(double[][], double[][])}.
+	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+	 * where length is number of rows, {@code (null == a[row])} where a[row] is
+	 * any row, {@code (null == b[row])} where b[row] is any row,
+	 * {@code (acol != a[row].length)} where acol is number of columns on first
+	 * row and a[row].length is number of columns, or
+	 * {@code (bcol != b[row].length)} where bcol is number of columns on first
+	 * row and b[row].length is number of columns on any row.
 	 * 
 	 * @param a
 	 *            n by n array of double
@@ -617,37 +642,7 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix b must contain only one column");
 
-		// inline determinant
-
-		double denominator;
-
-		if (a.length == 0)
-			denominator = 0;
-
-		else if (a.length == 1)
-			denominator = a[0][0];
-
-		else if (a.length == 2)
-			denominator = a[0][0] * a[1][1] - a[0][1] * a[1][0];
-
-		else if (a.length == 3)
-			denominator = (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
-					- (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
-					+ (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
-
-		else {
-			denominator = 0;
-
-			for (int col = 0; col < a.length; col++) {
-				if (col % 2 == 0)
-					denominator += a[0][col]
-							* Matrices.determinant(Matrices.minor(a, 0, col));
-
-				else
-					denominator -= a[0][col]
-							* Matrices.determinant(Matrices.minor(a, 0, col));
-			}
-		}
+		double denominator = Matrices.determinant(a);
 
 		double[][] cramer = new double[a.length][1];
 
@@ -675,7 +670,9 @@ public class Fundamentals {
 	 * identity matrix. Returns n by n array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@link Matrices#determinant(double[][])}.
+	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
+	 * {@code (a.length != a[row].length)} where length is number of rows and
+	 * a[row].length is number of columns on any row.
 	 * 
 	 * Throws ArithmeticException if any of the following is true:
 	 * {@code (determinant == 0)} where determinant is computed from matrix a.
@@ -697,39 +694,7 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix a number of rows and columns must be equal");
 
-		// inline determinant
-
-		double determinant;
-
-		if (a.length == 0)
-			determinant = 0;
-
-		else if (a.length == 1)
-			determinant = a[0][0];
-
-		else if (a.length == 2)
-			determinant = a[0][0] * a[1][1] - a[0][1] * a[1][0];
-
-		else if (a.length == 3)
-			determinant = (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
-					- (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
-					+ (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
-
-		else {
-			determinant = 0;
-
-			for (int col = 0; col < a.length; col++) {
-				double minorDet = Matrices.determinant(Matrices
-						.minor(a, 0, col));
-
-				if (col % 2 == 0)
-					determinant += a[0][col] * minorDet;
-
-				else
-					determinant -= a[0][col] * minorDet;
-			}
-		}
-
+		double determinant = Matrices.determinant(a);
 		if (determinant == 0)
 			// matrix is singular
 			throw new ArithmeticException("divide by 0");
@@ -738,7 +703,26 @@ public class Fundamentals {
 
 		for (int row = 0; row < a.length; row++)
 			for (int col = 0; col < a.length; col++) {
-				double det = Matrices.determinant(Matrices.minor(a, row, col));
+
+				// inline matrix minor
+
+				double[][] minor = new double[a.length - 1][a.length - 1];
+
+				for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
+					if (row == mrow)
+						// ignore row being skipped and access new row
+						srow++;
+
+					for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
+						if (col == mcol)
+							// ignore column being skipped and access new col
+							scol++;
+
+						minor[mrow][mcol] = a[srow][scol];
+					}
+				}
+
+				double det = Matrices.determinant(minor);
 
 				if ((row + col) % 2 == 0)
 					adjugate[col][row] = det;

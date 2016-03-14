@@ -64,11 +64,26 @@ public class Matrices {
 		double determinant = 0;
 
 		for (int col = 0; col < a.length; col++) {
+
+			// inline matrix minor where skipRow eqauls 0
+
+			double[][] minor = new double[a.length - 1][a.length - 1];
+
+			for (int row = 0; row < minor.length; row++) {
+				for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
+					if (col == mcol)
+						// ignore column being skipped and access new col
+						scol++;
+
+					minor[row][mcol] = a[row + 1][scol];
+				}
+			}
+
 			if (col % 2 == 0)
-				determinant += a[0][col] * determinant(minor(a, 0, col));
+				determinant += a[0][col] * determinant(minor);
 
 			else
-				determinant -= a[0][col] * determinant(minor(a, 0, col));
+				determinant -= a[0][col] * determinant(minor);
 		}
 
 		// other dimensional "sofu"
@@ -170,13 +185,14 @@ public class Matrices {
 
 		for (int row = 0, srow = 0; row < minor.length; row++, srow++) {
 			if (skipRow == row)
-				// ignore row being skipped and access a from new row
+				// ignore row being skipped and access new row
 				srow++;
 
 			for (int col = 0, scol = 0; col < minor.length; col++, scol++) {
 				if (skipCol == col)
-					// ignore column being skipped and access a from new col
+					// ignore column being skipped and access new col
 					scol++;
+
 				minor[row][col] = a[srow][scol];
 			}
 		}
@@ -304,7 +320,9 @@ public class Matrices {
 	 * space with m components.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@link Matrices#transpose(double[][])}.
+	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
+	 * {@code (acol != a[row].length)} where acol is number of columns on first
+	 * row and a[row].length is number of columns.
 	 * 
 	 * @param a
 	 *            n by m array of double
@@ -346,36 +364,7 @@ public class Matrices {
 			}
 		}
 
-		// inline determinant whose result is placed under square root
-
-		if (mul.length == 0)
-			return 0;
-
-		else if (mul.length == 1)
-			return Math.sqrt(mul[0][0]);
-
-		else if (mul.length == 2)
-			return Math.sqrt(mul[0][0] * mul[1][1] - mul[0][1] * mul[1][0]);
-
-		else if (a.length == 3)
-			return Math.sqrt((mul[0][0] * (mul[1][1] * mul[2][2] - mul[1][2]
-					* mul[2][1]))
-					- (mul[0][1] * (mul[1][0] * mul[2][2] - mul[1][2]
-							* mul[2][0]))
-					+ (mul[0][2] * (mul[1][0] * mul[2][1] - mul[1][1]
-							* mul[2][0])));
-
-		double determinant = 0;
-
-		for (int col = 0; col < mul.length; col++) {
-			if (col % 2 == 0)
-				determinant += mul[0][col] * determinant(minor(mul, 0, col));
-
-			else
-				determinant -= mul[0][col] * determinant(minor(mul, 0, col));
-		}
-
-		return Math.sqrt(determinant);
+		return Math.sqrt(determinant(mul));
 	}
 
 }
