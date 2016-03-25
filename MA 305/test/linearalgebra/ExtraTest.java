@@ -266,6 +266,33 @@ public class ExtraTest {
 				assertEquals(b[row][col], actualAX[row][col], DELTA);
 		}
 
+		// second test on 3 by 4 and 3 by 1 arrays
+		a = new double[][] { new double[] { 4, -3, -1, 1 },
+				new double[] { -4, -3, -1, -3 }, new double[] { 4, 2, 3, 3 } };
+		b = new double[][] { new double[] { 3 }, new double[] { 1 },
+				new double[] { -1 } };
+		expectedX = new double[][] { new double[] { 0.279 },
+				new double[] { -0.555 }, new double[] { -0.277 },
+				new double[] { -0.058 } };
+		actualX = Extra.underconstrained(a, b);
+
+		assertEquals(expectedX.length, actualX.length);
+		for (int row = 0; row < expectedX.length; row++) {
+			assertEquals(expectedX[row].length, actualX[row].length);
+			for (int col = 0; col < expectedX[row].length; col++)
+				assertEquals(expectedX[row][col], actualX[row][col], DELTA);
+		}
+
+		actualAX = Matrices.multiply(a, actualX);
+		assertEquals(b.length, actualAX.length);
+		assertEquals(b.length, b.length);
+		for (int row = 0; row < b.length; row++) {
+			assertEquals(b[row].length, actualAX[row].length);
+			assertEquals(b[row].length, b[row].length);
+			for (int col = 0; col < b[row].length; col++)
+				assertEquals(b[row][col], actualAX[row][col], DELTA);
+		}
+
 		try {
 			// matrix a is null
 			testX = Extra.underconstrained(null, b);
