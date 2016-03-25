@@ -719,17 +719,17 @@ public class Decomposition {
 			for (int col = 0; col < ata.length; col++)
 				sigma[row][col] = Math.sqrt(l[row][col]);
 
-		double[][] sigmaInv = new double[ata.length][ata.length];
+		double[][] inverse = new double[ata.length][ata.length];
 
 		for (int row = 0; row < ata.length; row++)
 			for (int col = 0; col < ata.length; col++) {
 				if (sigma[row][col] == 0)
 					// prevent divides by 0
-					sigmaInv[row][col] = 0;
+					inverse[row][col] = 0;
 
 				else
 					// inverse is simple inverse since sigma is diagonal
-					sigmaInv[row][col] = 1 / sigma[row][col];
+					inverse[row][col] = 1 / sigma[row][col];
 			}
 
 		// inline matrix multiply
@@ -752,7 +752,7 @@ public class Decomposition {
 
 		// inline matrix multiply
 
-		double[][] u = new double[av.length][sigmaInv[0].length];
+		double[][] u = new double[av.length][inverse[0].length];
 
 		for (int row = 0; row < u.length; row++) {
 			for (int col = 0; col < u[row].length; col++) {
@@ -761,8 +761,8 @@ public class Decomposition {
 
 				double sum = 0;
 
-				for (int brow = 0; brow < sigmaInv.length; brow++)
-					sum += av[row][brow] * sigmaInv[brow][col];
+				for (int brow = 0; brow < inverse.length; brow++)
+					sum += av[row][brow] * inverse[brow][col];
 
 				u[row][col] = sum;
 			}

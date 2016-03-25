@@ -349,10 +349,10 @@ public class Matrices {
 
 		// inline matrix multiplication
 
-		double[][] mul = new double[a[0].length][a[0].length];
+		double[][] ata = new double[a[0].length][a[0].length];
 
-		for (int row = 0; row < mul.length; row++) {
-			for (int col = 0; col < mul[row].length; col++) {
+		for (int row = 0; row < ata.length; row++) {
+			for (int col = 0; col < ata[row].length; col++) {
 				double sum = 0;
 
 				for (int brow = 0; brow < a.length; brow++)
@@ -360,11 +360,11 @@ public class Matrices {
 					// column becomes row
 					sum += a[brow][row] * a[brow][col];
 
-				mul[row][col] = sum;
+				ata[row][col] = sum;
 			}
 		}
 
-		return Math.sqrt(determinant(mul));
+		return Math.sqrt(determinant(ata));
 	}
 
 }

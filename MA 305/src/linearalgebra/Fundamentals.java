@@ -694,42 +694,102 @@ public class Fundamentals {
 				throw new IllegalArgumentException(
 						"matrix a number of rows and columns must be equal");
 
-		double determinant = Matrices.determinant(a);
-		if (determinant == 0)
+		double[][] adjugate = new double[a.length][a.length];
+		double determinant = 0;
+
+		if (a.length == 0) {
+
+			// inline matrix determinant on point
+
 			// matrix is singular
 			throw new ArithmeticException("divide by 0");
 
-		double[][] adjugate = new double[a.length][a.length];
+		} else if (a.length == 1) {
 
-		for (int row = 0; row < a.length; row++)
-			for (int col = 0; col < a.length; col++) {
+			// inline matrix determinant on line
 
-				// inline matrix minor
+			determinant = a[0][0];
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
 
-				double[][] minor = new double[a.length - 1][a.length - 1];
+			adjugate[0][0] = 1;
 
-				for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
-					if (row == mrow)
-						// ignore row being skipped and access new row
-						srow++;
+		} else if (a.length == 2) {
 
-					for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
-						if (col == mcol)
-							// ignore column being skipped and access new col
-							scol++;
+			// inline matrix determinant on vectors
 
-						minor[mrow][mcol] = a[srow][scol];
+			determinant = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			adjugate[0][0] = a[1][1];
+			adjugate[0][1] = -a[0][1];
+			adjugate[1][0] = -a[1][0];
+			adjugate[1][1] = a[0][0];
+
+		} else if (a.length == 3) {
+
+			// inline matrix determinant on triple product of vectors
+
+			determinant = (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
+					- (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
+					+ (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			// multiple inline matrix determinants on vectors
+
+			adjugate[0][0] = (a[1][1] * a[2][2] - a[1][2] * a[2][1]);
+			adjugate[0][1] = -(a[0][1] * a[2][2] - a[0][2] * a[2][1]);
+			adjugate[0][2] = (a[0][1] * a[1][2] - a[0][2] * a[1][1]);
+			adjugate[1][0] = -(a[1][0] * a[2][2] - a[1][2] * a[2][0]);
+			adjugate[1][1] = (a[0][0] * a[2][2] - a[0][2] * a[2][0]);
+			adjugate[1][2] = -(a[0][0] * a[1][2] - a[0][2] * a[1][0]);
+			adjugate[2][0] = (a[1][0] * a[2][1] - a[1][1] * a[2][0]);
+			adjugate[2][1] = -(a[0][0] * a[2][1] - a[0][1] * a[2][0]);
+			adjugate[2][2] = (a[0][0] * a[1][1] - a[0][1] * a[1][0]);
+
+		} else {
+
+			determinant = Matrices.determinant(a);
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			for (int row = 0; row < a.length; row++)
+				for (int col = 0; col < a.length; col++) {
+
+					// inline matrix minor
+
+					double[][] minor = new double[a.length - 1][a.length - 1];
+
+					for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
+						if (row == mrow)
+							// ignore row being skipped and access new row
+							srow++;
+
+						for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
+							if (col == mcol)
+								// ignore column being skipped and access new
+								// col
+								scol++;
+
+							minor[mrow][mcol] = a[srow][scol];
+						}
 					}
+
+					double det = Matrices.determinant(minor);
+
+					if ((row + col) % 2 == 0)
+						adjugate[col][row] = det;
+
+					else
+						adjugate[col][row] = -det;
 				}
-
-				double det = Matrices.determinant(minor);
-
-				if ((row + col) % 2 == 0)
-					adjugate[col][row] = det;
-
-				else
-					adjugate[col][row] = -det;
-			}
+		}
 
 		// divide adjugate elements by determinant
 

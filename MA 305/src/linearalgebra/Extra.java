@@ -99,66 +99,129 @@ public class Extra {
 
 		// inline invert
 
-		double determinant = Matrices.determinant(ata);
-		if (determinant == 0)
+		double[][] adjugate = new double[ata.length][ata.length];
+		double determinant = 0;
+
+		if (ata.length == 0) {
+
+			// inline matrix determinant on point
+
 			// matrix is singular
 			throw new ArithmeticException("divide by 0");
 
-		double[][] ataInv = new double[acol][acol];
+		} else if (ata.length == 1) {
 
-		for (int row = 0; row < ata.length; row++)
-			for (int col = 0; col < ata.length; col++) {
+			// inline matrix determinant on line
 
-				// inline matrix minor
+			determinant = ata[0][0];
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
 
-				double[][] minor = new double[ata.length - 1][ata.length - 1];
+			adjugate[0][0] = 1;
 
-				for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
-					if (row == mrow)
-						// ignore row being skipped and access new row
-						srow++;
+		} else if (ata.length == 2) {
 
-					for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
-						if (col == mcol)
-							// ignore column being skipped and access new col
-							scol++;
+			// inline matrix determinant on vectors
 
-						minor[mrow][mcol] = ata[srow][scol];
+			determinant = ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0];
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			adjugate[0][0] = ata[1][1];
+			adjugate[0][1] = -ata[0][1];
+			adjugate[1][0] = -ata[1][0];
+			adjugate[1][1] = ata[0][0];
+
+		} else if (ata.length == 3) {
+
+			// inline matrix determinant on triple product of vectors
+
+			determinant = (ata[0][0] * (ata[1][1] * ata[2][2] - ata[1][2]
+					* ata[2][1]))
+					- (ata[0][1] * (ata[1][0] * ata[2][2] - ata[1][2]
+							* ata[2][0]))
+					+ (ata[0][2] * (ata[1][0] * ata[2][1] - ata[1][1]
+							* ata[2][0]));
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			// multiple inline matrix determinants on vectors
+
+			adjugate[0][0] = (ata[1][1] * ata[2][2] - ata[1][2] * ata[2][1]);
+			adjugate[0][1] = -(ata[0][1] * ata[2][2] - ata[0][2] * ata[2][1]);
+			adjugate[0][2] = (ata[0][1] * ata[1][2] - ata[0][2] * ata[1][1]);
+			adjugate[1][0] = -(ata[1][0] * ata[2][2] - ata[1][2] * ata[2][0]);
+			adjugate[1][1] = (ata[0][0] * ata[2][2] - ata[0][2] * ata[2][0]);
+			adjugate[1][2] = -(ata[0][0] * ata[1][2] - ata[0][2] * ata[1][0]);
+			adjugate[2][0] = (ata[1][0] * ata[2][1] - ata[1][1] * ata[2][0]);
+			adjugate[2][1] = -(ata[0][0] * ata[2][1] - ata[0][1] * ata[2][0]);
+			adjugate[2][2] = (ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0]);
+
+		} else {
+
+			determinant = Matrices.determinant(ata);
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			for (int row = 0; row < ata.length; row++)
+				for (int col = 0; col < ata.length; col++) {
+
+					// inline matrix minor
+
+					double[][] minor = new double[ata.length - 1][ata.length - 1];
+
+					for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
+						if (row == mrow)
+							// ignore row being skipped and access new row
+							srow++;
+
+						for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
+							if (col == mcol)
+								// ignore column being skipped and access new
+								// col
+								scol++;
+
+							minor[mrow][mcol] = ata[srow][scol];
+						}
 					}
+
+					double det = Matrices.determinant(minor);
+
+					if ((row + col) % 2 == 0)
+						adjugate[col][row] = det;
+
+					else
+						adjugate[col][row] = -det;
 				}
-
-				double det = Matrices.determinant(minor);
-
-				if ((row + col) % 2 == 0)
-					ataInv[col][row] = det;
-
-				else
-					ataInv[col][row] = -det;
-			}
+		}
 
 		// divide adjugate elements by determinant
 
 		for (int row = 0; row < ata.length; row++)
 			for (int col = 0; col < ata.length; col++)
-				ataInv[row][col] /= determinant;
+				adjugate[row][col] /= determinant;
 
 		// inline matrix multiply
 
-		double[][] ataInvat = new double[acol][a.length];
+		double[][] adjugateAt = new double[acol][a.length];
 
 		// find dot products of every row and column combination
 
-		for (int row = 0; row < ataInvat.length; row++) {
-			for (int col = 0; col < ataInvat[row].length; col++) {
+		for (int row = 0; row < adjugateAt.length; row++) {
+			for (int col = 0; col < adjugateAt[row].length; col++) {
 
 				// inline dot product
 
 				double sum = 0;
 
 				for (int brow = 0; brow < acol; brow++)
-					sum += ataInv[row][brow] * a[col][brow];
+					sum += adjugate[row][brow] * a[col][brow];
 
-				ataInvat[row][col] = sum;
+				adjugateAt[row][col] = sum;
 			}
 		}
 
@@ -175,7 +238,7 @@ public class Extra {
 			double sum = 0;
 
 			for (int brow = 0; brow < b.length; brow++)
-				sum += ataInvat[row][brow] * b[brow][0];
+				sum += adjugateAt[row][brow] * b[brow][0];
 
 			x[row][0] = sum;
 		}
@@ -286,72 +349,135 @@ public class Extra {
 
 		// inline invert
 
-		double determinant = Matrices.determinant(aat);
-		if (determinant == 0)
+		double[][] adjugate = new double[aat.length][aat.length];
+		double determinant = 0;
+
+		if (aat.length == 0) {
+
+			// inline matrix determinant on point
+
 			// matrix is singular
 			throw new ArithmeticException("divide by 0");
 
-		double[][] aatInv = new double[aat.length][aat.length];
+		} else if (aat.length == 1) {
 
-		for (int row = 0; row < aat.length; row++)
-			for (int col = 0; col < aat.length; col++) {
+			// inline matrix determinant on line
 
-				// inline matrix minor
+			determinant = aat[0][0];
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
 
-				double[][] minor = new double[aat.length - 1][aat.length - 1];
+			adjugate[0][0] = 1;
 
-				for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
-					if (row == mrow)
-						// ignore row being skipped and access new row
-						srow++;
+		} else if (aat.length == 2) {
 
-					for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
-						if (col == mcol)
-							// ignore column being skipped and access new col
-							scol++;
+			// inline matrix determinant on vectors
 
-						minor[mrow][mcol] = aat[srow][scol];
+			determinant = aat[0][0] * aat[1][1] - aat[0][1] * aat[1][0];
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			adjugate[0][0] = aat[1][1];
+			adjugate[0][1] = -aat[0][1];
+			adjugate[1][0] = -aat[1][0];
+			adjugate[1][1] = aat[0][0];
+
+		} else if (aat.length == 3) {
+
+			// inline matrix determinant on triple product of vectors
+
+			determinant = (aat[0][0] * (aat[1][1] * aat[2][2] - aat[1][2]
+					* aat[2][1]))
+					- (aat[0][1] * (aat[1][0] * aat[2][2] - aat[1][2]
+							* aat[2][0]))
+					+ (aat[0][2] * (aat[1][0] * aat[2][1] - aat[1][1]
+							* aat[2][0]));
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			// multiple inline matrix determinants on vectors
+
+			adjugate[0][0] = (aat[1][1] * aat[2][2] - aat[1][2] * aat[2][1]);
+			adjugate[0][1] = -(aat[0][1] * aat[2][2] - aat[0][2] * aat[2][1]);
+			adjugate[0][2] = (aat[0][1] * aat[1][2] - aat[0][2] * aat[1][1]);
+			adjugate[1][0] = -(aat[1][0] * aat[2][2] - aat[1][2] * aat[2][0]);
+			adjugate[1][1] = (aat[0][0] * aat[2][2] - aat[0][2] * aat[2][0]);
+			adjugate[1][2] = -(aat[0][0] * aat[1][2] - aat[0][2] * aat[1][0]);
+			adjugate[2][0] = (aat[1][0] * aat[2][1] - aat[1][1] * aat[2][0]);
+			adjugate[2][1] = -(aat[0][0] * aat[2][1] - aat[0][1] * aat[2][0]);
+			adjugate[2][2] = (aat[0][0] * aat[1][1] - aat[0][1] * aat[1][0]);
+
+		} else {
+
+			determinant = Matrices.determinant(aat);
+			if (determinant == 0)
+				// matrix is singular
+				throw new ArithmeticException("divide by 0");
+
+			for (int row = 0; row < aat.length; row++)
+				for (int col = 0; col < aat.length; col++) {
+
+					// inline matrix minor
+
+					double[][] minor = new double[aat.length - 1][aat.length - 1];
+
+					for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
+						if (row == mrow)
+							// ignore row being skipped and access new row
+							srow++;
+
+						for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
+							if (col == mcol)
+								// ignore column being skipped and access new
+								// col
+								scol++;
+
+							minor[mrow][mcol] = aat[srow][scol];
+						}
 					}
+
+					double det = Matrices.determinant(minor);
+
+					if ((row + col) % 2 == 0)
+						adjugate[col][row] = det;
+
+					else
+						adjugate[col][row] = -det;
 				}
-
-				double det = Matrices.determinant(minor);
-
-				if ((row + col) % 2 == 0)
-					aatInv[col][row] = det;
-
-				else
-					aatInv[col][row] = -det;
-			}
+		}
 
 		// divide adjugate elements by determinant
 
 		for (int row = 0; row < aat.length; row++)
 			for (int col = 0; col < aat.length; col++)
-				aatInv[row][col] /= determinant;
+				adjugate[row][col] /= determinant;
 
 		// inline matrix multiply
 
-		double[][] ataatInv = new double[a[0].length][aat.length];
+		double[][] atAdjugate = new double[a[0].length][aat.length];
 
 		// find dot products of every row and column combination
 
-		for (int row = 0; row < ataatInv.length; row++) {
-			for (int col = 0; col < ataatInv[row].length; col++) {
+		for (int row = 0; row < atAdjugate.length; row++) {
+			for (int col = 0; col < atAdjugate[row].length; col++) {
 
 				// inline dot product
 
 				double sum = 0;
 
-				for (int brow = 0; brow < aatInv.length; brow++)
-					sum += a[brow][row] * aatInv[brow][col];
+				for (int brow = 0; brow < adjugate.length; brow++)
+					sum += a[brow][row] * adjugate[brow][col];
 
-				ataatInv[row][col] = sum;
+				atAdjugate[row][col] = sum;
 			}
 		}
 
 		// inline matrix multiply on vector
 
-		double[][] x = new double[ataatInv.length][1];
+		double[][] x = new double[atAdjugate.length][1];
 
 		// find dot products of every row and column combination
 
@@ -362,7 +488,7 @@ public class Extra {
 			double sum = 0;
 
 			for (int brow = 0; brow < b.length; brow++)
-				sum += ataatInv[row][brow] * b[brow][0];
+				sum += atAdjugate[row][brow] * b[brow][0];
 
 			x[row][0] = sum;
 		}
