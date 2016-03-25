@@ -507,9 +507,9 @@ public class Decomposition {
 				// row becomes column; column becomes row
 				at[col][row] = a[row][col];
 
-		double[][] ata = new double[acol][acol];
-
 		// inline matrix multiplication
+
+		double[][] ata = new double[acol][acol];
 
 		for (int row = 0; row < ata.length; row++) {
 			for (int col = 0; col < ata[row].length; col++) {
@@ -741,9 +741,9 @@ public class Decomposition {
 					sigmaInv[row][col] = 1 / sigma[row][col];
 			}
 
-		double[][] av = new double[a.length][v[0].length];
-
 		// inline matrix multiply
+
+		double[][] av = new double[a.length][v[0].length];
 
 		for (int row = 0; row < av.length; row++) {
 			for (int col = 0; col < av[row].length; col++) {
@@ -759,9 +759,9 @@ public class Decomposition {
 			}
 		}
 
-		double[][] u = new double[av.length][sigmaInv[0].length];
-
 		// inline matrix multiply
+
+		double[][] u = new double[av.length][sigmaInv[0].length];
 
 		for (int row = 0; row < u.length; row++) {
 			for (int col = 0; col < u[row].length; col++) {

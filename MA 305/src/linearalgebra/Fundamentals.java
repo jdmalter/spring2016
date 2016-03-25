@@ -315,7 +315,7 @@ public class Fundamentals {
 	 * where length is number of rows, {@code (null == a[row])} where a[row] is
 	 * any row, {@code (null == b[row])} where b[row] is any row,
 	 * {@code (acol != a[row].length)} where acol is number of columns on first
-	 * row and a[row].length is number of columns, or
+	 * row and a[row].length is number of columns,
 	 * {@code (bcol != b[row].length)} where bcol is number of columns on first
 	 * row and b[row].length is number of columns on any row,
 	 * {@code (a.length != a[row].length)} where length is number of rows and
@@ -452,7 +452,7 @@ public class Fundamentals {
 	 * where length is number of rows, {@code (null == a[row])} where a[row] is
 	 * any row, {@code (null == b[row])} where b[row] is any row,
 	 * {@code (acol != a[row].length)} where acol is number of columns on first
-	 * row and a[row].length is number of columns, or
+	 * row and a[row].length is number of columns,
 	 * {@code (bcol != b[row].length)} where bcol is number of columns on first
 	 * row and b[row].length is number of columns on any row,
 	 * {@code (a.length != a[row].length)} where length is number of rows and
