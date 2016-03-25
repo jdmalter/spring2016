@@ -347,7 +347,7 @@ public class Matrices {
 				throw new IllegalArgumentException(
 						"matrix a row width must remain constant");
 
-		// inline matrix multiplication
+		// inline matrix multiply and tranpose
 
 		double[][] ata = new double[a[0].length][a[0].length];
 
@@ -356,8 +356,6 @@ public class Matrices {
 				double sum = 0;
 
 				for (int brow = 0; brow < a.length; brow++)
-					// implicit tranpose going on where row become column and
-					// column becomes row
 					sum += a[brow][row] * a[brow][col];
 
 				ata[row][col] = sum;

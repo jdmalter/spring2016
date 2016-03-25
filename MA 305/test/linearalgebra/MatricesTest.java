@@ -452,57 +452,57 @@ public class MatricesTest {
 	public void testSofu() {
 		// variables required for testing
 		double[][] a;
-		double expectedVol;
-		double actualVol;
-		double testVol = 0;
+		double expectedSofu;
+		double actualSofu;
+		double testSofu = 0;
 
 		// first test on 2 by 1 array
 		a = new double[][] { new double[] { 3 }, new double[] { -4 } };
-		expectedVol = 5;
-		actualVol = Matrices.sofu(a);
+		expectedSofu = 5;
+		actualSofu = Matrices.sofu(a);
 
-		assertEquals(expectedVol, actualVol, DELTA);
+		assertEquals(expectedSofu, actualSofu, DELTA);
 
 		// second test on 3 by 2 array
 		a = new double[][] { new double[] { -2, -4 }, new double[] { 3, 1 },
 				new double[] { 2, -1 } };
-		expectedVol = 15;
-		actualVol = Matrices.sofu(a);
+		expectedSofu = 15;
+		actualSofu = Matrices.sofu(a);
 
-		assertEquals(expectedVol, actualVol, DELTA);
+		assertEquals(expectedSofu, actualSofu, DELTA);
 
 		// third test on 4 by 5 array
 		a = new double[][] { new double[] { -2, 2, -4, 1 },
 				new double[] { -1, -4, -1, -1 }, new double[] { 5, 4, -4, 4 },
 				new double[] { -2, 1, -2, 1 }, new double[] { -3, 3, 5, -5 } };
-		expectedVol = 526.49786324352732362438329844498;
-		actualVol = Matrices.sofu(a);
+		expectedSofu = 526.49786324352732362438329844498;
+		actualSofu = Matrices.sofu(a);
 
-		assertEquals(expectedVol, actualVol, DELTA);
+		assertEquals(expectedSofu, actualSofu, DELTA);
 
 		try {
 			// matrix a is null
-			testVol = Matrices.sofu(null);
+			testSofu = Matrices.sofu(null);
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertEquals(0, testVol, DELTA);
+			assertEquals(0, testSofu, DELTA);
 		}
 
 		try {
 			// matrix a does contain null column
-			testVol = Matrices.sofu(new double[][] { null });
+			testSofu = Matrices.sofu(new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertEquals(0, testVol, DELTA);
+			assertEquals(0, testSofu, DELTA);
 		}
 
 		try {
 			// matrix a row width does not remain constant
-			testVol = Matrices.sofu(new double[][] { new double[] { 0, 0 },
+			testSofu = Matrices.sofu(new double[][] { new double[] { 0, 0 },
 					new double[] { 0 } });
 			fail();
 		} catch (IllegalArgumentException ex) {
-			assertEquals(0, testVol, DELTA);
+			assertEquals(0, testSofu, DELTA);
 		}
 	}
 
