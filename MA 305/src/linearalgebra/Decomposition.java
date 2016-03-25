@@ -498,16 +498,7 @@ public class Decomposition {
 				throw new IllegalArgumentException(
 						"matrix a row width must remain constant");
 
-		// inline tranpose
-
-		double[][] at = new double[acol][a.length];
-
-		for (int row = 0; row < a.length; row++)
-			for (int col = 0; col < acol; col++)
-				// row becomes column; column becomes row
-				at[col][row] = a[row][col];
-
-		// inline matrix multiplication
+		// inline matrix multiplication and tranpose
 
 		double[][] ata = new double[acol][acol];
 
@@ -519,7 +510,7 @@ public class Decomposition {
 				double sum = 0;
 
 				for (int brow = 0; brow < a.length; brow++)
-					sum += at[row][brow] * a[brow][col];
+					sum += a[brow][row] * a[brow][col];
 
 				ata[row][col] = sum;
 			}
