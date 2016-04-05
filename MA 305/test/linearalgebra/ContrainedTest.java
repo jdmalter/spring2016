@@ -13,13 +13,13 @@ import org.junit.Test;
  * @author Jacob Malter
  *
  */
-public class ExtraTest {
+public class ContrainedTest {
 
 	/** acceptable margin of error */
 	private static final double DELTA = 0.001d;
 
 	/**
-	 * Test method for {@link Extra#overconstrainedPI(double[][], double[][])}.
+	 * Test method for {@link Constrained#overconstrainedPI(double[][], double[][])}.
 	 */
 	@Test
 	public void testOverconstrainedPI() {
@@ -42,7 +42,7 @@ public class ExtraTest {
 				new double[] { -0.660 } };
 		expectedE = new double[][] { new double[] { 0.839 },
 				new double[] { 2.875 }, new double[] { 0.120 } };
-		actualXE = Extra.overconstrainedPI(a, b);
+		actualXE = Constrained.overconstrainedPI(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -82,7 +82,7 @@ public class ExtraTest {
 		expectedE = new double[][] { new double[] { -0.030 },
 				new double[] { 0.273 }, new double[] { 0.637 },
 				new double[] { -0.607 } };
-		actualXE = Extra.overconstrainedPI(a, b);
+		actualXE = Constrained.overconstrainedPI(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -122,7 +122,7 @@ public class ExtraTest {
 		expectedE = new double[][] { new double[] { -0.994 },
 				new double[] { 0.497 }, new double[] { 1.319 },
 				new double[] { -1.606 }, new double[] { -1.530 } };
-		actualXE = Extra.overconstrainedPI(a, b);
+		actualXE = Constrained.overconstrainedPI(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -153,7 +153,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a is null
-			testXE = Extra.overconstrainedPI(null, b);
+			testXE = Constrained.overconstrainedPI(null, b);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testXE);
@@ -161,7 +161,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b is null
-			testXE = Extra.overconstrainedPI(a, null);
+			testXE = Constrained.overconstrainedPI(a, null);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testXE);
@@ -169,7 +169,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a and b do not have equal number of rows
-			testXE = Extra.overconstrainedPI(
+			testXE = Constrained.overconstrainedPI(
 					new double[][] { new double[] {} }, new double[][] {});
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -178,7 +178,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a does contain null column
-			testXE = Extra.overconstrainedPI(new double[][] { null },
+			testXE = Constrained.overconstrainedPI(new double[][] { null },
 					new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -187,7 +187,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b does contain null column
-			testXE = Extra
+			testXE = Constrained
 					.overconstrainedPI(new double[][] { new double[] {} },
 							new double[][] { null });
 			fail();
@@ -197,7 +197,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a must does not have more rows than columns
-			testXE = Extra.overconstrainedPI(new double[][] {
+			testXE = Constrained.overconstrainedPI(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
@@ -207,7 +207,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testXE = Extra.overconstrainedPI(new double[][] {
+			testXE = Constrained.overconstrainedPI(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 },
 					new double[] { 0, 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 },
@@ -219,7 +219,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b row width does not remain constant
-			testXE = Extra.overconstrainedPI(new double[][] {
+			testXE = Constrained.overconstrainedPI(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 },
 					new double[] { 0, 0 } }, new double[][] {
 					new double[] { 0 }, new double[] { 0 },
@@ -231,7 +231,7 @@ public class ExtraTest {
 	}
 
 	/**
-	 * Test method for {@link Extra#underconstrainedPI(double[][], double[][])}.
+	 * Test method for {@link Constrained#underconstrainedPI(double[][], double[][])}.
 	 */
 	@Test
 	public void testUnderconstrainedPI() {
@@ -248,7 +248,7 @@ public class ExtraTest {
 		b = new double[][] { new double[] { -1 }, new double[] { -3 } };
 		expectedX = new double[][] { new double[] { 0.206 },
 				new double[] { 0.454 }, new double[] { 0.463 } };
-		actualX = Extra.underconstrainedPI(a, b);
+		actualX = Constrained.underconstrainedPI(a, b);
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -275,7 +275,7 @@ public class ExtraTest {
 		expectedX = new double[][] { new double[] { 0.279 },
 				new double[] { -0.555 }, new double[] { -0.277 },
 				new double[] { -0.058 } };
-		actualX = Extra.underconstrainedPI(a, b);
+		actualX = Constrained.underconstrainedPI(a, b);
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -296,7 +296,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a is null
-			testX = Extra.underconstrainedPI(null, b);
+			testX = Constrained.underconstrainedPI(null, b);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testX);
@@ -304,7 +304,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b is null
-			testX = Extra.underconstrainedPI(a, null);
+			testX = Constrained.underconstrainedPI(a, null);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testX);
@@ -312,7 +312,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a and b do not have equal number of rows
-			testX = Extra.underconstrainedPI(
+			testX = Constrained.underconstrainedPI(
 					new double[][] { new double[] {} }, new double[][] {});
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -321,7 +321,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a does contain null column
-			testX = Extra.underconstrainedPI(new double[][] { null },
+			testX = Constrained.underconstrainedPI(new double[][] { null },
 					new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -330,7 +330,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b does contain null column
-			testX = Extra
+			testX = Constrained
 					.underconstrainedPI(new double[][] { new double[] {} },
 							new double[][] { null });
 			fail();
@@ -340,7 +340,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a must does not have more rows than columns
-			testX = Extra.underconstrainedPI(new double[][] {
+			testX = Constrained.underconstrainedPI(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
@@ -350,7 +350,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testX = Extra.underconstrainedPI(new double[][] {
+			testX = Constrained.underconstrainedPI(new double[][] {
 					new double[] { 0, 0, 0 }, new double[] { 0, 0, 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
@@ -360,7 +360,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b row width does not remain constant
-			testX = Extra
+			testX = Constrained
 					.underconstrainedPI(
 							new double[][] { new double[] { 0, 0, 0 },
 									new double[] { 0, 0, 0 } }, new double[][] {
@@ -372,7 +372,7 @@ public class ExtraTest {
 	}
 
 	/**
-	 * Test method for {@link Extra#overconstrainedCD(double[][], double[][])}.
+	 * Test method for {@link Constrained#overconstrainedCD(double[][], double[][])}.
 	 */
 	@Test
 	public void testOverconstrainedCD() {
@@ -395,7 +395,7 @@ public class ExtraTest {
 				new double[] { -0.660 } };
 		expectedE = new double[][] { new double[] { 0.839 },
 				new double[] { 2.875 }, new double[] { 0.120 } };
-		actualXE = Extra.overconstrainedCD(a, b);
+		actualXE = Constrained.overconstrainedCD(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -435,7 +435,7 @@ public class ExtraTest {
 		expectedE = new double[][] { new double[] { -0.030 },
 				new double[] { 0.273 }, new double[] { 0.637 },
 				new double[] { -0.607 } };
-		actualXE = Extra.overconstrainedCD(a, b);
+		actualXE = Constrained.overconstrainedCD(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -475,7 +475,7 @@ public class ExtraTest {
 		expectedE = new double[][] { new double[] { -0.994 },
 				new double[] { 0.497 }, new double[] { 1.319 },
 				new double[] { -1.606 }, new double[] { -1.530 } };
-		actualXE = Extra.overconstrainedCD(a, b);
+		actualXE = Constrained.overconstrainedCD(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -506,7 +506,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a is null
-			testXE = Extra.overconstrainedCD(null, b);
+			testXE = Constrained.overconstrainedCD(null, b);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testXE);
@@ -514,7 +514,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b is null
-			testXE = Extra.overconstrainedCD(a, null);
+			testXE = Constrained.overconstrainedCD(a, null);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testXE);
@@ -522,7 +522,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a and b do not have equal number of rows
-			testXE = Extra.overconstrainedCD(
+			testXE = Constrained.overconstrainedCD(
 					new double[][] { new double[] {} }, new double[][] {});
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -531,7 +531,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a does contain null column
-			testXE = Extra.overconstrainedCD(new double[][] { null },
+			testXE = Constrained.overconstrainedCD(new double[][] { null },
 					new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -540,7 +540,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b does contain null column
-			testXE = Extra
+			testXE = Constrained
 					.overconstrainedCD(new double[][] { new double[] {} },
 							new double[][] { null });
 			fail();
@@ -550,7 +550,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a must does not have more rows than columns
-			testXE = Extra.overconstrainedCD(new double[][] {
+			testXE = Constrained.overconstrainedCD(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
@@ -560,7 +560,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testXE = Extra.overconstrainedCD(new double[][] {
+			testXE = Constrained.overconstrainedCD(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 },
 					new double[] { 0, 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 },
@@ -572,7 +572,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b row width does not remain constant
-			testXE = Extra.overconstrainedCD(new double[][] {
+			testXE = Constrained.overconstrainedCD(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 },
 					new double[] { 0, 0 } }, new double[][] {
 					new double[] { 0 }, new double[] { 0 },
@@ -584,7 +584,7 @@ public class ExtraTest {
 	}
 
 	/**
-	 * Test method for {@link Extra#overconstrainedQR(double[][], double[][])}.
+	 * Test method for {@link Constrained#overconstrainedQR(double[][], double[][])}.
 	 */
 	@Test
 	public void testOverconstrainedQR() {
@@ -607,7 +607,7 @@ public class ExtraTest {
 				new double[] { -0.660 } };
 		expectedE = new double[][] { new double[] { 0.839 },
 				new double[] { 2.875 }, new double[] { 0.120 } };
-		actualXE = Extra.overconstrainedQR(a, b);
+		actualXE = Constrained.overconstrainedQR(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -647,7 +647,7 @@ public class ExtraTest {
 		expectedE = new double[][] { new double[] { -0.030 },
 				new double[] { 0.273 }, new double[] { 0.637 },
 				new double[] { -0.607 } };
-		actualXE = Extra.overconstrainedQR(a, b);
+		actualXE = Constrained.overconstrainedQR(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -687,7 +687,7 @@ public class ExtraTest {
 		expectedE = new double[][] { new double[] { -0.994 },
 				new double[] { 0.497 }, new double[] { 1.319 },
 				new double[] { -1.606 }, new double[] { -1.530 } };
-		actualXE = Extra.overconstrainedQR(a, b);
+		actualXE = Constrained.overconstrainedQR(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -718,7 +718,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a is null
-			testXE = Extra.overconstrainedQR(null, b);
+			testXE = Constrained.overconstrainedQR(null, b);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testXE);
@@ -726,7 +726,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b is null
-			testXE = Extra.overconstrainedQR(a, null);
+			testXE = Constrained.overconstrainedQR(a, null);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testXE);
@@ -734,7 +734,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a and b do not have equal number of rows
-			testXE = Extra.overconstrainedQR(
+			testXE = Constrained.overconstrainedQR(
 					new double[][] { new double[] {} }, new double[][] {});
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -743,7 +743,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a does contain null column
-			testXE = Extra.overconstrainedQR(new double[][] { null },
+			testXE = Constrained.overconstrainedQR(new double[][] { null },
 					new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -752,7 +752,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b does contain null column
-			testXE = Extra
+			testXE = Constrained
 					.overconstrainedQR(new double[][] { new double[] {} },
 							new double[][] { null });
 			fail();
@@ -762,7 +762,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a must does not have more rows than columns
-			testXE = Extra.overconstrainedQR(new double[][] {
+			testXE = Constrained.overconstrainedQR(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
@@ -772,7 +772,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testXE = Extra.overconstrainedQR(new double[][] {
+			testXE = Constrained.overconstrainedQR(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 },
 					new double[] { 0, 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 },
@@ -784,7 +784,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b row width does not remain constant
-			testXE = Extra.overconstrainedQR(new double[][] {
+			testXE = Constrained.overconstrainedQR(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 },
 					new double[] { 0, 0 } }, new double[][] {
 					new double[] { 0 }, new double[] { 0 },
@@ -796,7 +796,7 @@ public class ExtraTest {
 	}
 
 	/**
-	 * Test method for {@link Extra#overconstrainedSV(double[][], double[][])}.
+	 * Test method for {@link Constrained#overconstrainedSV(double[][], double[][])}.
 	 */
 	@Test
 	public void testOverconstrainedSV() {
@@ -819,7 +819,7 @@ public class ExtraTest {
 				new double[] { -0.660 } };
 		expectedE = new double[][] { new double[] { 0.839 },
 				new double[] { 2.875 }, new double[] { 0.120 } };
-		actualXE = Extra.overconstrainedSV(a, b);
+		actualXE = Constrained.overconstrainedSV(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -859,7 +859,7 @@ public class ExtraTest {
 		expectedE = new double[][] { new double[] { -0.030 },
 				new double[] { 0.273 }, new double[] { 0.637 },
 				new double[] { -0.607 } };
-		actualXE = Extra.overconstrainedSV(a, b);
+		actualXE = Constrained.overconstrainedSV(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -899,7 +899,7 @@ public class ExtraTest {
 		expectedE = new double[][] { new double[] { -0.994 },
 				new double[] { 0.497 }, new double[] { 1.319 },
 				new double[] { -1.606 }, new double[] { -1.530 } };
-		actualXE = Extra.overconstrainedSV(a, b);
+		actualXE = Constrained.overconstrainedSV(a, b);
 		actualX = actualXE[0];
 		actualE = actualXE[1];
 
@@ -930,7 +930,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a is null
-			testXE = Extra.overconstrainedSV(null, b);
+			testXE = Constrained.overconstrainedSV(null, b);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testXE);
@@ -938,7 +938,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b is null
-			testXE = Extra.overconstrainedSV(a, null);
+			testXE = Constrained.overconstrainedSV(a, null);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testXE);
@@ -946,7 +946,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a and b do not have equal number of rows
-			testXE = Extra.overconstrainedSV(
+			testXE = Constrained.overconstrainedSV(
 					new double[][] { new double[] {} }, new double[][] {});
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -955,7 +955,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a does contain null column
-			testXE = Extra.overconstrainedSV(new double[][] { null },
+			testXE = Constrained.overconstrainedSV(new double[][] { null },
 					new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -964,7 +964,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b does contain null column
-			testXE = Extra
+			testXE = Constrained
 					.overconstrainedSV(new double[][] { new double[] {} },
 							new double[][] { null });
 			fail();
@@ -974,7 +974,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a must does not have more rows than columns
-			testXE = Extra.overconstrainedSV(new double[][] {
+			testXE = Constrained.overconstrainedSV(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
@@ -984,7 +984,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testXE = Extra.overconstrainedSV(new double[][] {
+			testXE = Constrained.overconstrainedSV(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 },
 					new double[] { 0, 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 },
@@ -996,7 +996,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b row width does not remain constant
-			testXE = Extra.overconstrainedSV(new double[][] {
+			testXE = Constrained.overconstrainedSV(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 },
 					new double[] { 0, 0 } }, new double[][] {
 					new double[] { 0 }, new double[] { 0 },
@@ -1008,7 +1008,7 @@ public class ExtraTest {
 	}
 
 	/**
-	 * Test method for {@link Extra#underconstrainedSV(double[][], double[][])}.
+	 * Test method for {@link Constrained#underconstrainedSV(double[][], double[][])}.
 	 */
 	@Test
 	public void testUnderconstrainedSV() {
@@ -1025,7 +1025,7 @@ public class ExtraTest {
 		b = new double[][] { new double[] { -1 }, new double[] { -3 } };
 		expectedX = new double[][] { new double[] { 0.206 },
 				new double[] { 0.454 }, new double[] { 0.463 } };
-		actualX = Extra.underconstrainedSV(a, b);
+		actualX = Constrained.underconstrainedSV(a, b);
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -1052,7 +1052,7 @@ public class ExtraTest {
 		expectedX = new double[][] { new double[] { 0.279 },
 				new double[] { -0.555 }, new double[] { -0.277 },
 				new double[] { -0.058 } };
-		actualX = Extra.underconstrainedSV(a, b);
+		actualX = Constrained.underconstrainedSV(a, b);
 
 		assertEquals(expectedX.length, actualX.length);
 		for (int row = 0; row < expectedX.length; row++) {
@@ -1073,7 +1073,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a is null
-			testX = Extra.underconstrainedSV(null, b);
+			testX = Constrained.underconstrainedSV(null, b);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testX);
@@ -1081,7 +1081,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b is null
-			testX = Extra.underconstrainedSV(a, null);
+			testX = Constrained.underconstrainedSV(a, null);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testX);
@@ -1089,7 +1089,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a and b do not have equal number of rows
-			testX = Extra.underconstrainedSV(
+			testX = Constrained.underconstrainedSV(
 					new double[][] { new double[] {} }, new double[][] {});
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -1098,7 +1098,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a does contain null column
-			testX = Extra.underconstrainedSV(new double[][] { null },
+			testX = Constrained.underconstrainedSV(new double[][] { null },
 					new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -1107,7 +1107,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b does contain null column
-			testX = Extra
+			testX = Constrained
 					.underconstrainedSV(new double[][] { new double[] {} },
 							new double[][] { null });
 			fail();
@@ -1117,7 +1117,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a must does not have more rows than columns
-			testX = Extra.underconstrainedSV(new double[][] {
+			testX = Constrained.underconstrainedSV(new double[][] {
 					new double[] { 0, 0 }, new double[] { 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
@@ -1127,7 +1127,7 @@ public class ExtraTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testX = Extra.underconstrainedSV(new double[][] {
+			testX = Constrained.underconstrainedSV(new double[][] {
 					new double[] { 0, 0, 0 }, new double[] { 0, 0, 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
@@ -1137,7 +1137,7 @@ public class ExtraTest {
 
 		try {
 			// matrix b row width does not remain constant
-			testX = Extra
+			testX = Constrained
 					.underconstrainedSV(
 							new double[][] { new double[] { 0, 0, 0 },
 									new double[] { 0, 0, 0 } }, new double[][] {

@@ -6,12 +6,12 @@ package linearalgebra;
  * @author Jacob Malter
  *
  */
-public class Extra {
+public class Constrained {
 
 	/**
 	 * Does nothing. Never called.
 	 */
-	private Extra() {
+	private Constrained() {
 	}
 
 	/**
