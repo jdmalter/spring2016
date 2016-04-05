@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * Extra test.
+ * Constrained test.
  * 
  * @author Jacob Malter
  *
@@ -19,7 +19,8 @@ public class ContrainedTest {
 	private static final double DELTA = 0.001d;
 
 	/**
-	 * Test method for {@link Constrained#overconstrainedPI(double[][], double[][])}.
+	 * Test method for
+	 * {@link Constrained#overconstrainedPI(double[][], double[][])}.
 	 */
 	@Test
 	public void testOverconstrainedPI() {
@@ -231,7 +232,8 @@ public class ContrainedTest {
 	}
 
 	/**
-	 * Test method for {@link Constrained#underconstrainedPI(double[][], double[][])}.
+	 * Test method for
+	 * {@link Constrained#underconstrainedPI(double[][], double[][])}.
 	 */
 	@Test
 	public void testUnderconstrainedPI() {
@@ -372,7 +374,8 @@ public class ContrainedTest {
 	}
 
 	/**
-	 * Test method for {@link Constrained#overconstrainedCD(double[][], double[][])}.
+	 * Test method for
+	 * {@link Constrained#overconstrainedCD(double[][], double[][])}.
 	 */
 	@Test
 	public void testOverconstrainedCD() {
@@ -584,7 +587,8 @@ public class ContrainedTest {
 	}
 
 	/**
-	 * Test method for {@link Constrained#overconstrainedQR(double[][], double[][])}.
+	 * Test method for
+	 * {@link Constrained#overconstrainedQR(double[][], double[][])}.
 	 */
 	@Test
 	public void testOverconstrainedQR() {
@@ -796,7 +800,8 @@ public class ContrainedTest {
 	}
 
 	/**
-	 * Test method for {@link Constrained#overconstrainedSV(double[][], double[][])}.
+	 * Test method for
+	 * {@link Constrained#overconstrainedSV(double[][], double[][])}.
 	 */
 	@Test
 	public void testOverconstrainedSV() {
@@ -1008,7 +1013,8 @@ public class ContrainedTest {
 	}
 
 	/**
-	 * Test method for {@link Constrained#underconstrainedSV(double[][], double[][])}.
+	 * Test method for
+	 * {@link Constrained#underconstrainedSV(double[][], double[][])}.
 	 */
 	@Test
 	public void testUnderconstrainedSV() {

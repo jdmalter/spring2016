@@ -1,7 +1,8 @@
 package linearalgebra;
 
 /**
- * Efficiently computes problems.
+ * Contains functions which compute overconstrained and underconstrained systems
+ * through multiple implementations.
  * 
  * @author Jacob Malter
  *
@@ -17,13 +18,11 @@ public class Constrained {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
 	 * the first element of the resulting array and e is the second element of
-	 * the resulting array, a*x (through matrix multiplication) - b equals e
-	 * where the magnitude of e is minimized. Returns array of array of n by 1
-	 * and m by 1 array of double,
+	 * the resulting array, a*x - b = e where the magnitude of e is minimized.
+	 * Returns array of array of n by 1 and m by 1 array of double,
 	 * 
 	 * Given that at is tranpose of given matrix a, this implementation finds
-	 * the pseudo-inverse of matrix a which is equal to ((at*a)^-1)*at (through
-	 * multiple matrix multiplications).
+	 * the pseudo-inverse of matrix a by solving ((at*a)^-1)*at.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -36,8 +35,7 @@ public class Constrained {
 	 * any row.
 	 * 
 	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from at*a (through matrix
-	 * multiplication) eqauls 0.
+	 * determinant of the resulting matrix from at*a equals 0.
 	 * 
 	 * @param a
 	 *            m by n array of double where m > n
@@ -272,12 +270,11 @@ public class Constrained {
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * resulting matrix, a*x (through matrix multiplication) equals b where the
-	 * magnitude of x is minimized. Returns n by 1 array of double.
+	 * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
+	 * Returns n by 1 array of double.
 	 * 
 	 * Given that at is tranpose of given matrix a, this implementation finds
-	 * the pseudo-inverse of matrix a which is equal to at*((a*at)^-1) (multiple
-	 * through matrix multiplications).
+	 * the pseudo-inverse of matrix a by solving at*((a*at)^-1).
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -290,8 +287,7 @@ public class Constrained {
 	 * any row.
 	 * 
 	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from a*at (through matrix
-	 * multiplication) eqauls 0.
+	 * determinant of the resulting matrix from a*at equal 0.
 	 * 
 	 * @param a
 	 *            m by n array of double where m < n
@@ -507,15 +503,13 @@ public class Constrained {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
 	 * the first element of the resulting array and e is the second element of
-	 * the resulting array, a*x (through matrix multiplication) - b equals e
-	 * where the magnitude of e is minimized. Returns array of array of n by 1
-	 * and m by 1 array of double,
+	 * the resulting array, a*x - b = e where the magnitude of e is minimized.
+	 * Returns array of array of n by 1 and m by 1 array of double,
 	 * 
 	 * This implementation finds x in two steps. It is given that at is tranpose
 	 * of given matrix a, l is the cholesky decomposition of a, and lt is
-	 * tranpose of l. First, y is found by solving l*y = at*b (through multiple
-	 * matrix multiplications and gauss jordan). Second, x is found by solving
-	 * lt*x = y (through matrix multiplication and gauss jordan).
+	 * tranpose of l. First, y is found by solving l*y = at*b. Second, x is
+	 * found by solving lt*x = y.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -528,8 +522,7 @@ public class Constrained {
 	 * any row.
 	 * 
 	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from at*a (through matrix
-	 * multiplication) eqauls 0.
+	 * determinant of the resulting matrix from at*a equals 0.
 	 * 
 	 * @param a
 	 *            m by n array of double where m > n
@@ -822,15 +815,13 @@ public class Constrained {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
 	 * the first element of the resulting array and e is the second element of
-	 * the resulting array, a*x (through matrix multiplication) - b equals e
-	 * where the magnitude of e is minimized. Returns array of array of n by 1
-	 * and m by 1 array of double,
+	 * the resulting array, a*x - b = e where the magnitude of e is minimized.
+	 * Returns array of array of n by 1 and m by 1 array of double,
 	 * 
 	 * This implementation finds x in two steps. First, array qr is the
 	 * resulting array from qr decomposition on given matrix a where q is the
 	 * first element of qr and r is the second element of qr. Second, given that
-	 * qt is tranpose of q, x is found by solving r*x = qt*b (through multiple
-	 * matrix multiplications and gauss jordan).
+	 * qt is tranpose of q, x is found by solving r*x = qt*b.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -843,8 +834,7 @@ public class Constrained {
 	 * any row.
 	 * 
 	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from at*a (through matrix
-	 * multiplication) eqauls 0.
+	 * determinant of the resulting matrix from at*a equals 0.
 	 * 
 	 * @param a
 	 *            m by n array of double where m > n
@@ -1038,15 +1028,14 @@ public class Constrained {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
 	 * the first element of the resulting array and e is the second element of
-	 * the resulting array, a*x (through matrix multiplication) - b equals e
-	 * where the magnitude of e is minimized. Returns array of array of n by 1
-	 * and m by 1 array of double,
+	 * the resulting array, a*x - b = e where the magnitude of e is minimized.
+	 * Returns array of array of n by 1 and m by 1 array of double,
 	 * 
 	 * This implementation finds x in one step. Given that array usv is the
 	 * resulting array of sv decomposition on given matrix a where ut is
 	 * tranpose of the first element of usv, (s^-1) is the inverse of the second
 	 * element of usv, v is the third element of usv, x is equal to
-	 * v*(s^-1)*ut*b (through multiple matrix multiplications).
+	 * v*(s^-1)*ut*b.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -1059,8 +1048,7 @@ public class Constrained {
 	 * any row.
 	 * 
 	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from at*a (through matrix
-	 * multiplication) eqauls 0.
+	 * determinant of the resulting matrix from at*a equals 0.
 	 * 
 	 * @param a
 	 *            m by n array of double where m > n
@@ -1455,14 +1443,14 @@ public class Constrained {
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * resulting matrix, a*x (through matrix multiplication) equals b where the
-	 * magnitude of x is minimized. Returns n by 1 array of double.
+	 * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
+	 * Returns n by 1 array of double.
 	 * 
 	 * This implementation finds x in one step. Given that array usv is the
 	 * resulting array of sv decomposition on tranpose of the given matrix a
 	 * where u is the first element of usv, (s^-1) is the inverse of the second
-	 * element of usv, vt is tranpose of the third element of usv, x is equal to
-	 * u*(s^-1)*vt*b (through multiple matrix multiplications).
+	 * element of usv, vt is tranpose of the third element of usv, x is found by
+	 * solving u*(s^-1)*vt*b.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -1475,8 +1463,7 @@ public class Constrained {
 	 * any row.
 	 * 
 	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from a*at (through matrix
-	 * multiplication) eqauls 0.
+	 * determinant of the resulting matrix from a*at equals 0.
 	 * 
 	 * @param a
 	 *            m by n array of double where m < n

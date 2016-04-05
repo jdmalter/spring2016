@@ -1,7 +1,7 @@
 package linearalgebra;
 
 /**
- * Efficiently computes problems.
+ * Provides basic matrix functions with simple specifications.
  * 
  * @author Jacob Malter
  *
@@ -126,8 +126,8 @@ public class Matrices {
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Resulting matrix
-	 * does not contain row at skipRow or column at skipCol of matrix a. Returns
-	 * n-1 by m-1 array of double.
+	 * does not contain row at skipRow or column at skipCol of given matrix a.
+	 * Returns n-1 by m-1 array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (skipRow < 0)}, {@code (skipCol < 0)},

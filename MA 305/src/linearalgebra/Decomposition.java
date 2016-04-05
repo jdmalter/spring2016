@@ -1,7 +1,8 @@
 package linearalgebra;
 
 /**
- * Efficiently computes problems.
+ * Combines complex functions with detailed specifications. Functions take one
+ * matrix and return multiple matrices.
  * 
  * @author Jacob Malter
  *
@@ -17,8 +18,8 @@ public class Decomposition {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
 	 * the first element of the resulting array and u is the second element of
-	 * the resulting array, l*u (through matrix multiplication) equals a.
-	 * Returns array of n by n and n by n array of double.
+	 * the resulting array, l*u - a = 0. Returns array of n by n and n by n
+	 * array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
@@ -80,8 +81,8 @@ public class Decomposition {
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
-	 * resulting matrix and lt is transpose of resulting matrix, l*lt (through
-	 * matrix multiplication) equals a. Returns n by n array of double.
+	 * resulting matrix and lt is transpose of resulting matrix, l*lt - a = 0.
+	 * Returns n by n array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row,
@@ -151,10 +152,9 @@ public class Decomposition {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that q is
 	 * the first element of the resulting array and r is the second element of
-	 * the resulting array, q*r (through matrix multiplication) equals a. Given
-	 * that qt is tranpose of q, qt*q equals I where I is identity matrix. r
-	 * must be upper triangular. Returns array of m by n and n by n array of
-	 * double.
+	 * the resulting array, q*r - a = 0. Given that qt is tranpose of q, qt*q -
+	 * I = 0 where I is identity matrix. r is be upper triangular. Returns array
+	 * of m by n and n by n array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row,
@@ -220,9 +220,9 @@ public class Decomposition {
 	/**
 	 * Assumes row by columnn array representation of matrix. Given that l is
 	 * the first element of the resulting array and v is the second element of
-	 * the resulting array, a*v (through matrix multiplication) equals v*l
-	 * (through matrix multiplication). Returns array of n by n and n by n array
-	 * of double.
+	 * the resulting array, a*v - v*l = 0, or given that (v^-1) is the inverse
+	 * of v, a - v*l*(v^-1) = 0. Returns array of n by n and n by n array of
+	 * double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
@@ -452,15 +452,13 @@ public class Decomposition {
 
 	/**
 	 * Assumes row by columnn array representation of matrix. Given the
-	 * resulting array,the first element is matrix u, the second element is
-	 * matrix s, and the third element is matrix v. Input array a equals
-	 * u*s*(v^-1) (through matrix multiplication and inverse of matrix). Given
-	 * that ut is tranpose of u, ut*u (through matrix multiplication) equals I
-	 * where I is identity matrix, and given that vt is tranpose of v, vt*v
-	 * (through matrix multiplication) equals I where I is identity matrix.
-	 * Resulting matrix s is diagonal such that elements on diagonal are
-	 * non-zero and element not on diagonal equal zero. Returns array of m by n,
-	 * n by n, and n by n array of double.
+	 * resulting array, the first element is matrix u, the second element is
+	 * matrix s, and the third element is matrix v. Given that ut is tranpose of
+	 * u, ut*u - I = 0 where I is identity matrix. Given that vt is tranpose of
+	 * v, vt*v - I = 0 where I is identity matrix. s is diagonal such that
+	 * elements on diagonal are non-zero and elements not on diagonal equal
+	 * zero. From the specifications, it is given that matrix a equals u*s*vt.
+	 * Returns array of m by n, n by n, and n by n array of double.
 	 * 
 	 * Throws IllegalArgumentException if any of the following is true:
 	 * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row,
