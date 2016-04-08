@@ -36,12 +36,10 @@ public class Matrices {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (a.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a number of rows and columns must be equal");
+				throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
 		if (a.length == 0)
 			// point with no dimensions
@@ -111,8 +109,7 @@ public class Matrices {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of components must be equal");
+			throw new IllegalArgumentException("matrix a and b number of components must be equal");
 
 		double sum = 0;
 
@@ -150,34 +147,28 @@ public class Matrices {
 			throw new IllegalArgumentException("matrix a must not be null");
 
 		else if (skipRow < 0)
-			throw new IllegalArgumentException(
-					"skipRow must not be less than zero");
+			throw new IllegalArgumentException("skipRow must not be less than zero");
 
 		else if (skipCol < 0)
-			throw new IllegalArgumentException(
-					"skipCol must not be less than zero");
+			throw new IllegalArgumentException("skipCol must not be less than zero");
 
 		else if (skipRow >= a.length)
-			throw new IllegalArgumentException(
-					"skipRow must not be greater than or equal to number of rows");
+			throw new IllegalArgumentException("skipRow must not be greater than or equal to number of rows");
 
 		int acol = -1;
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row == 0)
 				acol = a[0].length;
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (skipCol >= acol)
-				throw new IllegalArgumentException(
-						"skipCol must not be greater than or equal to number of columns");
+				throw new IllegalArgumentException("skipCol must not be greater than or equal to number of columns");
 
 		// minor has one less row and column than original
 
@@ -230,12 +221,10 @@ public class Matrices {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row < b.length && null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
@@ -243,12 +232,10 @@ public class Matrices {
 			}
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (b.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix b number of rows must equal matrix a number of columns");
+				throw new IllegalArgumentException("matrix b number of rows must equal matrix a number of columns");
 
 		double[][] mul = new double[a.length][bcol];
 
@@ -294,15 +281,13 @@ public class Matrices {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row == 0)
 				acol = a[0].length;
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 		double[][] at = new double[acol][a.length];
 
@@ -337,15 +322,13 @@ public class Matrices {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row == 0)
 				acol = a[0].length;
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 		// inline matrix multiply and tranpose
 

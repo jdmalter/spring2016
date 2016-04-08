@@ -42,20 +42,17 @@ public class Fundamentals {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		int acol = -1;
 		int bcol = -1;
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
@@ -63,12 +60,10 @@ public class Fundamentals {
 			}
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (bcol != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b row width must remain constant");
+				throw new IllegalArgumentException("matrix b row width must remain constant");
 
 		double[][] aug = new double[a.length][acol + bcol];
 
@@ -112,19 +107,16 @@ public class Fundamentals {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length > acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain as many or more columns than rows");
+					throw new IllegalArgumentException("matrix a must contain as many or more columns than rows");
 			}
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 		// copy array a into forward
 
@@ -174,19 +166,16 @@ public class Fundamentals {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length > acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain as many or more columns than rows");
+					throw new IllegalArgumentException("matrix a must contain as many or more columns than rows");
 			}
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 		// copy a into backward
 
@@ -237,18 +226,15 @@ public class Fundamentals {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length > acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain as many or more columns than rows");
+					throw new IllegalArgumentException("matrix a must contain as many or more columns than rows");
 
 			} else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 		if (a.length == 0)
 			// there are no numbers to work with
@@ -343,25 +329,20 @@ public class Fundamentals {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (a.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a number of rows and columns must be equal");
+				throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must contain only one column");
+				throw new IllegalArgumentException("matrix b must contain only one column");
 
 		// inline augment
 
@@ -426,8 +407,7 @@ public class Fundamentals {
 		double[][] rref = new double[a.length][ab[0].length];
 
 		for (int row = 0; row < c.length; row++) {
-			rref[row][ab[0].length - 1] = c[row][ab[0].length - 1]
-					/ c[row][row];
+			rref[row][ab[0].length - 1] = c[row][ab[0].length - 1] / c[row][row];
 			rref[row][row] = 1;
 		}
 
@@ -479,25 +459,20 @@ public class Fundamentals {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (a.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a number of rows and columns must be equal");
+				throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must contain only one column");
+				throw new IllegalArgumentException("matrix b must contain only one column");
 
 		// inline augment
 
@@ -624,25 +599,20 @@ public class Fundamentals {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (a.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a number of rows and columns must be equal");
+				throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must contain only one column");
+				throw new IllegalArgumentException("matrix b must contain only one column");
 
 		double denominator = Matrices.determinant(a);
 
@@ -689,12 +659,10 @@ public class Fundamentals {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (a.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a number of rows and columns must be equal");
+				throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
 		double[][] adjugate = new double[a.length][a.length];
 		double determinant = 0;

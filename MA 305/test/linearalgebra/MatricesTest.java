@@ -49,16 +49,14 @@ public class MatricesTest {
 		assertEquals(expectedDet, actualDet, DELTA);
 
 		// third test on 3 component matrix
-		a = new double[][] { new double[] { 6, 1, 1 },
-				new double[] { 4, -2, 5 }, new double[] { 2, 8, 7 } };
+		a = new double[][] { new double[] { 6, 1, 1 }, new double[] { 4, -2, 5 }, new double[] { 2, 8, 7 } };
 		expectedDet = -306;
 		actualDet = Matrices.determinant(a);
 
 		assertEquals(expectedDet, actualDet, DELTA);
 
 		// fourth test on 4 component matrix
-		a = new double[][] { new double[] { 0, 2, 0, 0 },
-				new double[] { 6, 0, 1, 1 }, new double[] { 4, 0, -2, 5 },
+		a = new double[][] { new double[] { 0, 2, 0, 0 }, new double[] { 6, 0, 1, 1 }, new double[] { 4, 0, -2, 5 },
 				new double[] { 2, 0, 8, 7 } };
 		expectedDet = 612;
 		actualDet = Matrices.determinant(a);
@@ -66,8 +64,7 @@ public class MatricesTest {
 		assertEquals(expectedDet, actualDet, DELTA);
 
 		// fifth test on 4 component matrix
-		a = new double[][] { new double[] { 2, 5, 3, 5 },
-				new double[] { 4, 6, 6, 3 }, new double[] { 11, 3, 2, -2 },
+		a = new double[][] { new double[] { 2, 5, 3, 5 }, new double[] { 4, 6, 6, 3 }, new double[] { 11, 3, 2, -2 },
 				new double[] { 4, -7, 9, 3 } };
 		expectedDet = 2960;
 		actualDet = Matrices.determinant(a);
@@ -75,10 +72,8 @@ public class MatricesTest {
 		assertEquals(expectedDet, actualDet, DELTA);
 
 		// sixth test on 5 component matrix
-		a = new double[][] { new double[] { 276, 1, 179, 23, 9387 },
-				new double[] { 0, 0, 78, 0, 0 },
-				new double[] { 0, 0, -1, 0, 1 },
-				new double[] { 0, 0, 1994, -1, 1089 },
+		a = new double[][] { new double[] { 276, 1, 179, 23, 9387 }, new double[] { 0, 0, 78, 0, 0 },
+				new double[] { 0, 0, -1, 0, 1 }, new double[] { 0, 0, 1994, -1, 1089 },
 				new double[] { 1, 0, 212, 726, -378 } };
 		expectedDet = 78;
 		actualDet = Matrices.determinant(a);
@@ -103,9 +98,8 @@ public class MatricesTest {
 
 		try {
 			// matrix a must does not have as many columns as rows
-			testDet = Matrices.determinant(new double[][] {
-					new double[] { 0, 0 }, new double[] { 0, 0 },
-					new double[] { 0, 0 } });
+			testDet = Matrices.determinant(
+					new double[][] { new double[] { 0, 0 }, new double[] { 0, 0 }, new double[] { 0, 0 } });
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertEquals(0, testDet, DELTA);
@@ -201,10 +195,8 @@ public class MatricesTest {
 		}
 
 		// third test on 3 by 3 array
-		a = new double[][] { new double[] { 3, 0, 2 },
-				new double[] { 2, 0, -2 }, new double[] { 0, 1, 1 } };
-		expectedMin = new double[][] { new double[] { 3, 2 },
-				new double[] { 0, 1 } };
+		a = new double[][] { new double[] { 3, 0, 2 }, new double[] { 2, 0, -2 }, new double[] { 0, 1, 1 } };
+		expectedMin = new double[][] { new double[] { 3, 2 }, new double[] { 0, 1 } };
 		actualMin = Matrices.minor(a, 1, 1);
 
 		assertEquals(expectedMin.length, actualMin.length);
@@ -256,8 +248,7 @@ public class MatricesTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testMin = Matrices.minor(new double[][] { new double[] { 0, 0 },
-					new double[] { 0 } }, 0, 0);
+			testMin = Matrices.minor(new double[][] { new double[] { 0, 0 }, new double[] { 0 } }, 0, 0);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testMin);
@@ -265,8 +256,7 @@ public class MatricesTest {
 
 		try {
 			// skipCol is equal to number of columns
-			testMin = Matrices.minor(new double[][] { new double[] { 0, 0 },
-					new double[] { 0, 0 } }, 0, 2);
+			testMin = Matrices.minor(new double[][] { new double[] { 0, 0 }, new double[] { 0, 0 } }, 0, 2);
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testMin);
@@ -287,10 +277,8 @@ public class MatricesTest {
 
 		// first test on 2 by 3 and 3 by 2 arrays
 		a = new double[][] { new double[] { 1, 2, 3 }, new double[] { 4, 5, 6 } };
-		b = new double[][] { new double[] { 7, 8 }, new double[] { 9, 10 },
-				new double[] { 11, 12 } };
-		expectedMul = new double[][] { new double[] { 58, 64 },
-				new double[] { 139, 154 } };
+		b = new double[][] { new double[] { 7, 8 }, new double[] { 9, 10 }, new double[] { 11, 12 } };
+		expectedMul = new double[][] { new double[] { 58, 64 }, new double[] { 139, 154 } };
 		actualMul = Matrices.multiply(a, b);
 
 		assertEquals(expectedMul.length, actualMul.length);
@@ -302,8 +290,7 @@ public class MatricesTest {
 
 		// first test on 1 by 3 and 3 by 4 arrays
 		a = new double[][] { new double[] { 3, 4, 2 } };
-		b = new double[][] { new double[] { 13, 9, 7, 15 },
-				new double[] { 8, 7, 4, 6 }, new double[] { 6, 4, 0, 3 } };
+		b = new double[][] { new double[] { 13, 9, 7, 15 }, new double[] { 8, 7, 4, 6 }, new double[] { 6, 4, 0, 3 } };
 		expectedMul = new double[][] { new double[] { 83, 63, 37, 75 } };
 		actualMul = Matrices.multiply(a, b);
 
@@ -332,8 +319,7 @@ public class MatricesTest {
 
 		try {
 			// matrix a does contain null column
-			testMul = Matrices.multiply(new double[][] { null },
-					new double[][] { null });
+			testMul = Matrices.multiply(new double[][] { null }, new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testMul);
@@ -341,8 +327,7 @@ public class MatricesTest {
 
 		try {
 			// matrix b does contain null column
-			testMul = Matrices.multiply(new double[][] { new double[] {} },
-					new double[][] { null });
+			testMul = Matrices.multiply(new double[][] { new double[] {} }, new double[][] { null });
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testMul);
@@ -350,9 +335,8 @@ public class MatricesTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testMul = Matrices.multiply(new double[][] { new double[] { 0, 0 },
-					new double[] { 0 } }, new double[][] { new double[] {},
-					new double[] {} });
+			testMul = Matrices.multiply(new double[][] { new double[] { 0, 0 }, new double[] { 0 } },
+					new double[][] { new double[] {}, new double[] {} });
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testMul);
@@ -360,8 +344,7 @@ public class MatricesTest {
 
 		try {
 			// matrix b number of rows does not equal matrix a number of columns
-			testMul = Matrices.multiply(new double[][] {
-					new double[] { 0, 0, 0 }, new double[] { 0, 0, 0 } },
+			testMul = Matrices.multiply(new double[][] { new double[] { 0, 0, 0 }, new double[] { 0, 0, 0 } },
 					new double[][] { new double[] { 0 }, new double[] { 0 } });
 			fail();
 		} catch (IllegalArgumentException ex) {
@@ -394,8 +377,7 @@ public class MatricesTest {
 
 		// second test on 2 by 2 array
 		a = new double[][] { new double[] { 0, 1 }, new double[] { 2, 3 } };
-		expectedAT = new double[][] { new double[] { 0, 2 },
-				new double[] { 1, 3 } };
+		expectedAT = new double[][] { new double[] { 0, 2 }, new double[] { 1, 3 } };
 		actualAT = Matrices.transpose(a);
 
 		assertEquals(expectedAT.length, actualAT.length);
@@ -406,10 +388,8 @@ public class MatricesTest {
 		}
 
 		// third test on 3 by 3 array
-		a = new double[][] { new double[] { 3, 0, 2 },
-				new double[] { 2, 0, -2 }, new double[] { 0, 1, 1 } };
-		expectedAT = new double[][] { new double[] { 3, 2, 0 },
-				new double[] { 0, 0, 1 }, new double[] { 2, -2, 1 } };
+		a = new double[][] { new double[] { 3, 0, 2 }, new double[] { 2, 0, -2 }, new double[] { 0, 1, 1 } };
+		expectedAT = new double[][] { new double[] { 3, 2, 0 }, new double[] { 0, 0, 1 }, new double[] { 2, -2, 1 } };
 		actualAT = Matrices.transpose(a);
 
 		assertEquals(expectedAT.length, actualAT.length);
@@ -437,8 +417,7 @@ public class MatricesTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testAT = Matrices.transpose(new double[][] { new double[] { 0, 0 },
-					new double[] { 0 } });
+			testAT = Matrices.transpose(new double[][] { new double[] { 0, 0 }, new double[] { 0 } });
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertNull(testAT);
@@ -464,17 +443,15 @@ public class MatricesTest {
 		assertEquals(expectedSofu, actualSofu, DELTA);
 
 		// second test on 3 by 2 array
-		a = new double[][] { new double[] { -2, -4 }, new double[] { 3, 1 },
-				new double[] { 2, -1 } };
+		a = new double[][] { new double[] { -2, -4 }, new double[] { 3, 1 }, new double[] { 2, -1 } };
 		expectedSofu = 15;
 		actualSofu = Matrices.sofu(a);
 
 		assertEquals(expectedSofu, actualSofu, DELTA);
 
 		// third test on 4 by 5 array
-		a = new double[][] { new double[] { -2, 2, -4, 1 },
-				new double[] { -1, -4, -1, -1 }, new double[] { 5, 4, -4, 4 },
-				new double[] { -2, 1, -2, 1 }, new double[] { -3, 3, 5, -5 } };
+		a = new double[][] { new double[] { -2, 2, -4, 1 }, new double[] { -1, -4, -1, -1 },
+				new double[] { 5, 4, -4, 4 }, new double[] { -2, 1, -2, 1 }, new double[] { -3, 3, 5, -5 } };
 		expectedSofu = 526.49786324352732362438329844498;
 		actualSofu = Matrices.sofu(a);
 
@@ -498,8 +475,7 @@ public class MatricesTest {
 
 		try {
 			// matrix a row width does not remain constant
-			testSofu = Matrices.sofu(new double[][] { new double[] { 0, 0 },
-					new double[] { 0 } });
+			testSofu = Matrices.sofu(new double[][] { new double[] { 0, 0 }, new double[] { 0 } });
 			fail();
 		} catch (IllegalArgumentException ex) {
 			assertEquals(0, testSofu, DELTA);

@@ -51,33 +51,27 @@ public class Constrained {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		int acol = -1;
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length <= acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain more rows than columns");
+					throw new IllegalArgumentException("matrix a must contain more rows than columns");
 
 			} else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must only contain one column");
+				throw new IllegalArgumentException("matrix b must only contain one column");
 
 		// inline matrix multiply and tranpose
 
@@ -140,12 +134,9 @@ public class Constrained {
 
 			// inline matrix determinant on triple product of vectors
 
-			determinant = (ata[0][0] * (ata[1][1] * ata[2][2] - ata[1][2]
-					* ata[2][1]))
-					- (ata[0][1] * (ata[1][0] * ata[2][2] - ata[1][2]
-							* ata[2][0]))
-					+ (ata[0][2] * (ata[1][0] * ata[2][1] - ata[1][1]
-							* ata[2][0]));
+			determinant = (ata[0][0] * (ata[1][1] * ata[2][2] - ata[1][2] * ata[2][1]))
+					- (ata[0][1] * (ata[1][0] * ata[2][2] - ata[1][2] * ata[2][0]))
+					+ (ata[0][2] * (ata[1][0] * ata[2][1] - ata[1][1] * ata[2][0]));
 			if (determinant == 0)
 				// matrix is singular
 				throw new ArithmeticException("divide by 0");
@@ -303,33 +294,27 @@ public class Constrained {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		int acol = -1;
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length >= acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain less rows than columns");
+					throw new IllegalArgumentException("matrix a must contain less rows than columns");
 
 			} else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must only contain one column");
+				throw new IllegalArgumentException("matrix b must only contain one column");
 
 		// inline matrix multiply and tranpose
 
@@ -392,12 +377,9 @@ public class Constrained {
 
 			// inline matrix determinant on triple product of vectors
 
-			determinant = (aat[0][0] * (aat[1][1] * aat[2][2] - aat[1][2]
-					* aat[2][1]))
-					- (aat[0][1] * (aat[1][0] * aat[2][2] - aat[1][2]
-							* aat[2][0]))
-					+ (aat[0][2] * (aat[1][0] * aat[2][1] - aat[1][1]
-							* aat[2][0]));
+			determinant = (aat[0][0] * (aat[1][1] * aat[2][2] - aat[1][2] * aat[2][1]))
+					- (aat[0][1] * (aat[1][0] * aat[2][2] - aat[1][2] * aat[2][0]))
+					+ (aat[0][2] * (aat[1][0] * aat[2][1] - aat[1][1] * aat[2][0]));
 			if (determinant == 0)
 				// matrix is singular
 				throw new ArithmeticException("divide by 0");
@@ -538,33 +520,27 @@ public class Constrained {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		int acol = -1;
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length <= acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain more rows than columns");
+					throw new IllegalArgumentException("matrix a must contain more rows than columns");
 
 			} else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must only contain one column");
+				throw new IllegalArgumentException("matrix b must only contain one column");
 
 		// inline matrix multiply and tranpose
 
@@ -699,8 +675,7 @@ public class Constrained {
 			double[][] rref = new double[acol][latb[0].length];
 
 			for (int row = 0; row < c.length; row++) {
-				rref[row][latb[0].length - 1] = c[row][latb[0].length - 1]
-						/ c[row][row];
+				rref[row][latb[0].length - 1] = c[row][latb[0].length - 1] / c[row][row];
 				rref[row][row] = 1;
 			}
 
@@ -778,8 +753,7 @@ public class Constrained {
 			double[][] rref = new double[a.length][lty[0].length];
 
 			for (int row = 0; row < c.length; row++) {
-				rref[row][lty[0].length - 1] = c[row][lty[0].length - 1]
-						/ c[row][row];
+				rref[row][lty[0].length - 1] = c[row][lty[0].length - 1] / c[row][row];
 				rref[row][row] = 1;
 			}
 
@@ -850,33 +824,27 @@ public class Constrained {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		int acol = -1;
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length <= acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain more rows than columns");
+					throw new IllegalArgumentException("matrix a must contain more rows than columns");
 
 			} else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must only contain one column");
+				throw new IllegalArgumentException("matrix b must only contain one column");
 
 		// inline qr
 
@@ -991,8 +959,7 @@ public class Constrained {
 			double[][] rref = new double[acol][rqtb[0].length];
 
 			for (int row = 0; row < c.length; row++) {
-				rref[row][rqtb[0].length - 1] = c[row][rqtb[0].length - 1]
-						/ c[row][row];
+				rref[row][rqtb[0].length - 1] = c[row][rqtb[0].length - 1] / c[row][row];
 				rref[row][row] = 1;
 			}
 
@@ -1064,33 +1031,27 @@ public class Constrained {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		int acol = -1;
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length <= acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain more rows than columns");
+					throw new IllegalArgumentException("matrix a must contain more rows than columns");
 
 			} else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must only contain one column");
+				throw new IllegalArgumentException("matrix b must only contain one column");
 
 		// inline singular value decomposition
 
@@ -1151,15 +1112,11 @@ public class Constrained {
 
 			// assumed double a = -1;
 			double bb = ata[0][0] + ata[1][1] + ata[2][2];
-			double c = -(ata[0][0] * ata[1][1]) - (ata[0][0] * ata[2][2])
-					- (ata[1][1] * ata[2][2]) + (ata[0][1] * ata[1][0])
-					+ (ata[0][2] * ata[2][0]) + (ata[1][2] * ata[2][1]);
-			double d = (ata[2][0] * ata[0][1] * ata[1][2])
-					+ (ata[1][0] * ata[2][1] * ata[0][2])
-					- (ata[0][0] * ata[2][1] * ata[1][2])
-					- (ata[1][1] * ata[2][0] * ata[0][2])
-					- (ata[2][2] * ata[1][0] * ata[0][1])
-					+ (ata[0][0] * ata[1][1] * ata[2][2]);
+			double c = -(ata[0][0] * ata[1][1]) - (ata[0][0] * ata[2][2]) - (ata[1][1] * ata[2][2])
+					+ (ata[0][1] * ata[1][0]) + (ata[0][2] * ata[2][0]) + (ata[1][2] * ata[2][1]);
+			double d = (ata[2][0] * ata[0][1] * ata[1][2]) + (ata[1][0] * ata[2][1] * ata[0][2])
+					- (ata[0][0] * ata[2][1] * ata[1][2]) - (ata[1][1] * ata[2][0] * ata[0][2])
+					- (ata[2][2] * ata[1][0] * ata[0][1]) + (ata[0][0] * ata[1][1] * ata[2][2]);
 
 			double f = (-(3 * c) - (bb * bb)) / 3;
 			double g = (-(2 * bb * bb * bb) - (9 * bb * c) - (27 * d)) / 27;
@@ -1295,8 +1252,7 @@ public class Constrained {
 
 				// determinant on vector
 
-				double det = Math.sqrt((v[0][row] * v[0][row])
-						+ (v[1][row] * v[1][row]) + 1);
+				double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
 				v[0][row] /= det;
 				v[1][row] /= det;
 				v[2][row] /= det;
@@ -1304,8 +1260,7 @@ public class Constrained {
 
 		} else
 			// because finding zeros of larger polynomials is difficult
-			throw new UnsupportedOperationException(
-					"Cannot handle matrices larger than 3 by 3");
+			throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
 
 		double[][] inverse = new double[ata.length][ata.length];
 
@@ -1479,33 +1434,27 @@ public class Constrained {
 			throw new IllegalArgumentException("matrix b must not be null");
 
 		else if (a.length != b.length)
-			throw new IllegalArgumentException(
-					"matrix a and b number of rows must be equal");
+			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
 		int acol = -1;
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (null == b[row])
-				throw new IllegalArgumentException(
-						"matrix b must not contain null column");
+				throw new IllegalArgumentException("matrix b must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length >= acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain less rows than columns");
+					throw new IllegalArgumentException("matrix a must contain less rows than columns");
 
 			} else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 			else if (1 != b[row].length)
-				throw new IllegalArgumentException(
-						"matrix b must only contain one column");
+				throw new IllegalArgumentException("matrix b must only contain one column");
 
 		// inline matrix multiplication and tranpose (different tranpose)
 
@@ -1564,15 +1513,11 @@ public class Constrained {
 
 			// assumed double a = -1;
 			double bb = aat[0][0] + aat[1][1] + aat[2][2];
-			double c = -(aat[0][0] * aat[1][1]) - (aat[0][0] * aat[2][2])
-					- (aat[1][1] * aat[2][2]) + (aat[0][1] * aat[1][0])
-					+ (aat[0][2] * aat[2][0]) + (aat[1][2] * aat[2][1]);
-			double d = (aat[2][0] * aat[0][1] * aat[1][2])
-					+ (aat[1][0] * aat[2][1] * aat[0][2])
-					- (aat[0][0] * aat[2][1] * aat[1][2])
-					- (aat[1][1] * aat[2][0] * aat[0][2])
-					- (aat[2][2] * aat[1][0] * aat[0][1])
-					+ (aat[0][0] * aat[1][1] * aat[2][2]);
+			double c = -(aat[0][0] * aat[1][1]) - (aat[0][0] * aat[2][2]) - (aat[1][1] * aat[2][2])
+					+ (aat[0][1] * aat[1][0]) + (aat[0][2] * aat[2][0]) + (aat[1][2] * aat[2][1]);
+			double d = (aat[2][0] * aat[0][1] * aat[1][2]) + (aat[1][0] * aat[2][1] * aat[0][2])
+					- (aat[0][0] * aat[2][1] * aat[1][2]) - (aat[1][1] * aat[2][0] * aat[0][2])
+					- (aat[2][2] * aat[1][0] * aat[0][1]) + (aat[0][0] * aat[1][1] * aat[2][2]);
 
 			double f = (-(3 * c) - (bb * bb)) / 3;
 			double g = (-(2 * bb * bb * bb) - (9 * bb * c) - (27 * d)) / 27;
@@ -1708,8 +1653,7 @@ public class Constrained {
 
 				// determinant on vector
 
-				double det = Math.sqrt((v[0][row] * v[0][row])
-						+ (v[1][row] * v[1][row]) + 1);
+				double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
 				v[0][row] /= det;
 				v[1][row] /= det;
 				v[2][row] /= det;
@@ -1717,8 +1661,7 @@ public class Constrained {
 
 		} else
 			// because finding zeros of larger polynomials is difficult
-			throw new UnsupportedOperationException(
-					"Cannot handle matrices larger than 3 by 3");
+			throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
 
 		// copy array v into array usv
 

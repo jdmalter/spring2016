@@ -39,12 +39,10 @@ public class Decomposition {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (a.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a number of rows and columns must be equal");
+				throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
 		double[][] l = new double[a.length][a.length];
 		double[][] u = new double[a.length][a.length];
@@ -109,18 +107,15 @@ public class Decomposition {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (a.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a number of rows and columns must be equal");
+				throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
 		for (int row = 0; row < a.length; row++)
 			for (int col = 0; col < a.length; col++)
 				if (a[row][col] != a[col][row])
-					throw new IllegalArgumentException(
-							"matrix a must have symmetry across diagonal");
+					throw new IllegalArgumentException("matrix a must have symmetry across diagonal");
 
 		double[][] l = new double[a.length][a.length];
 
@@ -174,19 +169,16 @@ public class Decomposition {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length < acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain as many or more rows than columns");
+					throw new IllegalArgumentException("matrix a must contain as many or more rows than columns");
 			}
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 		double[][] q = new double[a.length][acol];
 		double[][] r = new double[acol][acol];
@@ -242,12 +234,10 @@ public class Decomposition {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (a.length != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a number of rows and columns must be equal");
+				throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
 		double[][] l = new double[a.length][a.length];
 		double[][] v = new double[a.length][a.length];
@@ -286,15 +276,10 @@ public class Decomposition {
 
 			// assumed double a = -1;
 			double b = a[0][0] + a[1][1] + a[2][2];
-			double c = -(a[0][0] * a[1][1]) - (a[0][0] * a[2][2])
-					- (a[1][1] * a[2][2]) + (a[0][1] * a[1][0])
+			double c = -(a[0][0] * a[1][1]) - (a[0][0] * a[2][2]) - (a[1][1] * a[2][2]) + (a[0][1] * a[1][0])
 					+ (a[0][2] * a[2][0]) + (a[1][2] * a[2][1]);
-			double d = (a[2][0] * a[0][1] * a[1][2])
-					+ (a[1][0] * a[2][1] * a[0][2])
-					- (a[0][0] * a[2][1] * a[1][2])
-					- (a[1][1] * a[2][0] * a[0][2])
-					- (a[2][2] * a[1][0] * a[0][1])
-					+ (a[0][0] * a[1][1] * a[2][2]);
+			double d = (a[2][0] * a[0][1] * a[1][2]) + (a[1][0] * a[2][1] * a[0][2]) - (a[0][0] * a[2][1] * a[1][2])
+					- (a[1][1] * a[2][0] * a[0][2]) - (a[2][2] * a[1][0] * a[0][1]) + (a[0][0] * a[1][1] * a[2][2]);
 
 			double f = (-(3 * c) - (b * b)) / 3;
 			double g = (-(2 * b * b * b) - (9 * b * c) - (27 * d)) / 27;
@@ -432,8 +417,7 @@ public class Decomposition {
 
 				// determinant on vector
 
-				double det = Math.sqrt((v[0][row] * v[0][row])
-						+ (v[1][row] * v[1][row]) + 1);
+				double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
 
 				v[0][row] /= det;
 				v[1][row] /= det;
@@ -444,8 +428,7 @@ public class Decomposition {
 
 		} else
 			// because finding zeros of larger polynomials is difficult
-			throw new UnsupportedOperationException(
-					"Cannot handle matrices larger than 3 by 3");
+			throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
 
 		return new double[][][] { l, v };
 	}
@@ -482,19 +465,16 @@ public class Decomposition {
 
 		for (int row = 0; row < a.length; row++)
 			if (null == a[row])
-				throw new IllegalArgumentException(
-						"matrix a must not contain null column");
+				throw new IllegalArgumentException("matrix a must not contain null column");
 
 			else if (row == 0) {
 				acol = a[0].length;
 				if (a.length < acol)
-					throw new IllegalArgumentException(
-							"matrix a must contain as many or more rows than columns");
+					throw new IllegalArgumentException("matrix a must contain as many or more rows than columns");
 			}
 
 			else if (acol != a[row].length)
-				throw new IllegalArgumentException(
-						"matrix a row width must remain constant");
+				throw new IllegalArgumentException("matrix a row width must remain constant");
 
 		// inline matrix multiplication and tranpose
 
@@ -553,15 +533,11 @@ public class Decomposition {
 
 			// assumed double a = -1;
 			double b = ata[0][0] + ata[1][1] + ata[2][2];
-			double c = -(ata[0][0] * ata[1][1]) - (ata[0][0] * ata[2][2])
-					- (ata[1][1] * ata[2][2]) + (ata[0][1] * ata[1][0])
-					+ (ata[0][2] * ata[2][0]) + (ata[1][2] * ata[2][1]);
-			double d = (ata[2][0] * ata[0][1] * ata[1][2])
-					+ (ata[1][0] * ata[2][1] * ata[0][2])
-					- (ata[0][0] * ata[2][1] * ata[1][2])
-					- (ata[1][1] * ata[2][0] * ata[0][2])
-					- (ata[2][2] * ata[1][0] * ata[0][1])
-					+ (ata[0][0] * ata[1][1] * ata[2][2]);
+			double c = -(ata[0][0] * ata[1][1]) - (ata[0][0] * ata[2][2]) - (ata[1][1] * ata[2][2])
+					+ (ata[0][1] * ata[1][0]) + (ata[0][2] * ata[2][0]) + (ata[1][2] * ata[2][1]);
+			double d = (ata[2][0] * ata[0][1] * ata[1][2]) + (ata[1][0] * ata[2][1] * ata[0][2])
+					- (ata[0][0] * ata[2][1] * ata[1][2]) - (ata[1][1] * ata[2][0] * ata[0][2])
+					- (ata[2][2] * ata[1][0] * ata[0][1]) + (ata[0][0] * ata[1][1] * ata[2][2]);
 
 			double f = (-(3 * c) - (b * b)) / 3;
 			double g = (-(2 * b * b * b) - (9 * b * c) - (27 * d)) / 27;
@@ -697,8 +673,7 @@ public class Decomposition {
 
 				// determinant on vector
 
-				double det = Math.sqrt((v[0][row] * v[0][row])
-						+ (v[1][row] * v[1][row]) + 1);
+				double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
 				v[0][row] /= det;
 				v[1][row] /= det;
 				v[2][row] /= det;
@@ -706,8 +681,7 @@ public class Decomposition {
 
 		} else
 			// because finding zeros of larger polynomials is difficult
-			throw new UnsupportedOperationException(
-					"Cannot handle matrices larger than 3 by 3");
+			throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
 
 		// copy array v into array usv
 
