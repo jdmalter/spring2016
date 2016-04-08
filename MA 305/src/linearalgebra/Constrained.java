@@ -9,1772 +9,1738 @@ package linearalgebra;
  */
 public class Constrained {
 
-	/**
-	 * Does nothing. Never called.
-	 */
-	private Constrained() {
-	}
-
-	/**
-	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * the first element of the resulting array and e is the second element of
-	 * the resulting array, a*x - b = e where the magnitude of e is minimized.
-	 * Returns array of array of n by 1 and m by 1 array of double,
-	 * 
-	 * Given that at is tranpose of given matrix a, this implementation finds
-	 * the pseudo-inverse of matrix a by solving ((at*a)^-1)*at.
-	 * 
-	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
-	 * where length is number of rows, {@code (null == a[row])} where a[row] is
-	 * any row, {@code (null == b[row])} where b[row] is any row,
-	 * {@code (a.length <= acol)} where length is number rows and acol is number
-	 * of columns on first row, {@code (acol != a[row].length)} where acol is
-	 * number of columns on first row and a[row].length is number of columns, or
-	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
-	 * any row.
-	 * 
-	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from at*a equals 0.
-	 * 
-	 * @param a
-	 *            m by n array of double where m > n
-	 * @param b
-	 *            m by 1 array of double
-	 * @return array of n by 1 and m by 1 array of double
-	 */
-	public static double[][][] overconstrainedPI(double[][] a, double[][] b) {
-		if (null == a)
-			throw new IllegalArgumentException("matrix a must not be null");
+   /**
+    * Does nothing. Never called.
+    */
+   private Constrained() {
+   }
 
-		else if (null == b)
-			throw new IllegalArgumentException("matrix b must not be null");
+   /**
+    * Assumes row by columnn array representation of matrix. Given that x is the
+    * first element of the resulting array and e is the second element of the
+    * resulting array, a*x - b = e where the magnitude of e is minimized.
+    * Returns array of array of n by 1 and m by 1 array of double,
+    * 
+    * Given that at is tranpose of given matrix a, this implementation finds the
+    * pseudo-inverse of matrix a by solving ((at*a)^-1)*at.
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+    * where length is number of rows, {@code (null == a[row])} where a[row] is
+    * any row, {@code (null == b[row])} where b[row] is any row,
+    * {@code (a.length <= acol)} where length is number rows and acol is number
+    * of columns on first row, {@code (acol != a[row].length)} where acol is
+    * number of columns on first row and a[row].length is number of columns, or
+    * {@code (1 != b[row].length)} where b[row].length is number of columns on
+    * any row.
+    * 
+    * There is a special condition where divide by 0 occurs when the determinant
+    * of the resulting matrix from at*a equals 0.
+    * 
+    * @param a
+    *        m by n array of double where m > n
+    * @param b
+    *        m by 1 array of double
+    * @return array of n by 1 and m by 1 array of double
+    */
+   public static double[][][] overconstrainedPI(double[][] a, double[][] b) {
+      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
 
-		else if (a.length != b.length)
-			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
-
-		int acol = -1;
-
-		for (int row = 0; row < a.length; row++)
-			if (null == a[row])
-				throw new IllegalArgumentException("matrix a must not contain null column");
-
-			else if (null == b[row])
-				throw new IllegalArgumentException("matrix b must not contain null column");
+      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
 
-			else if (row == 0) {
-				acol = a[0].length;
-				if (a.length <= acol)
-					throw new IllegalArgumentException("matrix a must contain more rows than columns");
+      else if (a.length != b.length)
+         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+
+      int acol = -1;
 
-			} else if (acol != a[row].length)
-				throw new IllegalArgumentException("matrix a row width must remain constant");
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row])
+            throw new IllegalArgumentException("matrix a must not contain null column");
 
-			else if (1 != b[row].length)
-				throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (null == b[row])
+            throw new IllegalArgumentException("matrix b must not contain null column");
 
-		// inline matrix multiply and tranpose
+         else if (row == 0) {
+            acol = a[0].length;
+            if (a.length <= acol)
+               throw new IllegalArgumentException("matrix a must contain more rows than columns");
 
-		double[][] ata = new double[acol][acol];
+         } else if (acol != a[row].length)
+            throw new IllegalArgumentException("matrix a row width must remain constant");
 
-		// find dot products of every row and column combination
+         else if (1 != b[row].length)
+            throw new IllegalArgumentException("matrix b must only contain one column");
 
-		for (int row = 0; row < acol; row++) {
-			for (int col = 0; col < acol; col++) {
+      // inline matrix multiply and tranpose
 
-				// inline dot product
+      double[][] ata = new double[acol][acol];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < a.length; brow++)
-					sum += a[brow][row] * a[brow][col];
+      for (int row = 0; row < acol; row++) {
+         for (int col = 0; col < acol; col++) {
 
-				ata[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline invert
+            double sum = 0;
 
-		double[][] adjugate = new double[ata.length][ata.length];
-		double determinant = 0;
+            for (int brow = 0; brow < a.length; brow++)
+               sum += a[brow][row] * a[brow][col];
 
-		if (ata.length == 0) {
+            ata[row][col] = sum;
+         }
+      }
 
-			// inline matrix determinant on point
+      // inline invert
 
-			// matrix is singular
-			throw new ArithmeticException("divide by 0");
+      double[][] adjugate = new double[ata.length][ata.length];
+      double determinant = 0;
 
-		} else if (ata.length == 1) {
+      if (ata.length == 0) {
 
-			// inline matrix determinant on line
+         // inline matrix determinant on point
 
-			determinant = ata[0][0];
-			if (determinant == 0)
-				// matrix is singular
-				throw new ArithmeticException("divide by 0");
+         // matrix is singular
+         throw new ArithmeticException("divide by 0");
 
-			adjugate[0][0] = 1;
+      } else if (ata.length == 1) {
 
-		} else if (ata.length == 2) {
+         // inline matrix determinant on line
 
-			// inline matrix determinant on vectors
+         determinant = ata[0][0];
+         if (determinant == 0)
+            // matrix is singular
+            throw new ArithmeticException("divide by 0");
 
-			determinant = ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0];
-			if (determinant == 0)
-				// matrix is singular
-				throw new ArithmeticException("divide by 0");
+         adjugate[0][0] = 1;
 
-			adjugate[0][0] = ata[1][1];
-			adjugate[0][1] = -ata[0][1];
-			adjugate[1][0] = -ata[1][0];
-			adjugate[1][1] = ata[0][0];
+      } else if (ata.length == 2) {
 
-		} else if (ata.length == 3) {
+         // inline matrix determinant on vectors
 
-			// inline matrix determinant on triple product of vectors
+         determinant = ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0];
+         if (determinant == 0)
+            // matrix is singular
+            throw new ArithmeticException("divide by 0");
 
-			determinant = (ata[0][0] * (ata[1][1] * ata[2][2] - ata[1][2] * ata[2][1]))
-					- (ata[0][1] * (ata[1][0] * ata[2][2] - ata[1][2] * ata[2][0]))
-					+ (ata[0][2] * (ata[1][0] * ata[2][1] - ata[1][1] * ata[2][0]));
-			if (determinant == 0)
-				// matrix is singular
-				throw new ArithmeticException("divide by 0");
+         adjugate[0][0] = ata[1][1];
+         adjugate[0][1] = -ata[0][1];
+         adjugate[1][0] = -ata[1][0];
+         adjugate[1][1] = ata[0][0];
 
-			// multiple inline matrix determinants on vectors
+      } else if (ata.length == 3) {
 
-			adjugate[0][0] = (ata[1][1] * ata[2][2] - ata[1][2] * ata[2][1]);
-			adjugate[0][1] = -(ata[0][1] * ata[2][2] - ata[0][2] * ata[2][1]);
-			adjugate[0][2] = (ata[0][1] * ata[1][2] - ata[0][2] * ata[1][1]);
-			adjugate[1][0] = -(ata[1][0] * ata[2][2] - ata[1][2] * ata[2][0]);
-			adjugate[1][1] = (ata[0][0] * ata[2][2] - ata[0][2] * ata[2][0]);
-			adjugate[1][2] = -(ata[0][0] * ata[1][2] - ata[0][2] * ata[1][0]);
-			adjugate[2][0] = (ata[1][0] * ata[2][1] - ata[1][1] * ata[2][0]);
-			adjugate[2][1] = -(ata[0][0] * ata[2][1] - ata[0][1] * ata[2][0]);
-			adjugate[2][2] = (ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0]);
+         // inline matrix determinant on triple product of vectors
 
-		} else {
+         determinant = (ata[0][0] * (ata[1][1] * ata[2][2] - ata[1][2] * ata[2][1]))
+            - (ata[0][1] * (ata[1][0] * ata[2][2] - ata[1][2] * ata[2][0]))
+            + (ata[0][2] * (ata[1][0] * ata[2][1] - ata[1][1] * ata[2][0]));
+         if (determinant == 0)
+            // matrix is singular
+            throw new ArithmeticException("divide by 0");
 
-			determinant = Matrices.determinant(ata);
-			if (determinant == 0)
-				// matrix is singular
-				throw new ArithmeticException("divide by 0");
+         // multiple inline matrix determinants on vectors
 
-			for (int row = 0; row < ata.length; row++)
-				for (int col = 0; col < ata.length; col++) {
+         adjugate[0][0] = (ata[1][1] * ata[2][2] - ata[1][2] * ata[2][1]);
+         adjugate[0][1] = -(ata[0][1] * ata[2][2] - ata[0][2] * ata[2][1]);
+         adjugate[0][2] = (ata[0][1] * ata[1][2] - ata[0][2] * ata[1][1]);
+         adjugate[1][0] = -(ata[1][0] * ata[2][2] - ata[1][2] * ata[2][0]);
+         adjugate[1][1] = (ata[0][0] * ata[2][2] - ata[0][2] * ata[2][0]);
+         adjugate[1][2] = -(ata[0][0] * ata[1][2] - ata[0][2] * ata[1][0]);
+         adjugate[2][0] = (ata[1][0] * ata[2][1] - ata[1][1] * ata[2][0]);
+         adjugate[2][1] = -(ata[0][0] * ata[2][1] - ata[0][1] * ata[2][0]);
+         adjugate[2][2] = (ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0]);
 
-					// inline matrix minor
+      } else {
 
-					double[][] minor = new double[ata.length - 1][ata.length - 1];
+         determinant = Matrices.determinant(ata);
+         if (determinant == 0)
+            // matrix is singular
+            throw new ArithmeticException("divide by 0");
 
-					for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
-						if (row == mrow)
-							// ignore row being skipped and access new row
-							srow++;
+         for (int row = 0; row < ata.length; row++)
+            for (int col = 0; col < ata.length; col++) {
 
-						for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
-							if (col == mcol)
-								// ignore column being skipped and access new
-								// col
-								scol++;
+               // inline matrix minor
 
-							minor[mrow][mcol] = ata[srow][scol];
-						}
-					}
+               double[][] minor = new double[ata.length - 1][ata.length - 1];
 
-					double det = Matrices.determinant(minor);
+               for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
+                  if (row == mrow)
+                     // ignore row being skipped and access new row
+                     srow++;
 
-					if ((row + col) % 2 == 0)
-						adjugate[col][row] = det;
+                  for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
+                     if (col == mcol)
+                        // ignore column being skipped and access new
+                        // col
+                        scol++;
 
-					else
-						adjugate[col][row] = -det;
-				}
-		}
+                     minor[mrow][mcol] = ata[srow][scol];
+                  }
+               }
 
-		// divide adjugate elements by determinant
+               double det = Matrices.determinant(minor);
 
-		for (int row = 0; row < ata.length; row++)
-			for (int col = 0; col < ata.length; col++)
-				adjugate[row][col] /= determinant;
+               if ((row + col) % 2 == 0) adjugate[col][row] = det;
 
-		// inline matrix multiply
+               else adjugate[col][row] = -det;
+            }
+      }
 
-		double[][] adjugateAt = new double[acol][a.length];
+      // divide adjugate elements by determinant
 
-		// find dot products of every row and column combination
+      for (int row = 0; row < ata.length; row++)
+         for (int col = 0; col < ata.length; col++)
+            adjugate[row][col] /= determinant;
 
-		for (int row = 0; row < adjugateAt.length; row++) {
-			for (int col = 0; col < adjugateAt[row].length; col++) {
+      // inline matrix multiply
 
-				// inline dot product
+      double[][] adjugateAt = new double[acol][a.length];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < acol; brow++)
-					sum += adjugate[row][brow] * a[col][brow];
+      for (int row = 0; row < adjugateAt.length; row++) {
+         for (int col = 0; col < adjugateAt[row].length; col++) {
 
-				adjugateAt[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply on vector
+            double sum = 0;
 
-		double[][] x = new double[acol][1];
+            for (int brow = 0; brow < acol; brow++)
+               sum += adjugate[row][brow] * a[col][brow];
 
-		// find dot products of every row and column combination
+            adjugateAt[row][col] = sum;
+         }
+      }
 
-		for (int row = 0; row < x.length; row++) {
+      // inline matrix multiply on vector
 
-			// inline dot product
+      double[][] x = new double[acol][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < b.length; brow++)
-				sum += adjugateAt[row][brow] * b[brow][0];
+      for (int row = 0; row < x.length; row++) {
 
-			x[row][0] = sum;
-		}
+         // inline dot product
 
-		// inline matrix multiply on vector
+         double sum = 0;
 
-		double[][] e = new double[a.length][1];
+         for (int brow = 0; brow < b.length; brow++)
+            sum += adjugateAt[row][brow] * b[brow][0];
 
-		// find dot products of every row and column combination
+         x[row][0] = sum;
+      }
 
-		for (int row = 0; row < e.length; row++) {
+      // inline matrix multiply on vector
 
-			// inline dot product
+      double[][] e = new double[a.length][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < x.length; brow++)
-				sum += a[row][brow] * x[brow][0];
+      for (int row = 0; row < e.length; row++) {
 
-			// change to matrix multiply to satisfy specifications
+         // inline dot product
 
-			e[row][0] = sum - b[row][0];
-		}
+         double sum = 0;
 
-		return new double[][][] { x, e };
-	}
+         for (int brow = 0; brow < x.length; brow++)
+            sum += a[row][brow] * x[brow][0];
 
-	/**
-	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
-	 * Returns n by 1 array of double.
-	 * 
-	 * Given that at is tranpose of given matrix a, this implementation finds
-	 * the pseudo-inverse of matrix a by solving at*((a*at)^-1).
-	 * 
-	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
-	 * where length is number of rows, {@code (null == a[row])} where a[row] is
-	 * any row, {@code (null == b[row])} where b[row] is any row,
-	 * {@code (a.length >= acol)} where length is number rows and acol is number
-	 * of columns on first row, {@code (acol != a[row].length)} where acol is
-	 * number of columns on first row and a[row].length is number of columns, or
-	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
-	 * any row.
-	 * 
-	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from a*at equal 0.
-	 * 
-	 * @param a
-	 *            m by n array of double where m < n
-	 * @param b
-	 *            m by 1 array of double
-	 * @return n by 1 array of double
-	 */
-	public static double[][] underconstrainedPI(double[][] a, double[][] b) {
-		if (null == a)
-			throw new IllegalArgumentException("matrix a must not be null");
+         // change to matrix multiply to satisfy specifications
 
-		else if (null == b)
-			throw new IllegalArgumentException("matrix b must not be null");
+         e[row][0] = sum - b[row][0];
+      }
 
-		else if (a.length != b.length)
-			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      return new double[][][] { x, e };
+   }
 
-		int acol = -1;
+   /**
+    * Assumes row by columnn array representation of matrix. Given that x is
+    * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
+    * Returns n by 1 array of double.
+    * 
+    * Given that at is tranpose of given matrix a, this implementation finds the
+    * pseudo-inverse of matrix a by solving at*((a*at)^-1).
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+    * where length is number of rows, {@code (null == a[row])} where a[row] is
+    * any row, {@code (null == b[row])} where b[row] is any row,
+    * {@code (a.length >= acol)} where length is number rows and acol is number
+    * of columns on first row, {@code (acol != a[row].length)} where acol is
+    * number of columns on first row and a[row].length is number of columns, or
+    * {@code (1 != b[row].length)} where b[row].length is number of columns on
+    * any row.
+    * 
+    * There is a special condition where divide by 0 occurs when the determinant
+    * of the resulting matrix from a*at equal 0.
+    * 
+    * @param a
+    *        m by n array of double where m < n
+    * @param b
+    *        m by 1 array of double
+    * @return n by 1 array of double
+    */
+   public static double[][] underconstrainedPI(double[][] a, double[][] b) {
+      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
 
-		for (int row = 0; row < a.length; row++)
-			if (null == a[row])
-				throw new IllegalArgumentException("matrix a must not contain null column");
+      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
 
-			else if (null == b[row])
-				throw new IllegalArgumentException("matrix b must not contain null column");
+      else if (a.length != b.length)
+         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
-			else if (row == 0) {
-				acol = a[0].length;
-				if (a.length >= acol)
-					throw new IllegalArgumentException("matrix a must contain less rows than columns");
+      int acol = -1;
 
-			} else if (acol != a[row].length)
-				throw new IllegalArgumentException("matrix a row width must remain constant");
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row])
+            throw new IllegalArgumentException("matrix a must not contain null column");
 
-			else if (1 != b[row].length)
-				throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (null == b[row])
+            throw new IllegalArgumentException("matrix b must not contain null column");
 
-		// inline matrix multiply and tranpose
+         else if (row == 0) {
+            acol = a[0].length;
+            if (a.length >= acol)
+               throw new IllegalArgumentException("matrix a must contain less rows than columns");
 
-		double[][] aat = new double[a.length][a.length];
+         } else if (acol != a[row].length)
+            throw new IllegalArgumentException("matrix a row width must remain constant");
 
-		// find dot products of every row and column combination
+         else if (1 != b[row].length)
+            throw new IllegalArgumentException("matrix b must only contain one column");
 
-		for (int row = 0; row < aat.length; row++) {
-			for (int col = 0; col < aat[row].length; col++) {
+      // inline matrix multiply and tranpose
 
-				// inline dot product
+      double[][] aat = new double[a.length][a.length];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < a[0].length; brow++)
-					sum += a[row][brow] * a[col][brow];
+      for (int row = 0; row < aat.length; row++) {
+         for (int col = 0; col < aat[row].length; col++) {
 
-				aat[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline invert
+            double sum = 0;
 
-		double[][] adjugate = new double[aat.length][aat.length];
-		double determinant = 0;
+            for (int brow = 0; brow < a[0].length; brow++)
+               sum += a[row][brow] * a[col][brow];
 
-		if (aat.length == 0) {
+            aat[row][col] = sum;
+         }
+      }
 
-			// inline matrix determinant on point
+      // inline invert
 
-			// matrix is singular
-			throw new ArithmeticException("divide by 0");
+      double[][] adjugate = new double[aat.length][aat.length];
+      double determinant = 0;
 
-		} else if (aat.length == 1) {
+      if (aat.length == 0) {
 
-			// inline matrix determinant on line
+         // inline matrix determinant on point
 
-			determinant = aat[0][0];
-			if (determinant == 0)
-				// matrix is singular
-				throw new ArithmeticException("divide by 0");
+         // matrix is singular
+         throw new ArithmeticException("divide by 0");
 
-			adjugate[0][0] = 1;
+      } else if (aat.length == 1) {
 
-		} else if (aat.length == 2) {
+         // inline matrix determinant on line
 
-			// inline matrix determinant on vectors
+         determinant = aat[0][0];
+         if (determinant == 0)
+            // matrix is singular
+            throw new ArithmeticException("divide by 0");
 
-			determinant = aat[0][0] * aat[1][1] - aat[0][1] * aat[1][0];
-			if (determinant == 0)
-				// matrix is singular
-				throw new ArithmeticException("divide by 0");
+         adjugate[0][0] = 1;
 
-			adjugate[0][0] = aat[1][1];
-			adjugate[0][1] = -aat[0][1];
-			adjugate[1][0] = -aat[1][0];
-			adjugate[1][1] = aat[0][0];
+      } else if (aat.length == 2) {
 
-		} else if (aat.length == 3) {
+         // inline matrix determinant on vectors
 
-			// inline matrix determinant on triple product of vectors
+         determinant = aat[0][0] * aat[1][1] - aat[0][1] * aat[1][0];
+         if (determinant == 0)
+            // matrix is singular
+            throw new ArithmeticException("divide by 0");
 
-			determinant = (aat[0][0] * (aat[1][1] * aat[2][2] - aat[1][2] * aat[2][1]))
-					- (aat[0][1] * (aat[1][0] * aat[2][2] - aat[1][2] * aat[2][0]))
-					+ (aat[0][2] * (aat[1][0] * aat[2][1] - aat[1][1] * aat[2][0]));
-			if (determinant == 0)
-				// matrix is singular
-				throw new ArithmeticException("divide by 0");
+         adjugate[0][0] = aat[1][1];
+         adjugate[0][1] = -aat[0][1];
+         adjugate[1][0] = -aat[1][0];
+         adjugate[1][1] = aat[0][0];
 
-			// multiple inline matrix determinants on vectors
+      } else if (aat.length == 3) {
 
-			adjugate[0][0] = (aat[1][1] * aat[2][2] - aat[1][2] * aat[2][1]);
-			adjugate[0][1] = -(aat[0][1] * aat[2][2] - aat[0][2] * aat[2][1]);
-			adjugate[0][2] = (aat[0][1] * aat[1][2] - aat[0][2] * aat[1][1]);
-			adjugate[1][0] = -(aat[1][0] * aat[2][2] - aat[1][2] * aat[2][0]);
-			adjugate[1][1] = (aat[0][0] * aat[2][2] - aat[0][2] * aat[2][0]);
-			adjugate[1][2] = -(aat[0][0] * aat[1][2] - aat[0][2] * aat[1][0]);
-			adjugate[2][0] = (aat[1][0] * aat[2][1] - aat[1][1] * aat[2][0]);
-			adjugate[2][1] = -(aat[0][0] * aat[2][1] - aat[0][1] * aat[2][0]);
-			adjugate[2][2] = (aat[0][0] * aat[1][1] - aat[0][1] * aat[1][0]);
+         // inline matrix determinant on triple product of vectors
 
-		} else {
+         determinant = (aat[0][0] * (aat[1][1] * aat[2][2] - aat[1][2] * aat[2][1]))
+            - (aat[0][1] * (aat[1][0] * aat[2][2] - aat[1][2] * aat[2][0]))
+            + (aat[0][2] * (aat[1][0] * aat[2][1] - aat[1][1] * aat[2][0]));
+         if (determinant == 0)
+            // matrix is singular
+            throw new ArithmeticException("divide by 0");
 
-			determinant = Matrices.determinant(aat);
-			if (determinant == 0)
-				// matrix is singular
-				throw new ArithmeticException("divide by 0");
+         // multiple inline matrix determinants on vectors
 
-			for (int row = 0; row < aat.length; row++)
-				for (int col = 0; col < aat.length; col++) {
+         adjugate[0][0] = (aat[1][1] * aat[2][2] - aat[1][2] * aat[2][1]);
+         adjugate[0][1] = -(aat[0][1] * aat[2][2] - aat[0][2] * aat[2][1]);
+         adjugate[0][2] = (aat[0][1] * aat[1][2] - aat[0][2] * aat[1][1]);
+         adjugate[1][0] = -(aat[1][0] * aat[2][2] - aat[1][2] * aat[2][0]);
+         adjugate[1][1] = (aat[0][0] * aat[2][2] - aat[0][2] * aat[2][0]);
+         adjugate[1][2] = -(aat[0][0] * aat[1][2] - aat[0][2] * aat[1][0]);
+         adjugate[2][0] = (aat[1][0] * aat[2][1] - aat[1][1] * aat[2][0]);
+         adjugate[2][1] = -(aat[0][0] * aat[2][1] - aat[0][1] * aat[2][0]);
+         adjugate[2][2] = (aat[0][0] * aat[1][1] - aat[0][1] * aat[1][0]);
 
-					// inline matrix minor
+      } else {
 
-					double[][] minor = new double[aat.length - 1][aat.length - 1];
+         determinant = Matrices.determinant(aat);
+         if (determinant == 0)
+            // matrix is singular
+            throw new ArithmeticException("divide by 0");
 
-					for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
-						if (row == mrow)
-							// ignore row being skipped and access new row
-							srow++;
+         for (int row = 0; row < aat.length; row++)
+            for (int col = 0; col < aat.length; col++) {
 
-						for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
-							if (col == mcol)
-								// ignore column being skipped and access new
-								// col
-								scol++;
+               // inline matrix minor
 
-							minor[mrow][mcol] = aat[srow][scol];
-						}
-					}
+               double[][] minor = new double[aat.length - 1][aat.length - 1];
 
-					double det = Matrices.determinant(minor);
+               for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
+                  if (row == mrow)
+                     // ignore row being skipped and access new row
+                     srow++;
 
-					if ((row + col) % 2 == 0)
-						adjugate[col][row] = det;
+                  for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
+                     if (col == mcol)
+                        // ignore column being skipped and access new
+                        // col
+                        scol++;
 
-					else
-						adjugate[col][row] = -det;
-				}
-		}
+                     minor[mrow][mcol] = aat[srow][scol];
+                  }
+               }
 
-		// divide adjugate elements by determinant
+               double det = Matrices.determinant(minor);
 
-		for (int row = 0; row < aat.length; row++)
-			for (int col = 0; col < aat.length; col++)
-				adjugate[row][col] /= determinant;
+               if ((row + col) % 2 == 0) adjugate[col][row] = det;
 
-		// inline matrix multiply
+               else adjugate[col][row] = -det;
+            }
+      }
 
-		double[][] atAdjugate = new double[acol][aat.length];
+      // divide adjugate elements by determinant
 
-		// find dot products of every row and column combination
+      for (int row = 0; row < aat.length; row++)
+         for (int col = 0; col < aat.length; col++)
+            adjugate[row][col] /= determinant;
 
-		for (int row = 0; row < atAdjugate.length; row++) {
-			for (int col = 0; col < atAdjugate[row].length; col++) {
+      // inline matrix multiply
 
-				// inline dot product
+      double[][] atAdjugate = new double[acol][aat.length];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < adjugate.length; brow++)
-					sum += a[brow][row] * adjugate[brow][col];
+      for (int row = 0; row < atAdjugate.length; row++) {
+         for (int col = 0; col < atAdjugate[row].length; col++) {
 
-				atAdjugate[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply on vector
+            double sum = 0;
 
-		double[][] x = new double[atAdjugate.length][1];
+            for (int brow = 0; brow < adjugate.length; brow++)
+               sum += a[brow][row] * adjugate[brow][col];
 
-		// find dot products of every row and column combination
+            atAdjugate[row][col] = sum;
+         }
+      }
 
-		for (int row = 0; row < x.length; row++) {
+      // inline matrix multiply on vector
 
-			// inline dot product
+      double[][] x = new double[atAdjugate.length][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < b.length; brow++)
-				sum += atAdjugate[row][brow] * b[brow][0];
+      for (int row = 0; row < x.length; row++) {
 
-			x[row][0] = sum;
-		}
+         // inline dot product
 
-		return x;
-	}
+         double sum = 0;
 
-	/**
-	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * the first element of the resulting array and e is the second element of
-	 * the resulting array, a*x - b = e where the magnitude of e is minimized.
-	 * Returns array of array of n by 1 and m by 1 array of double,
-	 * 
-	 * This implementation finds x in two steps. It is given that at is tranpose
-	 * of given matrix a, l is the cholesky decomposition of a, and lt is
-	 * tranpose of l. First, y is found by solving l*y = at*b. Second, x is
-	 * found by solving lt*x = y.
-	 * 
-	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
-	 * where length is number of rows, {@code (null == a[row])} where a[row] is
-	 * any row, {@code (null == b[row])} where b[row] is any row,
-	 * {@code (a.length <= acol)} where length is number rows and acol is number
-	 * of columns on first row, {@code (acol != a[row].length)} where acol is
-	 * number of columns on first row and a[row].length is number of columns, or
-	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
-	 * any row.
-	 * 
-	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from at*a equals 0.
-	 * 
-	 * @param a
-	 *            m by n array of double where m > n
-	 * @param b
-	 *            m by 1 array of double
-	 * @return array of n by 1 and m by 1 array of double
-	 */
-	public static double[][][] overconstrainedCD(double[][] a, double[][] b) {
-		if (null == a)
-			throw new IllegalArgumentException("matrix a must not be null");
+         for (int brow = 0; brow < b.length; brow++)
+            sum += atAdjugate[row][brow] * b[brow][0];
 
-		else if (null == b)
-			throw new IllegalArgumentException("matrix b must not be null");
+         x[row][0] = sum;
+      }
 
-		else if (a.length != b.length)
-			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      return x;
+   }
 
-		int acol = -1;
+   /**
+    * Assumes row by columnn array representation of matrix. Given that x is the
+    * first element of the resulting array and e is the second element of the
+    * resulting array, a*x - b = e where the magnitude of e is minimized.
+    * Returns array of array of n by 1 and m by 1 array of double,
+    * 
+    * This implementation finds x in two steps. It is given that at is tranpose
+    * of given matrix a, l is the cholesky decomposition of a, and lt is
+    * tranpose of l. First, y is found by solving l*y = at*b. Second, x is found
+    * by solving lt*x = y.
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+    * where length is number of rows, {@code (null == a[row])} where a[row] is
+    * any row, {@code (null == b[row])} where b[row] is any row,
+    * {@code (a.length <= acol)} where length is number rows and acol is number
+    * of columns on first row, {@code (acol != a[row].length)} where acol is
+    * number of columns on first row and a[row].length is number of columns, or
+    * {@code (1 != b[row].length)} where b[row].length is number of columns on
+    * any row.
+    * 
+    * There is a special condition where divide by 0 occurs when the determinant
+    * of the resulting matrix from at*a equals 0.
+    * 
+    * @param a
+    *        m by n array of double where m > n
+    * @param b
+    *        m by 1 array of double
+    * @return array of n by 1 and m by 1 array of double
+    */
+   public static double[][][] overconstrainedCD(double[][] a, double[][] b) {
+      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
 
-		for (int row = 0; row < a.length; row++)
-			if (null == a[row])
-				throw new IllegalArgumentException("matrix a must not contain null column");
+      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
 
-			else if (null == b[row])
-				throw new IllegalArgumentException("matrix b must not contain null column");
+      else if (a.length != b.length)
+         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
-			else if (row == 0) {
-				acol = a[0].length;
-				if (a.length <= acol)
-					throw new IllegalArgumentException("matrix a must contain more rows than columns");
+      int acol = -1;
 
-			} else if (acol != a[row].length)
-				throw new IllegalArgumentException("matrix a row width must remain constant");
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row])
+            throw new IllegalArgumentException("matrix a must not contain null column");
 
-			else if (1 != b[row].length)
-				throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (null == b[row])
+            throw new IllegalArgumentException("matrix b must not contain null column");
 
-		// inline matrix multiply and tranpose
+         else if (row == 0) {
+            acol = a[0].length;
+            if (a.length <= acol)
+               throw new IllegalArgumentException("matrix a must contain more rows than columns");
 
-		double[][] ata = new double[acol][acol];
+         } else if (acol != a[row].length)
+            throw new IllegalArgumentException("matrix a row width must remain constant");
 
-		// find dot products of every row and column combination
+         else if (1 != b[row].length)
+            throw new IllegalArgumentException("matrix b must only contain one column");
 
-		for (int row = 0; row < acol; row++) {
-			for (int col = 0; col < acol; col++) {
+      // inline matrix multiply and tranpose
 
-				// inline dot product
+      double[][] ata = new double[acol][acol];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < a.length; brow++)
-					sum += a[brow][row] * a[brow][col];
+      for (int row = 0; row < acol; row++) {
+         for (int col = 0; col < acol; col++) {
 
-				ata[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline cholesy
+            double sum = 0;
 
-		double[][] l = new double[acol][acol];
+            for (int brow = 0; brow < a.length; brow++)
+               sum += a[brow][row] * a[brow][col];
 
-		for (int row = 0; row < acol; row++) {
-			double sum = 0;
+            ata[row][col] = sum;
+         }
+      }
 
-			// inline determinant on vector
+      // inline cholesy
 
-			for (int col = 0; col < row; col++)
-				sum += l[row][col] * l[row][col];
-			l[row][row] = Math.sqrt(ata[row][row] - sum);
+      double[][] l = new double[acol][acol];
 
-			for (int lrow = row + 1; lrow < acol; lrow++) {
-				double lsum = 0;
+      for (int row = 0; row < acol; row++) {
+         double sum = 0;
 
-				for (int lcol = 0; lcol < row; ++lcol)
-					lsum += l[lrow][lcol] * l[row][lcol];
+         // inline determinant on vector
 
-				if (l[row][row] == 0)
-					throw new ArithmeticException("divide by 0");
+         for (int col = 0; col < row; col++)
+            sum += l[row][col] * l[row][col];
+         l[row][row] = Math.sqrt(ata[row][row] - sum);
 
-				l[lrow][row] = (ata[lrow][row] - lsum) / l[row][row];
-			}
-		}
+         for (int lrow = row + 1; lrow < acol; lrow++) {
+            double lsum = 0;
 
-		// inline matrix multiply and tranpose
+            for (int lcol = 0; lcol < row; ++lcol)
+               lsum += l[lrow][lcol] * l[row][lcol];
 
-		double[][] atb = new double[acol][1];
+            if (l[row][row] == 0) throw new ArithmeticException("divide by 0");
 
-		// find dot products of every row and column combination
+            l[lrow][row] = (ata[lrow][row] - lsum) / l[row][row];
+         }
+      }
 
-		for (int row = 0; row < acol; row++) {
+      // inline matrix multiply and tranpose
 
-			// inline dot product
+      double[][] atb = new double[acol][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < b.length; brow++)
-				sum += a[brow][row] * b[brow][0];
+      for (int row = 0; row < acol; row++) {
 
-			atb[row][0] = sum;
-		}
+         // inline dot product
 
-		// inline gauss jordan
+         double sum = 0;
 
-		// inline augment
+         for (int brow = 0; brow < b.length; brow++)
+            sum += a[brow][row] * b[brow][0];
 
-		double[][] latb = new double[acol][acol + 1];
+         atb[row][0] = sum;
+      }
 
-		for (int row = 0; row < acol; row++)
-			for (int col = 0; col < acol; col++)
-				latb[row][col] = l[row][col];
+      // inline gauss jordan
 
-		for (int row = 0; row < acol; row++)
-			latb[row][acol] = atb[row][0];
+      // inline augment
 
-		// slight modification to the order of declarations
-		double[][] y = new double[acol][1];
+      double[][] latb = new double[acol][acol + 1];
 
-		// inline rref
+      for (int row = 0; row < acol; row++)
+         for (int col = 0; col < acol; col++)
+            latb[row][col] = l[row][col];
 
-		if (latb.length == 0) {
-			// if l has 0 rows, then x has 0 rows
-			y = new double[][] {};
+      for (int row = 0; row < acol; row++)
+         latb[row][acol] = atb[row][0];
 
-		} else if (latb.length == 1) {
-			if (latb[0][0] == 0)
-				y = new double[][] { new double[] { 0 } };
-			else
-				y = new double[][] { new double[] { 1 } };
+      // slight modification to the order of declarations
+      double[][] y = new double[acol][1];
 
-		} else {
-			// copy array ab into array c
+      // inline rref
 
-			double[][] c = new double[latb[0].length - 1][latb[0].length];
-			for (int row = 0; row < c.length; row++)
-				for (int col = 0; col < latb[0].length; col++)
-					c[row][col] = latb[row][col];
+      if (latb.length == 0) {
+         // if l has 0 rows, then x has 0 rows
+         y = new double[][] {};
 
-			// inline forward elimination
+      } else if (latb.length == 1) {
+         if (latb[0][0] == 0) y = new double[][] { new double[] { 0 } };
+         else y = new double[][] { new double[] { 1 } };
 
-			for (int diag = 0; diag < c.length - 1; diag++) {
-				if (c[diag][diag] == 0)
-					throw new ArithmeticException("divide by 0");
+      } else {
+         // copy array ab into array c
 
-				for (int row = diag + 1; row < c.length; row++) {
-					double quotient = c[row][diag] / c[diag][diag];
+         double[][] c = new double[latb[0].length - 1][latb[0].length];
+         for (int row = 0; row < c.length; row++)
+            for (int col = 0; col < latb[0].length; col++)
+               c[row][col] = latb[row][col];
 
-					for (int col = 0; col < c[row].length; col++)
-						c[row][col] -= (quotient * c[diag][col]);
-				}
-			}
+         // inline forward elimination
 
-			// inline backward elimination
+         for (int diag = 0; diag < c.length - 1; diag++) {
+            if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-			for (int diag = c.length - 1; diag > 0; diag--) {
-				if (c[diag][diag] == 0)
-					throw new ArithmeticException("divide by 0");
+            for (int row = diag + 1; row < c.length; row++) {
+               double quotient = c[row][diag] / c[diag][diag];
 
-				for (int row = diag - 1; row >= 0; row--) {
-					double quotient = c[row][diag] / c[diag][diag];
+               for (int col = 0; col < c[row].length; col++)
+                  c[row][col] -= (quotient * c[diag][col]);
+            }
+         }
 
-					for (int col = 0; col < c[row].length; col++)
-						c[row][col] -= (quotient * c[diag][col]);
-				}
-			}
+         // inline backward elimination
 
-			// normalize c
+         for (int diag = c.length - 1; diag > 0; diag--) {
+            if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-			double[][] rref = new double[acol][latb[0].length];
+            for (int row = diag - 1; row >= 0; row--) {
+               double quotient = c[row][diag] / c[diag][diag];
 
-			for (int row = 0; row < c.length; row++) {
-				rref[row][latb[0].length - 1] = c[row][latb[0].length - 1] / c[row][row];
-				rref[row][row] = 1;
-			}
+               for (int col = 0; col < c[row].length; col++)
+                  c[row][col] -= (quotient * c[diag][col]);
+            }
+         }
 
-			// copy last column of results into array y
+         // normalize c
 
-			for (int row = 0; row < y.length; row++)
-				y[row][0] = rref[row][rref[row].length - 1] / rref[row][row];
-		}
+         double[][] rref = new double[acol][latb[0].length];
 
-		// inline gauss jordan
+         for (int row = 0; row < c.length; row++) {
+            rref[row][latb[0].length - 1] = c[row][latb[0].length - 1] / c[row][row];
+            rref[row][row] = 1;
+         }
 
-		// inline augment
+         // copy last column of results into array y
 
-		double[][] lty = new double[acol][acol + 1];
+         for (int row = 0; row < y.length; row++)
+            y[row][0] = rref[row][rref[row].length - 1] / rref[row][row];
+      }
 
-		for (int row = 0; row < acol; row++)
-			for (int col = 0; col < acol; col++)
-				lty[row][col] = l[col][row];
+      // inline gauss jordan
 
-		for (int row = 0; row < y.length; row++)
-			lty[row][acol] = y[row][0];
+      // inline augment
 
-		// slight modification to the order of declarations
-		double[][] x = new double[acol][1];
+      double[][] lty = new double[acol][acol + 1];
 
-		// inline rref
+      for (int row = 0; row < acol; row++)
+         for (int col = 0; col < acol; col++)
+            lty[row][col] = l[col][row];
 
-		if (lty.length == 0) {
-			x = new double[][] {};
+      for (int row = 0; row < y.length; row++)
+         lty[row][acol] = y[row][0];
 
-		} else if (lty.length == 1) {
-			if (lty[0][0] == 0)
-				x = new double[][] { new double[] { 0 } };
-			else
-				x = new double[][] { new double[] { 1 } };
+      // slight modification to the order of declarations
+      double[][] x = new double[acol][1];
 
-		} else {
-			// copy array ab into array c
+      // inline rref
 
-			double[][] c = new double[lty[0].length - 1][lty[0].length];
-			for (int row = 0; row < c.length; row++)
-				for (int col = 0; col < lty[0].length; col++)
-					c[row][col] = lty[row][col];
+      if (lty.length == 0) {
+         x = new double[][] {};
 
-			// inline forward elimination
+      } else if (lty.length == 1) {
+         if (lty[0][0] == 0) x = new double[][] { new double[] { 0 } };
+         else x = new double[][] { new double[] { 1 } };
 
-			for (int diag = 0; diag < c.length - 1; diag++) {
-				if (c[diag][diag] == 0)
-					throw new ArithmeticException("divide by 0");
+      } else {
+         // copy array ab into array c
 
-				for (int row = diag + 1; row < c.length; row++) {
-					double quotient = c[row][diag] / c[diag][diag];
+         double[][] c = new double[lty[0].length - 1][lty[0].length];
+         for (int row = 0; row < c.length; row++)
+            for (int col = 0; col < lty[0].length; col++)
+               c[row][col] = lty[row][col];
 
-					for (int col = 0; col < c[row].length; col++)
-						c[row][col] -= (quotient * c[diag][col]);
-				}
-			}
+         // inline forward elimination
 
-			// inline backward elimination
+         for (int diag = 0; diag < c.length - 1; diag++) {
+            if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-			for (int diag = c.length - 1; diag > 0; diag--) {
-				if (c[diag][diag] == 0)
-					throw new ArithmeticException("divide by 0");
+            for (int row = diag + 1; row < c.length; row++) {
+               double quotient = c[row][diag] / c[diag][diag];
 
-				for (int row = diag - 1; row >= 0; row--) {
-					double quotient = c[row][diag] / c[diag][diag];
+               for (int col = 0; col < c[row].length; col++)
+                  c[row][col] -= (quotient * c[diag][col]);
+            }
+         }
 
-					for (int col = 0; col < c[row].length; col++)
-						c[row][col] -= (quotient * c[diag][col]);
-				}
-			}
+         // inline backward elimination
 
-			// normalize c
+         for (int diag = c.length - 1; diag > 0; diag--) {
+            if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-			double[][] rref = new double[a.length][lty[0].length];
+            for (int row = diag - 1; row >= 0; row--) {
+               double quotient = c[row][diag] / c[diag][diag];
 
-			for (int row = 0; row < c.length; row++) {
-				rref[row][lty[0].length - 1] = c[row][lty[0].length - 1] / c[row][row];
-				rref[row][row] = 1;
-			}
+               for (int col = 0; col < c[row].length; col++)
+                  c[row][col] -= (quotient * c[diag][col]);
+            }
+         }
 
-			// copy last column of results into array x
+         // normalize c
 
-			for (int row = 0; row < x.length; row++)
-				x[row][0] = rref[row][rref[row].length - 1] / rref[row][row];
-		}
+         double[][] rref = new double[a.length][lty[0].length];
 
-		// inline matrix multiply on vector
+         for (int row = 0; row < c.length; row++) {
+            rref[row][lty[0].length - 1] = c[row][lty[0].length - 1] / c[row][row];
+            rref[row][row] = 1;
+         }
 
-		double[][] e = new double[a.length][1];
+         // copy last column of results into array x
 
-		// find dot products of every row and column combination
+         for (int row = 0; row < x.length; row++)
+            x[row][0] = rref[row][rref[row].length - 1] / rref[row][row];
+      }
 
-		for (int row = 0; row < e.length; row++) {
+      // inline matrix multiply on vector
 
-			// inline dot product
+      double[][] e = new double[a.length][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < x.length; brow++)
-				sum += a[row][brow] * x[brow][0];
+      for (int row = 0; row < e.length; row++) {
 
-			// change to matrix multiply to satisfy specifications
+         // inline dot product
 
-			e[row][0] = sum - b[row][0];
-		}
+         double sum = 0;
 
-		return new double[][][] { x, e };
-	}
+         for (int brow = 0; brow < x.length; brow++)
+            sum += a[row][brow] * x[brow][0];
 
-	/**
-	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * the first element of the resulting array and e is the second element of
-	 * the resulting array, a*x - b = e where the magnitude of e is minimized.
-	 * Returns array of array of n by 1 and m by 1 array of double,
-	 * 
-	 * This implementation finds x in two steps. First, array qr is the
-	 * resulting array from qr decomposition on given matrix a where q is the
-	 * first element of qr and r is the second element of qr. Second, given that
-	 * qt is tranpose of q, x is found by solving r*x = qt*b.
-	 * 
-	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
-	 * where length is number of rows, {@code (null == a[row])} where a[row] is
-	 * any row, {@code (null == b[row])} where b[row] is any row,
-	 * {@code (a.length <= acol)} where length is number rows and acol is number
-	 * of columns on first row, {@code (acol != a[row].length)} where acol is
-	 * number of columns on first row and a[row].length is number of columns, or
-	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
-	 * any row.
-	 * 
-	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from at*a equals 0.
-	 * 
-	 * @param a
-	 *            m by n array of double where m > n
-	 * @param b
-	 *            m by 1 array of double
-	 * @return array of n by 1 and m by 1 array of double
-	 */
-	public static double[][][] overconstrainedQR(double[][] a, double[][] b) {
-		if (null == a)
-			throw new IllegalArgumentException("matrix a must not be null");
+         // change to matrix multiply to satisfy specifications
 
-		else if (null == b)
-			throw new IllegalArgumentException("matrix b must not be null");
+         e[row][0] = sum - b[row][0];
+      }
 
-		else if (a.length != b.length)
-			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      return new double[][][] { x, e };
+   }
 
-		int acol = -1;
+   /**
+    * Assumes row by columnn array representation of matrix. Given that x is the
+    * first element of the resulting array and e is the second element of the
+    * resulting array, a*x - b = e where the magnitude of e is minimized.
+    * Returns array of array of n by 1 and m by 1 array of double,
+    * 
+    * This implementation finds x in two steps. First, array qr is the resulting
+    * array from qr decomposition on given matrix a where q is the first element
+    * of qr and r is the second element of qr. Second, given that qt is tranpose
+    * of q, x is found by solving r*x = qt*b.
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+    * where length is number of rows, {@code (null == a[row])} where a[row] is
+    * any row, {@code (null == b[row])} where b[row] is any row,
+    * {@code (a.length <= acol)} where length is number rows and acol is number
+    * of columns on first row, {@code (acol != a[row].length)} where acol is
+    * number of columns on first row and a[row].length is number of columns, or
+    * {@code (1 != b[row].length)} where b[row].length is number of columns on
+    * any row.
+    * 
+    * There is a special condition where divide by 0 occurs when the determinant
+    * of the resulting matrix from at*a equals 0.
+    * 
+    * @param a
+    *        m by n array of double where m > n
+    * @param b
+    *        m by 1 array of double
+    * @return array of n by 1 and m by 1 array of double
+    */
+   public static double[][][] overconstrainedQR(double[][] a, double[][] b) {
+      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
 
-		for (int row = 0; row < a.length; row++)
-			if (null == a[row])
-				throw new IllegalArgumentException("matrix a must not contain null column");
+      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
 
-			else if (null == b[row])
-				throw new IllegalArgumentException("matrix b must not contain null column");
+      else if (a.length != b.length)
+         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
-			else if (row == 0) {
-				acol = a[0].length;
-				if (a.length <= acol)
-					throw new IllegalArgumentException("matrix a must contain more rows than columns");
+      int acol = -1;
 
-			} else if (acol != a[row].length)
-				throw new IllegalArgumentException("matrix a row width must remain constant");
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row])
+            throw new IllegalArgumentException("matrix a must not contain null column");
 
-			else if (1 != b[row].length)
-				throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (null == b[row])
+            throw new IllegalArgumentException("matrix b must not contain null column");
 
-		// inline qr
+         else if (row == 0) {
+            acol = a[0].length;
+            if (a.length <= acol)
+               throw new IllegalArgumentException("matrix a must contain more rows than columns");
 
-		double[][] q = new double[a.length][acol];
-		double[][] r = new double[acol][acol];
+         } else if (acol != a[row].length)
+            throw new IllegalArgumentException("matrix a row width must remain constant");
 
-		for (int col = 0; col < acol; col++) {
-			for (int rrow = 0; rrow < col; rrow++)
-				for (int row = 0; row < a.length; row++)
-					r[rrow][col] += q[row][rrow] * a[row][col];
+         else if (1 != b[row].length)
+            throw new IllegalArgumentException("matrix b must only contain one column");
 
-			double[] w = new double[a.length];
-			for (int row = 0; row < a.length; row++) {
-				w[row] = a[row][col];
+      // inline qr
 
-				for (int wrow = 0; wrow < col; wrow++)
-					w[row] -= (r[wrow][col] * q[row][wrow]);
-			}
+      double[][] q = new double[a.length][acol];
+      double[][] r = new double[acol][acol];
 
-			// inline determinant on vector
+      for (int col = 0; col < acol; col++) {
+         for (int rrow = 0; rrow < col; rrow++)
+            for (int row = 0; row < a.length; row++)
+               r[rrow][col] += q[row][rrow] * a[row][col];
 
-			for (int row = 0; row < a.length; row++)
-				r[col][col] += w[row] * w[row];
-			r[col][col] = Math.sqrt(r[col][col]);
+         double[] w = new double[a.length];
+         for (int row = 0; row < a.length; row++) {
+            w[row] = a[row][col];
 
-			for (int row = 0; row < a.length; row++)
-				q[row][col] = w[row] / r[col][col];
-		}
+            for (int wrow = 0; wrow < col; wrow++)
+               w[row] -= (r[wrow][col] * q[row][wrow]);
+         }
 
-		// inline matrix multiply and tranpose
+         // inline determinant on vector
 
-		double[][] qtb = new double[acol][1];
+         for (int row = 0; row < a.length; row++)
+            r[col][col] += w[row] * w[row];
+         r[col][col] = Math.sqrt(r[col][col]);
 
-		// find dot products of every row and column combination
+         for (int row = 0; row < a.length; row++)
+            q[row][col] = w[row] / r[col][col];
+      }
 
-		for (int row = 0; row < qtb.length; row++) {
+      // inline matrix multiply and tranpose
 
-			// inline dot product
+      double[][] qtb = new double[acol][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < b.length; brow++)
-				sum += q[brow][row] * b[brow][0];
+      for (int row = 0; row < qtb.length; row++) {
 
-			qtb[row][0] = sum;
-		}
+         // inline dot product
 
-		// inline gauss jordan
+         double sum = 0;
 
-		// inline augment
+         for (int brow = 0; brow < b.length; brow++)
+            sum += q[brow][row] * b[brow][0];
 
-		double[][] rqtb = new double[acol][acol + 1];
-		for (int row = 0; row < acol; row++)
-			for (int col = 0; col < acol; col++)
-				rqtb[row][col] = r[row][col];
+         qtb[row][0] = sum;
+      }
 
-		for (int row = 0; row < acol; row++)
-			rqtb[row][acol] = qtb[row][0];
+      // inline gauss jordan
 
-		// slight modification to the order of declarations
-		double[][] x = new double[acol][1];
+      // inline augment
 
-		// inline rref
+      double[][] rqtb = new double[acol][acol + 1];
+      for (int row = 0; row < acol; row++)
+         for (int col = 0; col < acol; col++)
+            rqtb[row][col] = r[row][col];
 
-		if (rqtb.length == 0) {
-			x = new double[][] {};
+      for (int row = 0; row < acol; row++)
+         rqtb[row][acol] = qtb[row][0];
 
-		} else if (rqtb.length == 1) {
-			if (rqtb[0][0] == 0)
-				x = new double[][] { new double[] { 0 } };
-			else
-				x = new double[][] { new double[] { 1 } };
+      // slight modification to the order of declarations
+      double[][] x = new double[acol][1];
 
-		} else {
-			// copy array ab into array c
+      // inline rref
 
-			double[][] c = new double[rqtb[0].length - 1][rqtb[0].length];
-			for (int row = 0; row < c.length; row++)
-				for (int col = 0; col < rqtb[0].length; col++)
-					c[row][col] = rqtb[row][col];
+      if (rqtb.length == 0) {
+         x = new double[][] {};
 
-			// inline forward elimination
+      } else if (rqtb.length == 1) {
+         if (rqtb[0][0] == 0) x = new double[][] { new double[] { 0 } };
+         else x = new double[][] { new double[] { 1 } };
 
-			for (int diag = 0; diag < c.length - 1; diag++) {
-				if (c[diag][diag] == 0)
-					throw new ArithmeticException("divide by 0");
+      } else {
+         // copy array ab into array c
 
-				for (int row = diag + 1; row < c.length; row++) {
-					double quotient = c[row][diag] / c[diag][diag];
+         double[][] c = new double[rqtb[0].length - 1][rqtb[0].length];
+         for (int row = 0; row < c.length; row++)
+            for (int col = 0; col < rqtb[0].length; col++)
+               c[row][col] = rqtb[row][col];
 
-					for (int col = 0; col < c[row].length; col++)
-						c[row][col] -= (quotient * c[diag][col]);
-				}
-			}
+         // inline forward elimination
 
-			// inline backward elimination
+         for (int diag = 0; diag < c.length - 1; diag++) {
+            if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-			for (int diag = c.length - 1; diag > 0; diag--) {
-				if (c[diag][diag] == 0)
-					throw new ArithmeticException("divide by 0");
+            for (int row = diag + 1; row < c.length; row++) {
+               double quotient = c[row][diag] / c[diag][diag];
 
-				for (int row = diag - 1; row >= 0; row--) {
-					double quotient = c[row][diag] / c[diag][diag];
+               for (int col = 0; col < c[row].length; col++)
+                  c[row][col] -= (quotient * c[diag][col]);
+            }
+         }
 
-					for (int col = 0; col < c[row].length; col++)
-						c[row][col] -= (quotient * c[diag][col]);
-				}
-			}
+         // inline backward elimination
 
-			// normalize c
+         for (int diag = c.length - 1; diag > 0; diag--) {
+            if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-			double[][] rref = new double[acol][rqtb[0].length];
+            for (int row = diag - 1; row >= 0; row--) {
+               double quotient = c[row][diag] / c[diag][diag];
 
-			for (int row = 0; row < c.length; row++) {
-				rref[row][rqtb[0].length - 1] = c[row][rqtb[0].length - 1] / c[row][row];
-				rref[row][row] = 1;
-			}
+               for (int col = 0; col < c[row].length; col++)
+                  c[row][col] -= (quotient * c[diag][col]);
+            }
+         }
 
-			// copy last column of results into array x
+         // normalize c
 
-			for (int row = 0; row < x.length; row++)
-				x[row][0] = rref[row][rref[row].length - 1] / rref[row][row];
-		}
+         double[][] rref = new double[acol][rqtb[0].length];
 
-		// inline matrix multiply on vector
+         for (int row = 0; row < c.length; row++) {
+            rref[row][rqtb[0].length - 1] = c[row][rqtb[0].length - 1] / c[row][row];
+            rref[row][row] = 1;
+         }
 
-		double[][] e = new double[a.length][1];
+         // copy last column of results into array x
 
-		// find dot products of every row and column combination
+         for (int row = 0; row < x.length; row++)
+            x[row][0] = rref[row][rref[row].length - 1] / rref[row][row];
+      }
 
-		for (int row = 0; row < e.length; row++) {
+      // inline matrix multiply on vector
 
-			// inline dot product
+      double[][] e = new double[a.length][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < x.length; brow++)
-				sum += a[row][brow] * x[brow][0];
+      for (int row = 0; row < e.length; row++) {
 
-			// change to matrix multiply to satisfy specifications
+         // inline dot product
 
-			e[row][0] = sum - b[row][0];
-		}
+         double sum = 0;
 
-		return new double[][][] { x, e };
-	}
+         for (int brow = 0; brow < x.length; brow++)
+            sum += a[row][brow] * x[brow][0];
 
-	/**
-	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * the first element of the resulting array and e is the second element of
-	 * the resulting array, a*x - b = e where the magnitude of e is minimized.
-	 * Returns array of array of n by 1 and m by 1 array of double,
-	 * 
-	 * This implementation finds x in one step. Given that array usv is the
-	 * resulting array of sv decomposition on given matrix a where ut is
-	 * tranpose of the first element of usv, (s^-1) is the inverse of the second
-	 * element of usv, v is the third element of usv, x is equal to
-	 * v*(s^-1)*ut*b.
-	 * 
-	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
-	 * where length is number of rows, {@code (null == a[row])} where a[row] is
-	 * any row, {@code (null == b[row])} where b[row] is any row,
-	 * {@code (a.length <= acol)} where length is number rows and acol is number
-	 * of columns on first row, {@code (acol != a[row].length)} where acol is
-	 * number of columns on first row and a[row].length is number of columns, or
-	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
-	 * any row.
-	 * 
-	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from at*a equals 0.
-	 * 
-	 * @param a
-	 *            m by n array of double where m > n
-	 * @param b
-	 *            m by 1 array of double
-	 * @return array of n by 1 and m by 1 array of double
-	 */
-	public static double[][][] overconstrainedSV(double[][] a, double[][] b) {
-		if (null == a)
-			throw new IllegalArgumentException("matrix a must not be null");
+         // change to matrix multiply to satisfy specifications
 
-		else if (null == b)
-			throw new IllegalArgumentException("matrix b must not be null");
+         e[row][0] = sum - b[row][0];
+      }
 
-		else if (a.length != b.length)
-			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      return new double[][][] { x, e };
+   }
 
-		int acol = -1;
+   /**
+    * Assumes row by columnn array representation of matrix. Given that x is the
+    * first element of the resulting array and e is the second element of the
+    * resulting array, a*x - b = e where the magnitude of e is minimized.
+    * Returns array of array of n by 1 and m by 1 array of double,
+    * 
+    * This implementation finds x in one step. Given that array usv is the
+    * resulting array of sv decomposition on given matrix a where ut is tranpose
+    * of the first element of usv, (s^-1) is the inverse of the second element
+    * of usv, v is the third element of usv, x is equal to v*(s^-1)*ut*b.
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+    * where length is number of rows, {@code (null == a[row])} where a[row] is
+    * any row, {@code (null == b[row])} where b[row] is any row,
+    * {@code (a.length <= acol)} where length is number rows and acol is number
+    * of columns on first row, {@code (acol != a[row].length)} where acol is
+    * number of columns on first row and a[row].length is number of columns, or
+    * {@code (1 != b[row].length)} where b[row].length is number of columns on
+    * any row.
+    * 
+    * There is a special condition where divide by 0 occurs when the determinant
+    * of the resulting matrix from at*a equals 0.
+    * 
+    * @param a
+    *        m by n array of double where m > n
+    * @param b
+    *        m by 1 array of double
+    * @return array of n by 1 and m by 1 array of double
+    */
+   public static double[][][] overconstrainedSV(double[][] a, double[][] b) {
+      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
 
-		for (int row = 0; row < a.length; row++)
-			if (null == a[row])
-				throw new IllegalArgumentException("matrix a must not contain null column");
+      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
 
-			else if (null == b[row])
-				throw new IllegalArgumentException("matrix b must not contain null column");
+      else if (a.length != b.length)
+         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
-			else if (row == 0) {
-				acol = a[0].length;
-				if (a.length <= acol)
-					throw new IllegalArgumentException("matrix a must contain more rows than columns");
+      int acol = -1;
 
-			} else if (acol != a[row].length)
-				throw new IllegalArgumentException("matrix a row width must remain constant");
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row])
+            throw new IllegalArgumentException("matrix a must not contain null column");
 
-			else if (1 != b[row].length)
-				throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (null == b[row])
+            throw new IllegalArgumentException("matrix b must not contain null column");
 
-		// inline singular value decomposition
+         else if (row == 0) {
+            acol = a[0].length;
+            if (a.length <= acol)
+               throw new IllegalArgumentException("matrix a must contain more rows than columns");
 
-		// inline matrix multiplication and tranpose
+         } else if (acol != a[row].length)
+            throw new IllegalArgumentException("matrix a row width must remain constant");
 
-		double[][] ata = new double[acol][acol];
+         else if (1 != b[row].length)
+            throw new IllegalArgumentException("matrix b must only contain one column");
 
-		for (int row = 0; row < ata.length; row++) {
-			for (int col = 0; col < ata[row].length; col++) {
+      // inline singular value decomposition
 
-				// inline dot product
+      // inline matrix multiplication and tranpose
 
-				double sum = 0;
+      double[][] ata = new double[acol][acol];
 
-				for (int brow = 0; brow < a.length; brow++)
-					sum += a[brow][row] * a[brow][col];
+      for (int row = 0; row < ata.length; row++) {
+         for (int col = 0; col < ata[row].length; col++) {
 
-				ata[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline eigen
+            double sum = 0;
 
-		double[][] l = new double[ata.length][ata.length];
-		double[][] v = new double[ata.length][ata.length];
+            for (int brow = 0; brow < a.length; brow++)
+               sum += a[brow][row] * a[brow][col];
 
-		if (ata.length == 1) {
+            ata[row][col] = sum;
+         }
+      }
 
-			// assumed double a = -1;
-			double bb = ata[0][0];
+      // inline eigen
 
-			l[0][0] = bb;
+      double[][] l = new double[ata.length][ata.length];
+      double[][] v = new double[ata.length][ata.length];
 
-			v[1][0] = 1;
+      if (ata.length == 1) {
 
-		} else if (ata.length == 2) {
+         // assumed double a = -1;
+         double bb = ata[0][0];
 
-			// assumed double a = 1;
-			double bb = -ata[0][0] - ata[1][1];
-			double c = ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0];
-			double sqrt = Math.sqrt((bb * bb) - (4 * c));
+         l[0][0] = bb;
 
-			l[0][0] = (-bb + sqrt) / 2;
-			l[1][1] = (-bb - sqrt) / 2;
+         v[1][0] = 1;
 
-			for (int row = 0; row < ata.length; row++) {
-				v[0][row] = -ata[0][1] / (ata[0][0] - l[row][row]);
-				v[1][row] = 1;
-			}
+      } else if (ata.length == 2) {
 
-			for (int row = 0; row < ata.length; row++) {
-				double mag = Math.sqrt((v[0][row] * v[0][row]) + 1);
-				v[0][row] /= mag;
-				v[1][row] /= mag;
-			}
+         // assumed double a = 1;
+         double bb = -ata[0][0] - ata[1][1];
+         double c = ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0];
+         double sqrt = Math.sqrt((bb * bb) - (4 * c));
 
-		} else if (ata.length == 3) {
+         l[0][0] = (-bb + sqrt) / 2;
+         l[1][1] = (-bb - sqrt) / 2;
 
-			// assumed double a = -1;
-			double bb = ata[0][0] + ata[1][1] + ata[2][2];
-			double c = -(ata[0][0] * ata[1][1]) - (ata[0][0] * ata[2][2]) - (ata[1][1] * ata[2][2])
-					+ (ata[0][1] * ata[1][0]) + (ata[0][2] * ata[2][0]) + (ata[1][2] * ata[2][1]);
-			double d = (ata[2][0] * ata[0][1] * ata[1][2]) + (ata[1][0] * ata[2][1] * ata[0][2])
-					- (ata[0][0] * ata[2][1] * ata[1][2]) - (ata[1][1] * ata[2][0] * ata[0][2])
-					- (ata[2][2] * ata[1][0] * ata[0][1]) + (ata[0][0] * ata[1][1] * ata[2][2]);
+         for (int row = 0; row < ata.length; row++) {
+            v[0][row] = -ata[0][1] / (ata[0][0] - l[row][row]);
+            v[1][row] = 1;
+         }
 
-			double f = (-(3 * c) - (bb * bb)) / 3;
-			double g = (-(2 * bb * bb * bb) - (9 * bb * c) - (27 * d)) / 27;
-			double h = (g * g / 4) + (f * f * f / 27);
-			double i = Math.sqrt((g * g / 4) - h);
-			double j = Math.pow(i, 1d / 3);
-			double k = Math.acos(-g / (2 * i));
+         for (int row = 0; row < ata.length; row++) {
+            double mag = Math.sqrt((v[0][row] * v[0][row]) + 1);
+            v[0][row] /= mag;
+            v[1][row] /= mag;
+         }
 
-			double m = Math.cos(k / 3);
-			double n = Math.sqrt(3) * Math.sin(k / 3);
-			double p = (bb / 3);
-			double q = 2 * j * Math.cos(k / 3) + (bb / 3);
-			double r = -j * (m + n) + p;
-			double s = -j * (m - n) + p;
+      } else if (ata.length == 3) {
 
-			// more than 19 variables
+         // assumed double a = -1;
+         double bb = ata[0][0] + ata[1][1] + ata[2][2];
+         double c = -(ata[0][0] * ata[1][1]) - (ata[0][0] * ata[2][2]) - (ata[1][1] * ata[2][2])
+            + (ata[0][1] * ata[1][0]) + (ata[0][2] * ata[2][0]) + (ata[1][2] * ata[2][1]);
+         double d = (ata[2][0] * ata[0][1] * ata[1][2]) + (ata[1][0] * ata[2][1] * ata[0][2])
+            - (ata[0][0] * ata[2][1] * ata[1][2]) - (ata[1][1] * ata[2][0] * ata[0][2])
+            - (ata[2][2] * ata[1][0] * ata[0][1]) + (ata[0][0] * ata[1][1] * ata[2][2]);
 
-			if (q > r && q > s) {
+         double f = (-(3 * c) - (bb * bb)) / 3;
+         double g = (-(2 * bb * bb * bb) - (9 * bb * c) - (27 * d)) / 27;
+         double h = (g * g / 4) + (f * f * f / 27);
+         double i = Math.sqrt((g * g / 4) - h);
+         double j = Math.pow(i, 1d / 3);
+         double k = Math.acos(-g / (2 * i));
 
-				// q is greatest root
+         double m = Math.cos(k / 3);
+         double n = Math.sqrt(3) * Math.sin(k / 3);
+         double p = (bb / 3);
+         double q = 2 * j * Math.cos(k / 3) + (bb / 3);
+         double r = -j * (m + n) + p;
+         double s = -j * (m - n) + p;
 
-				l[0][0] = q;
+         // more than 19 variables
 
-				if (r > s) {
+         if (q > r && q > s) {
 
-					// s is least root
+            // q is greatest root
 
-					l[1][1] = r;
-					l[2][2] = s;
+            l[0][0] = q;
 
-				} else {
+            if (r > s) {
 
-					// r is least root
+               // s is least root
 
-					l[1][1] = s;
-					l[2][2] = r;
-				}
+               l[1][1] = r;
+               l[2][2] = s;
 
-			} else if (r > s) {
+            } else {
 
-				// r is greatest root
+               // r is least root
 
-				l[0][0] = r;
+               l[1][1] = s;
+               l[2][2] = r;
+            }
 
-				if (q > s) {
+         } else if (r > s) {
 
-					// s is least root
+            // r is greatest root
 
-					l[1][1] = q;
-					l[2][2] = s;
+            l[0][0] = r;
 
-				} else {
+            if (q > s) {
 
-					// q is least root
+               // s is least root
 
-					l[1][1] = s;
-					l[2][2] = q;
-				}
+               l[1][1] = q;
+               l[2][2] = s;
 
-			} else {
+            } else {
 
-				// s is greatest root
+               // q is least root
 
-				l[0][0] = s;
+               l[1][1] = s;
+               l[2][2] = q;
+            }
 
-				if (q > r) {
+         } else {
 
-					// r is least root
+            // s is greatest root
 
-					l[1][1] = q;
-					l[2][2] = r;
+            l[0][0] = s;
 
-				} else {
+            if (q > r) {
 
-					// q is least root
+               // r is least root
 
-					l[1][1] = r;
-					l[2][2] = q;
-				}
-			}
+               l[1][1] = q;
+               l[2][2] = r;
 
-			for (int row = 0; row < ata.length; row++) {
+            } else {
 
-				// copy array sig into array x
+               // q is least root
 
-				double[][] x = new double[ata.length - 1][ata.length];
-				for (int xrow = 0; xrow < x.length; xrow++)
-					for (int xcol = 0; xcol < ata.length; xcol++) {
-						x[xrow][xcol] = ata[xrow][xcol];
-						if (xrow == xcol)
-							// if on the diagonal, then subtract lambda
-							x[xrow][xcol] -= l[row][row];
-					}
+               l[1][1] = r;
+               l[2][2] = q;
+            }
+         }
 
-				// inline forward elimination
+         for (int row = 0; row < ata.length; row++) {
 
-				for (int diag = 0; diag < x.length - 1; diag++) {
-					if (x[diag][diag] == 0)
-						throw new ArithmeticException("divide by 0");
+            // copy array sig into array x
 
-					for (int xrow = diag + 1; xrow < x.length; xrow++) {
-						double quotient = x[xrow][diag] / x[diag][diag];
+            double[][] x = new double[ata.length - 1][ata.length];
+            for (int xrow = 0; xrow < x.length; xrow++)
+               for (int xcol = 0; xcol < ata.length; xcol++) {
+                  x[xrow][xcol] = ata[xrow][xcol];
+                  if (xrow == xcol)
+                     // if on the diagonal, then subtract lambda
+                     x[xrow][xcol] -= l[row][row];
+               }
 
-						for (int xcol = 0; xcol < x[xrow].length; xcol++)
-							x[xrow][xcol] -= (quotient * x[diag][xcol]);
-					}
-				}
+            // inline forward elimination
 
-				// inline backward elimination
+            for (int diag = 0; diag < x.length - 1; diag++) {
+               if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-				for (int diag = x.length - 1; diag > 0; diag--) {
-					if (x[diag][diag] == 0)
-						throw new ArithmeticException("divide by 0");
+               for (int xrow = diag + 1; xrow < x.length; xrow++) {
+                  double quotient = x[xrow][diag] / x[diag][diag];
 
-					for (int xrow = diag - 1; xrow >= 0; xrow--) {
-						double quotient = x[xrow][diag] / x[diag][diag];
+                  for (int xcol = 0; xcol < x[xrow].length; xcol++)
+                     x[xrow][xcol] -= (quotient * x[diag][xcol]);
+               }
+            }
 
-						for (int xcol = 0; xcol < x[xrow].length; xcol++)
-							x[xrow][xcol] -= (quotient * x[diag][xcol]);
-					}
-				}
+            // inline backward elimination
 
-				// solve for "z" where z is on row 5
+            for (int diag = x.length - 1; diag > 0; diag--) {
+               if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-				v[0][row] = -x[0][2] / x[0][0];
-				v[1][row] = -x[1][2] / x[1][1];
-				v[2][row] = 1;
-			}
+               for (int xrow = diag - 1; xrow >= 0; xrow--) {
+                  double quotient = x[xrow][diag] / x[diag][diag];
 
-			// normalize by row
+                  for (int xcol = 0; xcol < x[xrow].length; xcol++)
+                     x[xrow][xcol] -= (quotient * x[diag][xcol]);
+               }
+            }
 
-			for (int row = 0; row < ata.length; row++) {
+            // solve for "z" where z is on row 5
 
-				// determinant on vector
+            v[0][row] = -x[0][2] / x[0][0];
+            v[1][row] = -x[1][2] / x[1][1];
+            v[2][row] = 1;
+         }
 
-				double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
-				v[0][row] /= det;
-				v[1][row] /= det;
-				v[2][row] /= det;
-			}
+         // normalize by row
 
-		} else
-			// because finding zeros of larger polynomials is difficult
-			throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
+         for (int row = 0; row < ata.length; row++) {
 
-		double[][] inverse = new double[ata.length][ata.length];
+            // determinant on vector
 
-		for (int row = 0; row < ata.length; row++)
-			for (int col = 0; col < ata.length; col++) {
-				if (l[row][col] == 0)
-					// prevent divides by 0
-					inverse[row][col] = 0;
+            double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
+            v[0][row] /= det;
+            v[1][row] /= det;
+            v[2][row] /= det;
+         }
 
-				else
-					// inverse is simple inverse since sigma is diagonal
-					inverse[row][col] = 1 / Math.sqrt(l[row][col]);
-			}
+      } else
+         // because finding zeros of larger polynomials is difficult
+         throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
 
-		// inline matrix multiply
+      double[][] inverse = new double[ata.length][ata.length];
 
-		double[][] av = new double[a.length][v[0].length];
+      for (int row = 0; row < ata.length; row++)
+         for (int col = 0; col < ata.length; col++) {
+            if (l[row][col] == 0)
+               // prevent divides by 0
+               inverse[row][col] = 0;
 
-		for (int row = 0; row < av.length; row++) {
-			for (int col = 0; col < av[row].length; col++) {
+            else
+               // inverse is simple inverse since sigma is diagonal
+               inverse[row][col] = 1 / Math.sqrt(l[row][col]);
+         }
 
-				// inline dot product
+      // inline matrix multiply
 
-				double sum = 0;
+      double[][] av = new double[a.length][v[0].length];
 
-				for (int brow = 0; brow < v.length; brow++)
-					sum += a[row][brow] * v[brow][col];
+      for (int row = 0; row < av.length; row++) {
+         for (int col = 0; col < av[row].length; col++) {
 
-				av[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply and tranpose
+            double sum = 0;
 
-		double[][] ut = new double[inverse[0].length][av.length];
+            for (int brow = 0; brow < v.length; brow++)
+               sum += a[row][brow] * v[brow][col];
 
-		for (int col = 0; col < ut.length; col++) {
-			for (int row = 0; row < ut[col].length; row++) {
+            av[row][col] = sum;
+         }
+      }
 
-				// inline dot product
+      // inline matrix multiply and tranpose
 
-				double sum = 0;
+      double[][] ut = new double[inverse[0].length][av.length];
 
-				for (int brow = 0; brow < inverse.length; brow++)
-					sum += av[row][brow] * inverse[brow][col];
+      for (int col = 0; col < ut.length; col++) {
+         for (int row = 0; row < ut[col].length; row++) {
 
-				ut[col][row] = sum;
-			}
-		}
+            // inline dot product
 
-		// 27 variables NOT counting any variable declared inside for loop
+            double sum = 0;
 
-		// inline matrix multiply
+            for (int brow = 0; brow < inverse.length; brow++)
+               sum += av[row][brow] * inverse[brow][col];
 
-		double[][] vsInv = new double[acol][acol];
+            ut[col][row] = sum;
+         }
+      }
 
-		// find dot products of every row and column combination
+      // 27 variables NOT counting any variable declared inside for loop
 
-		for (int row = 0; row < vsInv.length; row++) {
-			for (int col = 0; col < vsInv[row].length; col++) {
+      // inline matrix multiply
 
-				// inline dot product
+      double[][] vsInv = new double[acol][acol];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < acol; brow++)
-					sum += v[row][brow] * inverse[brow][col];
+      for (int row = 0; row < vsInv.length; row++) {
+         for (int col = 0; col < vsInv[row].length; col++) {
 
-				vsInv[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply
+            double sum = 0;
 
-		double[][] vsInvUt = new double[acol][a.length];
+            for (int brow = 0; brow < acol; brow++)
+               sum += v[row][brow] * inverse[brow][col];
 
-		// find dot products of every row and column combination
+            vsInv[row][col] = sum;
+         }
+      }
 
-		for (int row = 0; row < vsInvUt.length; row++) {
-			for (int col = 0; col < vsInvUt[row].length; col++) {
+      // inline matrix multiply
 
-				// inline dot product
+      double[][] vsInvUt = new double[acol][a.length];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < ut.length; brow++)
-					sum += vsInv[row][brow] * ut[brow][col];
+      for (int row = 0; row < vsInvUt.length; row++) {
+         for (int col = 0; col < vsInvUt[row].length; col++) {
 
-				vsInvUt[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply
+            double sum = 0;
 
-		double[][] x = new double[acol][1];
+            for (int brow = 0; brow < ut.length; brow++)
+               sum += vsInv[row][brow] * ut[brow][col];
 
-		// find dot products of every row and column combination
+            vsInvUt[row][col] = sum;
+         }
+      }
 
-		for (int row = 0; row < x.length; row++) {
-			for (int col = 0; col < x[row].length; col++) {
+      // inline matrix multiply
 
-				// inline dot product
+      double[][] x = new double[acol][1];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < b.length; brow++)
-					sum += vsInvUt[row][brow] * b[brow][col];
+      for (int row = 0; row < x.length; row++) {
+         for (int col = 0; col < x[row].length; col++) {
 
-				x[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply on vector
+            double sum = 0;
 
-		double[][] e = new double[a.length][1];
+            for (int brow = 0; brow < b.length; brow++)
+               sum += vsInvUt[row][brow] * b[brow][col];
 
-		// find dot products of every row and column combination
+            x[row][col] = sum;
+         }
+      }
 
-		for (int row = 0; row < e.length; row++) {
+      // inline matrix multiply on vector
 
-			// inline dot product
+      double[][] e = new double[a.length][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < x.length; brow++)
-				sum += a[row][brow] * x[brow][0];
+      for (int row = 0; row < e.length; row++) {
 
-			// change to matrix multiply to satisfy specifications
+         // inline dot product
 
-			e[row][0] = sum - b[row][0];
-		}
+         double sum = 0;
 
-		return new double[][][] { x, e };
-	}
+         for (int brow = 0; brow < x.length; brow++)
+            sum += a[row][brow] * x[brow][0];
 
-	/**
-	 * Assumes row by columnn array representation of matrix. Given that x is
-	 * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
-	 * Returns n by 1 array of double.
-	 * 
-	 * This implementation finds x in one step. Given that array usv is the
-	 * resulting array of sv decomposition on tranpose of the given matrix a
-	 * where u is the first element of usv, (s^-1) is the inverse of the second
-	 * element of usv, vt is tranpose of the third element of usv, x is found by
-	 * solving u*(s^-1)*vt*b.
-	 * 
-	 * Throws IllegalArgumentException if any of the following is true:
-	 * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
-	 * where length is number of rows, {@code (null == a[row])} where a[row] is
-	 * any row, {@code (null == b[row])} where b[row] is any row,
-	 * {@code (a.length >= acol)} where length is number rows and acol is number
-	 * of columns on first row, {@code (acol != a[row].length)} where acol is
-	 * number of columns on first row and a[row].length is number of columns, or
-	 * {@code (1 != b[row].length)} where b[row].length is number of columns on
-	 * any row.
-	 * 
-	 * There is a special condition where divide by 0 occurs when the
-	 * determinant of the resulting matrix from a*at equals 0.
-	 * 
-	 * @param a
-	 *            m by n array of double where m < n
-	 * @param b
-	 *            m by 1 array of double
-	 * @return n by 1 array of double
-	 */
-	public static double[][] underconstrainedSV(double[][] a, double[][] b) {
-		if (null == a)
-			throw new IllegalArgumentException("matrix a must not be null");
+         // change to matrix multiply to satisfy specifications
 
-		else if (null == b)
-			throw new IllegalArgumentException("matrix b must not be null");
+         e[row][0] = sum - b[row][0];
+      }
 
-		else if (a.length != b.length)
-			throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      return new double[][][] { x, e };
+   }
 
-		int acol = -1;
+   /**
+    * Assumes row by columnn array representation of matrix. Given that x is
+    * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
+    * Returns n by 1 array of double.
+    * 
+    * This implementation finds x in one step. Given that array usv is the
+    * resulting array of sv decomposition on tranpose of the given matrix a
+    * where u is the first element of usv, (s^-1) is the inverse of the second
+    * element of usv, vt is tranpose of the third element of usv, x is found by
+    * solving u*(s^-1)*vt*b.
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
+    * where length is number of rows, {@code (null == a[row])} where a[row] is
+    * any row, {@code (null == b[row])} where b[row] is any row,
+    * {@code (a.length >= acol)} where length is number rows and acol is number
+    * of columns on first row, {@code (acol != a[row].length)} where acol is
+    * number of columns on first row and a[row].length is number of columns, or
+    * {@code (1 != b[row].length)} where b[row].length is number of columns on
+    * any row.
+    * 
+    * There is a special condition where divide by 0 occurs when the determinant
+    * of the resulting matrix from a*at equals 0.
+    * 
+    * @param a
+    *        m by n array of double where m < n
+    * @param b
+    *        m by 1 array of double
+    * @return n by 1 array of double
+    */
+   public static double[][] underconstrainedSV(double[][] a, double[][] b) {
+      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
 
-		for (int row = 0; row < a.length; row++)
-			if (null == a[row])
-				throw new IllegalArgumentException("matrix a must not contain null column");
+      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
 
-			else if (null == b[row])
-				throw new IllegalArgumentException("matrix b must not contain null column");
+      else if (a.length != b.length)
+         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
 
-			else if (row == 0) {
-				acol = a[0].length;
-				if (a.length >= acol)
-					throw new IllegalArgumentException("matrix a must contain less rows than columns");
+      int acol = -1;
 
-			} else if (acol != a[row].length)
-				throw new IllegalArgumentException("matrix a row width must remain constant");
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row])
+            throw new IllegalArgumentException("matrix a must not contain null column");
 
-			else if (1 != b[row].length)
-				throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (null == b[row])
+            throw new IllegalArgumentException("matrix b must not contain null column");
 
-		// inline matrix multiplication and tranpose (different tranpose)
+         else if (row == 0) {
+            acol = a[0].length;
+            if (a.length >= acol)
+               throw new IllegalArgumentException("matrix a must contain less rows than columns");
 
-		double[][] aat = new double[a.length][a.length];
+         } else if (acol != a[row].length)
+            throw new IllegalArgumentException("matrix a row width must remain constant");
 
-		for (int row = 0; row < a.length; row++) {
-			for (int col = 0; col < a.length; col++) {
+         else if (1 != b[row].length)
+            throw new IllegalArgumentException("matrix b must only contain one column");
 
-				// inline dot product
+      // inline matrix multiplication and tranpose (different tranpose)
 
-				double sum = 0;
+      double[][] aat = new double[a.length][a.length];
 
-				for (int brow = 0; brow < acol; brow++)
-					sum += a[row][brow] * a[col][brow];
+      for (int row = 0; row < a.length; row++) {
+         for (int col = 0; col < a.length; col++) {
 
-				aat[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline eigen
+            double sum = 0;
 
-		double[][] l = new double[aat.length][aat.length];
-		double[][] v = new double[aat.length][aat.length];
+            for (int brow = 0; brow < acol; brow++)
+               sum += a[row][brow] * a[col][brow];
 
-		if (aat.length == 1) {
+            aat[row][col] = sum;
+         }
+      }
 
-			// assumed double a = -1;
-			double bb = aat[0][0];
+      // inline eigen
 
-			l[0][0] = bb;
+      double[][] l = new double[aat.length][aat.length];
+      double[][] v = new double[aat.length][aat.length];
 
-			v[1][0] = 1;
+      if (aat.length == 1) {
 
-		} else if (aat.length == 2) {
+         // assumed double a = -1;
+         double bb = aat[0][0];
 
-			// assumed double a = 1;
-			double bb = -aat[0][0] - aat[1][1];
-			double c = aat[0][0] * aat[1][1] - aat[0][1] * aat[1][0];
-			double sqrt = Math.sqrt((bb * bb) - (4 * c));
+         l[0][0] = bb;
 
-			l[0][0] = (-bb + sqrt) / 2;
-			l[1][1] = (-bb - sqrt) / 2;
+         v[1][0] = 1;
 
-			for (int row = 0; row < aat.length; row++) {
-				v[0][row] = -aat[0][1] / (aat[0][0] - l[row][row]);
-				v[1][row] = 1;
-			}
+      } else if (aat.length == 2) {
 
-			for (int row = 0; row < aat.length; row++) {
-				double mag = Math.sqrt((v[0][row] * v[0][row]) + 1);
-				v[0][row] /= mag;
-				v[1][row] /= mag;
-			}
+         // assumed double a = 1;
+         double bb = -aat[0][0] - aat[1][1];
+         double c = aat[0][0] * aat[1][1] - aat[0][1] * aat[1][0];
+         double sqrt = Math.sqrt((bb * bb) - (4 * c));
 
-		} else if (aat.length == 3) {
+         l[0][0] = (-bb + sqrt) / 2;
+         l[1][1] = (-bb - sqrt) / 2;
 
-			// assumed double a = -1;
-			double bb = aat[0][0] + aat[1][1] + aat[2][2];
-			double c = -(aat[0][0] * aat[1][1]) - (aat[0][0] * aat[2][2]) - (aat[1][1] * aat[2][2])
-					+ (aat[0][1] * aat[1][0]) + (aat[0][2] * aat[2][0]) + (aat[1][2] * aat[2][1]);
-			double d = (aat[2][0] * aat[0][1] * aat[1][2]) + (aat[1][0] * aat[2][1] * aat[0][2])
-					- (aat[0][0] * aat[2][1] * aat[1][2]) - (aat[1][1] * aat[2][0] * aat[0][2])
-					- (aat[2][2] * aat[1][0] * aat[0][1]) + (aat[0][0] * aat[1][1] * aat[2][2]);
+         for (int row = 0; row < aat.length; row++) {
+            v[0][row] = -aat[0][1] / (aat[0][0] - l[row][row]);
+            v[1][row] = 1;
+         }
 
-			double f = (-(3 * c) - (bb * bb)) / 3;
-			double g = (-(2 * bb * bb * bb) - (9 * bb * c) - (27 * d)) / 27;
-			double h = (g * g / 4) + (f * f * f / 27);
-			double i = Math.sqrt((g * g / 4) - h);
-			double j = Math.pow(i, 1d / 3);
-			double k = Math.acos(-g / (2 * i));
+         for (int row = 0; row < aat.length; row++) {
+            double mag = Math.sqrt((v[0][row] * v[0][row]) + 1);
+            v[0][row] /= mag;
+            v[1][row] /= mag;
+         }
 
-			double m = Math.cos(k / 3);
-			double n = Math.sqrt(3) * Math.sin(k / 3);
-			double p = (bb / 3);
-			double q = 2 * j * Math.cos(k / 3) + (bb / 3);
-			double r = -j * (m + n) + p;
-			double s = -j * (m - n) + p;
+      } else if (aat.length == 3) {
 
-			// more than 19 variables
+         // assumed double a = -1;
+         double bb = aat[0][0] + aat[1][1] + aat[2][2];
+         double c = -(aat[0][0] * aat[1][1]) - (aat[0][0] * aat[2][2]) - (aat[1][1] * aat[2][2])
+            + (aat[0][1] * aat[1][0]) + (aat[0][2] * aat[2][0]) + (aat[1][2] * aat[2][1]);
+         double d = (aat[2][0] * aat[0][1] * aat[1][2]) + (aat[1][0] * aat[2][1] * aat[0][2])
+            - (aat[0][0] * aat[2][1] * aat[1][2]) - (aat[1][1] * aat[2][0] * aat[0][2])
+            - (aat[2][2] * aat[1][0] * aat[0][1]) + (aat[0][0] * aat[1][1] * aat[2][2]);
 
-			if (q > r && q > s) {
+         double f = (-(3 * c) - (bb * bb)) / 3;
+         double g = (-(2 * bb * bb * bb) - (9 * bb * c) - (27 * d)) / 27;
+         double h = (g * g / 4) + (f * f * f / 27);
+         double i = Math.sqrt((g * g / 4) - h);
+         double j = Math.pow(i, 1d / 3);
+         double k = Math.acos(-g / (2 * i));
 
-				// q is greatest root
+         double m = Math.cos(k / 3);
+         double n = Math.sqrt(3) * Math.sin(k / 3);
+         double p = (bb / 3);
+         double q = 2 * j * Math.cos(k / 3) + (bb / 3);
+         double r = -j * (m + n) + p;
+         double s = -j * (m - n) + p;
 
-				l[0][0] = q;
+         // more than 19 variables
 
-				if (r > s) {
+         if (q > r && q > s) {
 
-					// s is least root
+            // q is greatest root
 
-					l[1][1] = r;
-					l[2][2] = s;
+            l[0][0] = q;
 
-				} else {
+            if (r > s) {
 
-					// r is least root
+               // s is least root
 
-					l[1][1] = s;
-					l[2][2] = r;
-				}
+               l[1][1] = r;
+               l[2][2] = s;
 
-			} else if (r > s) {
+            } else {
 
-				// r is greatest root
+               // r is least root
 
-				l[0][0] = r;
+               l[1][1] = s;
+               l[2][2] = r;
+            }
 
-				if (q > s) {
+         } else if (r > s) {
 
-					// s is least root
+            // r is greatest root
 
-					l[1][1] = q;
-					l[2][2] = s;
+            l[0][0] = r;
 
-				} else {
+            if (q > s) {
 
-					// q is least root
+               // s is least root
 
-					l[1][1] = s;
-					l[2][2] = q;
-				}
+               l[1][1] = q;
+               l[2][2] = s;
 
-			} else {
+            } else {
 
-				// s is greatest root
+               // q is least root
 
-				l[0][0] = s;
+               l[1][1] = s;
+               l[2][2] = q;
+            }
 
-				if (q > r) {
+         } else {
 
-					// r is least root
+            // s is greatest root
 
-					l[1][1] = q;
-					l[2][2] = r;
+            l[0][0] = s;
 
-				} else {
+            if (q > r) {
 
-					// q is least root
+               // r is least root
 
-					l[1][1] = r;
-					l[2][2] = q;
-				}
-			}
+               l[1][1] = q;
+               l[2][2] = r;
 
-			for (int row = 0; row < aat.length; row++) {
+            } else {
 
-				// copy array sig into array x
+               // q is least root
 
-				double[][] x = new double[aat.length - 1][aat.length];
-				for (int xrow = 0; xrow < x.length; xrow++)
-					for (int xcol = 0; xcol < aat.length; xcol++) {
-						x[xrow][xcol] = aat[xrow][xcol];
-						if (xrow == xcol)
-							// if on the diagonal, then subtract lambda
-							x[xrow][xcol] -= l[row][row];
-					}
+               l[1][1] = r;
+               l[2][2] = q;
+            }
+         }
 
-				// inline forward elimination
+         for (int row = 0; row < aat.length; row++) {
 
-				for (int diag = 0; diag < x.length - 1; diag++) {
-					if (x[diag][diag] == 0)
-						throw new ArithmeticException("divide by 0");
+            // copy array sig into array x
 
-					for (int xrow = diag + 1; xrow < x.length; xrow++) {
-						double quotient = x[xrow][diag] / x[diag][diag];
+            double[][] x = new double[aat.length - 1][aat.length];
+            for (int xrow = 0; xrow < x.length; xrow++)
+               for (int xcol = 0; xcol < aat.length; xcol++) {
+                  x[xrow][xcol] = aat[xrow][xcol];
+                  if (xrow == xcol)
+                     // if on the diagonal, then subtract lambda
+                     x[xrow][xcol] -= l[row][row];
+               }
 
-						for (int xcol = 0; xcol < x[xrow].length; xcol++)
-							x[xrow][xcol] -= (quotient * x[diag][xcol]);
-					}
-				}
+            // inline forward elimination
 
-				// inline backward elimination
+            for (int diag = 0; diag < x.length - 1; diag++) {
+               if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-				for (int diag = x.length - 1; diag > 0; diag--) {
-					if (x[diag][diag] == 0)
-						throw new ArithmeticException("divide by 0");
+               for (int xrow = diag + 1; xrow < x.length; xrow++) {
+                  double quotient = x[xrow][diag] / x[diag][diag];
 
-					for (int xrow = diag - 1; xrow >= 0; xrow--) {
-						double quotient = x[xrow][diag] / x[diag][diag];
+                  for (int xcol = 0; xcol < x[xrow].length; xcol++)
+                     x[xrow][xcol] -= (quotient * x[diag][xcol]);
+               }
+            }
 
-						for (int xcol = 0; xcol < x[xrow].length; xcol++)
-							x[xrow][xcol] -= (quotient * x[diag][xcol]);
-					}
-				}
+            // inline backward elimination
 
-				// solve for "z" where z is on row 5
+            for (int diag = x.length - 1; diag > 0; diag--) {
+               if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-				v[0][row] = -x[0][2] / x[0][0];
-				v[1][row] = -x[1][2] / x[1][1];
-				v[2][row] = 1;
-			}
+               for (int xrow = diag - 1; xrow >= 0; xrow--) {
+                  double quotient = x[xrow][diag] / x[diag][diag];
 
-			// normalize by row
+                  for (int xcol = 0; xcol < x[xrow].length; xcol++)
+                     x[xrow][xcol] -= (quotient * x[diag][xcol]);
+               }
+            }
 
-			for (int row = 0; row < aat.length; row++) {
+            // solve for "z" where z is on row 5
 
-				// determinant on vector
+            v[0][row] = -x[0][2] / x[0][0];
+            v[1][row] = -x[1][2] / x[1][1];
+            v[2][row] = 1;
+         }
 
-				double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
-				v[0][row] /= det;
-				v[1][row] /= det;
-				v[2][row] /= det;
-			}
+         // normalize by row
 
-		} else
-			// because finding zeros of larger polynomials is difficult
-			throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
+         for (int row = 0; row < aat.length; row++) {
 
-		// copy array v into array usv
+            // determinant on vector
 
-		double[][] inverse = new double[aat.length][aat.length];
+            double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
+            v[0][row] /= det;
+            v[1][row] /= det;
+            v[2][row] /= det;
+         }
 
-		for (int row = 0; row < aat.length; row++)
-			for (int col = 0; col < aat.length; col++) {
-				if (l[row][col] == 0)
-					// prevent divides by 0
-					inverse[row][col] = 0;
+      } else
+         // because finding zeros of larger polynomials is difficult
+         throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
 
-				else
-					// inverse is simple inverse since sigma is diagonal
-					inverse[row][col] = 1 / Math.sqrt(l[row][col]);
-			}
+      // copy array v into array usv
 
-		// inline matrix multiply
+      double[][] inverse = new double[aat.length][aat.length];
 
-		double[][] av = new double[acol][a.length];
+      for (int row = 0; row < aat.length; row++)
+         for (int col = 0; col < aat.length; col++) {
+            if (l[row][col] == 0)
+               // prevent divides by 0
+               inverse[row][col] = 0;
 
-		for (int row = 0; row < av.length; row++) {
-			for (int col = 0; col < av[row].length; col++) {
+            else
+               // inverse is simple inverse since sigma is diagonal
+               inverse[row][col] = 1 / Math.sqrt(l[row][col]);
+         }
 
-				// inline dot product
+      // inline matrix multiply
 
-				double sum = 0;
+      double[][] av = new double[acol][a.length];
 
-				for (int brow = 0; brow < v.length; brow++)
-					sum += a[brow][row] * v[brow][col];
+      for (int row = 0; row < av.length; row++) {
+         for (int col = 0; col < av[row].length; col++) {
 
-				av[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply
+            double sum = 0;
 
-		double[][] u = new double[acol][a.length];
+            for (int brow = 0; brow < v.length; brow++)
+               sum += a[brow][row] * v[brow][col];
 
-		for (int row = 0; row < u.length; row++) {
-			for (int col = 0; col < u[row].length; col++) {
+            av[row][col] = sum;
+         }
+      }
 
-				// inline dot product
+      // inline matrix multiply
 
-				double sum = 0;
+      double[][] u = new double[acol][a.length];
 
-				for (int brow = 0; brow < inverse.length; brow++)
-					sum += av[row][brow] * inverse[brow][col];
+      for (int row = 0; row < u.length; row++) {
+         for (int col = 0; col < u[row].length; col++) {
 
-				u[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// 27 variables NOT counting any variable declared inside for loop
+            double sum = 0;
 
-		// inline matrix multiply
+            for (int brow = 0; brow < inverse.length; brow++)
+               sum += av[row][brow] * inverse[brow][col];
 
-		double[][] usInv = new double[acol][a.length];
+            u[row][col] = sum;
+         }
+      }
 
-		// find dot products of every row and column combination
+      // 27 variables NOT counting any variable declared inside for loop
 
-		for (int row = 0; row < usInv.length; row++) {
-			for (int col = 0; col < usInv[row].length; col++) {
+      // inline matrix multiply
 
-				// inline dot product
+      double[][] usInv = new double[acol][a.length];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < inverse.length; brow++)
-					sum += u[row][brow] * inverse[brow][col];
+      for (int row = 0; row < usInv.length; row++) {
+         for (int col = 0; col < usInv[row].length; col++) {
 
-				usInv[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply and tranpose
+            double sum = 0;
 
-		double[][] usInvVt = new double[acol][a.length];
+            for (int brow = 0; brow < inverse.length; brow++)
+               sum += u[row][brow] * inverse[brow][col];
 
-		// find dot products of every row and column combination
+            usInv[row][col] = sum;
+         }
+      }
 
-		for (int row = 0; row < usInvVt.length; row++) {
-			for (int col = 0; col < usInvVt[row].length; col++) {
+      // inline matrix multiply and tranpose
 
-				// inline dot product
+      double[][] usInvVt = new double[acol][a.length];
 
-				double sum = 0;
+      // find dot products of every row and column combination
 
-				for (int brow = 0; brow < a.length; brow++)
-					sum += usInv[row][brow] * v[col][brow];
+      for (int row = 0; row < usInvVt.length; row++) {
+         for (int col = 0; col < usInvVt[row].length; col++) {
 
-				usInvVt[row][col] = sum;
-			}
-		}
+            // inline dot product
 
-		// inline matrix multiply
+            double sum = 0;
 
-		double[][] x = new double[acol][1];
+            for (int brow = 0; brow < a.length; brow++)
+               sum += usInv[row][brow] * v[col][brow];
 
-		// find dot products of every row and column combination
+            usInvVt[row][col] = sum;
+         }
+      }
 
-		for (int row = 0; row < x.length; row++) {
+      // inline matrix multiply
 
-			// inline dot product
+      double[][] x = new double[acol][1];
 
-			double sum = 0;
+      // find dot products of every row and column combination
 
-			for (int brow = 0; brow < b.length; brow++)
-				sum += usInvVt[row][brow] * b[brow][0];
+      for (int row = 0; row < x.length; row++) {
 
-			x[row][0] = sum;
-		}
+         // inline dot product
 
-		return x;
-	}
+         double sum = 0;
+
+         for (int brow = 0; brow < b.length; brow++)
+            sum += usInvVt[row][brow] * b[brow][0];
+
+         x[row][0] = sum;
+      }
+
+      return x;
+   }
 
 }
