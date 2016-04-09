@@ -34,21 +34,21 @@ public class MatricesTest {
 
       assertEquals(expectedDet, actualDet, DELTA);
 
-      // first test on 1 component matrix
+      // second test on 1 component matrix
       a = new double[][] { new double[] { 3 } };
       expectedDet = 3;
       actualDet = Matrices.determinant(a);
 
       assertEquals(expectedDet, actualDet, DELTA);
 
-      // second test on 2 component matrix
+      // third test on 2 component matrix
       a = new double[][] { new double[] { 3, 8 }, new double[] { 4, 6 } };
       expectedDet = -14;
       actualDet = Matrices.determinant(a);
 
       assertEquals(expectedDet, actualDet, DELTA);
 
-      // third test on 3 component matrix
+      // fourth test on 3 component matrix
       a = new double[][] { new double[] { 6, 1, 1 }, new double[] { 4, -2, 5 },
          new double[] { 2, 8, 7 } };
       expectedDet = -306;
@@ -56,7 +56,7 @@ public class MatricesTest {
 
       assertEquals(expectedDet, actualDet, DELTA);
 
-      // fourth test on 4 component matrix
+      // fifth test on 4 component matrix
       a = new double[][] { new double[] { 0, 2, 0, 0 }, new double[] { 6, 0, 1, 1 },
          new double[] { 4, 0, -2, 5 }, new double[] { 2, 0, 8, 7 } };
       expectedDet = 612;
@@ -64,7 +64,7 @@ public class MatricesTest {
 
       assertEquals(expectedDet, actualDet, DELTA);
 
-      // fifth test on 4 component matrix
+      // sixth test on 4 component matrix
       a = new double[][] { new double[] { 2, 5, 3, 5 }, new double[] { 4, 6, 6, 3 },
          new double[] { 11, 3, 2, -2 }, new double[] { 4, -7, 9, 3 } };
       expectedDet = 2960;
@@ -72,7 +72,7 @@ public class MatricesTest {
 
       assertEquals(expectedDet, actualDet, DELTA);
 
-      // sixth test on 5 component matrix
+      // seventh test on 5 component matrix
       a = new double[][] { new double[] { 276, 1, 179, 23, 9387 }, new double[] { 0, 0, 78, 0, 0 },
          new double[] { 0, 0, -1, 0, 1 }, new double[] { 0, 0, 1994, -1, 1089 },
          new double[] { 1, 0, 212, 726, -378 } };
@@ -292,7 +292,7 @@ public class MatricesTest {
             assertEquals(expectedMul[row][col], actualMul[row][col], DELTA);
       }
 
-      // first test on 1 by 3 and 3 by 4 arrays
+      // second test on 1 by 3 and 3 by 4 arrays
       a = new double[][] { new double[] { 3, 4, 2 } };
       b = new double[][] { new double[] { 13, 9, 7, 15 }, new double[] { 8, 7, 4, 6 },
          new double[] { 6, 4, 0, 3 } };
@@ -488,6 +488,80 @@ public class MatricesTest {
          fail();
       } catch (IllegalArgumentException ex) {
          assertEquals(0, testSofu, DELTA);
+      }
+   }
+
+   /**
+    * Test method for {@link Matrices#characteristic(double[][])}.
+    */
+   @Test
+   public void testCharacteristic() {
+      // variables required for testing
+      double[][] a;
+      double[] expectedC;
+      double[] actualC;
+      double[] testC = null;
+
+      // first test on 0 by 0 array
+      a = new double[][] {};
+      expectedC = new double[] { 1 };
+      actualC = Matrices.characteristic(a);
+
+      assertEquals(expectedC.length, actualC.length);
+      for (int row = 0; row < expectedC.length; row++)
+         assertEquals(expectedC[row], actualC[row], DELTA);
+
+      // second test on 1 by 1 array
+      a = new double[][] { new double[] { 5 } };
+      expectedC = new double[] { 1, -5 };
+      actualC = Matrices.characteristic(a);
+
+      assertEquals(expectedC.length, actualC.length);
+      for (int row = 0; row < expectedC.length; row++)
+         assertEquals(expectedC[row], actualC[row], DELTA);
+
+      // third test on 2 by 2 array
+      a = new double[][] { new double[] { -1, 6 }, new double[] { -2, 6 } };
+      expectedC = new double[] { 1, -5, 6 };
+      actualC = Matrices.characteristic(a);
+
+      assertEquals(expectedC.length, actualC.length);
+      for (int row = 0; row < expectedC.length; row++)
+         assertEquals(expectedC[row], actualC[row], DELTA);
+
+      // fourth test on 3 by 3 array
+      a = new double[][] { new double[] { 2, 3, -3 }, new double[] { -2, -1, 2 },
+         new double[] { 2, 4, -3 } };
+      expectedC = new double[] { 1, -2, 1, 2 };
+      actualC = Matrices.characteristic(a);
+
+      assertEquals(expectedC.length, actualC.length);
+      for (int row = 0; row < expectedC.length; row++)
+         assertEquals(expectedC[row], actualC[row], DELTA);
+
+      try {
+         // array a is null
+         testC = Matrices.characteristic(null);
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testC);
+      }
+
+      try {
+         // matrix a does contain null column
+         testC = Matrices.characteristic(new double[][] { null });
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testC);
+      }
+
+      try {
+         // matrix a must does not have as many columns as rows
+         testC = Matrices.characteristic(
+            new double[][] { new double[] { 0, 0 }, new double[] { 0, 0 }, new double[] { 0, 0 } });
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testC);
       }
    }
 

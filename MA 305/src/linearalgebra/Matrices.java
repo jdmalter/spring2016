@@ -335,4 +335,49 @@ public class Matrices {
       return Math.sqrt(determinant(ata));
    }
 
+   /**
+    * Assumes row by columnn array representation of matrix. Given that the
+    * elements of the resulting array are coefficients of a polynomial, the
+    * roots of this polynomial are eigenvalues of given matrix a. Returns n+1
+    * array of double.
+    * 
+    * This implementation does not use recursion when number of rows is less
+    * than four.
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
+    * {@code (a.length != a[row].length)} where length is number of rows and
+    * a[row].length is number of columns on any row.
+    * 
+    * @param a
+    *        n by n array of double
+    * @return n+1 array of double
+    */
+   public static double[] characteristic(double[][] a) {
+      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row])
+            throw new IllegalArgumentException("matrix a must not contain null column");
+
+         else if (a.length != a[row].length)
+            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+
+      if (a.length == 0) return new double[] { 1 };
+
+      else if (a.length == 1) return new double[] { 1, -a[0][0] };
+
+      else if (a.length == 2)
+         return new double[] { 1, -a[0][0] - a[1][1], a[0][0] * a[1][1] - a[0][1] * a[1][0] };
+
+      else if (a.length == 3) return new double[] { 1, a[0][0] + a[1][1] + a[2][2],
+         -(a[0][0] * a[1][1] - a[0][1] * a[1][0]) - (a[0][0] * a[2][2] - a[0][2] * a[2][0])
+            - (a[1][1] * a[2][2] - a[1][2] * a[2][1]),
+         (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
+            - (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
+            + (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0])) };
+
+      throw new UnsupportedOperationException("Not yet");
+   }
+
 }
