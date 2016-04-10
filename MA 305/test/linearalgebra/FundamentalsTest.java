@@ -997,4 +997,91 @@ public class FundamentalsTest {
       }
    }
 
+   /**
+    * Test method for {@link Fundamentals#invertFaddeev(double[][])}.
+    */
+   @Test
+   public void testInvertFaddeev() {
+      // variables required for testing
+      double[][] a;
+      double[][] actualI;
+      double[][] expectedInv;
+      double[][] actualInv;
+      double[][] testInv = null;
+
+      // first test on 2 by 2 array
+      a = new double[][] { new double[] { -1, 4 }, new double[] { 1, -5 } };
+      expectedInv = new double[][] { new double[] { -5, -4 }, new double[] { -1, -1 } };
+      actualInv = Fundamentals.invertFaddeev(a);
+
+      assertEquals(expectedInv.length, actualInv.length);
+      for (int row = 0; row < expectedInv.length; row++) {
+         assertEquals(expectedInv[row].length, actualInv[row].length);
+         for (int col = 0; col < expectedInv[row].length; col++)
+            assertEquals(expectedInv[row][col], actualInv[row][col], DELTA);
+      }
+
+      actualI = Matrices.multiply(a, actualInv);
+      for (int row = 0; row < actualI.length; row++)
+         for (int col = 0; col < actualI[row].length; col++)
+            if (row == col) assertEquals(1, actualI[row][col], DELTA);
+
+            else assertEquals(0, actualI[row][col], DELTA);
+
+      // second test on 3 by 3 array
+      a = new double[][] { new double[] { -1, 4, -4 }, new double[] { -1, 0, -2 },
+         new double[] { -3, 0, -4 } };
+      expectedInv = new double[][] { new double[] { 0, 2, -1 }, new double[] { 0.25, -1, 0.25 },
+         new double[] { 0, -1.5, 0.5 } };
+      actualInv = Fundamentals.invertFaddeev(a);
+
+      assertEquals(expectedInv.length, actualInv.length);
+      for (int row = 0; row < expectedInv.length; row++) {
+         assertEquals(expectedInv[row].length, actualInv[row].length);
+         for (int col = 0; col < expectedInv[row].length; col++)
+            assertEquals(expectedInv[row][col], actualInv[row][col], DELTA);
+      }
+
+      actualI = Matrices.multiply(a, actualInv);
+      for (int row = 0; row < actualI.length; row++)
+         for (int col = 0; col < actualI[row].length; col++)
+            if (row == col) assertEquals(1, actualI[row][col], DELTA);
+
+            else assertEquals(0, actualI[row][col], DELTA);
+
+      try {
+         // matrix a is null
+         testInv = Fundamentals.invertFaddeev(null);
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testInv);
+      }
+
+      try {
+         // matrix a does contain null column
+         testInv = Fundamentals.invertFaddeev(new double[][] { null });
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testInv);
+      }
+
+      try {
+         // matrix a row width does not remain constant
+         testInv = Fundamentals
+            .invertFaddeev(new double[][] { new double[] { 0, 0 }, new double[] { 0 } });
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testInv);
+      }
+
+      try {
+         // divide by 0
+         testInv = Fundamentals
+            .invertFaddeev(new double[][] { new double[] { 0, 0 }, new double[] { 0, 0 } });
+         fail();
+      } catch (ArithmeticException ex) {
+         assertNull(testInv);
+      }
+   }
+
 }

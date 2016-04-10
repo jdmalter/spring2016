@@ -565,4 +565,88 @@ public class MatricesTest {
       }
    }
 
+   /**
+    * Test method for {@link Matrices#faddeev(double[][])}.
+    */
+   @Test
+   public void testFaddeev() {
+      // variables required for testing
+      double[][] a;
+      double[] expectedF;
+      double[] actualF;
+      double[] testF = null;
+
+      // first test on 0 by 0 array
+      a = new double[][] {};
+      expectedF = new double[] { 1 };
+      actualF = Matrices.faddeev(a);
+
+      assertEquals(expectedF.length, actualF.length);
+      for (int row = 0; row < expectedF.length; row++)
+         assertEquals(expectedF[row], actualF[row], DELTA);
+
+      // second test on 1 by 1 array
+      a = new double[][] { new double[] { 5 } };
+      expectedF = new double[] { 1, -5 };
+      actualF = Matrices.faddeev(a);
+
+      assertEquals(expectedF.length, actualF.length);
+      for (int row = 0; row < expectedF.length; row++)
+         assertEquals(expectedF[row], actualF[row], DELTA);
+
+      // third test on 2 by 2 array
+      a = new double[][] { new double[] { -1, 6 }, new double[] { -2, 6 } };
+      expectedF = new double[] { 1, -5, 6 };
+      actualF = Matrices.faddeev(a);
+
+      assertEquals(expectedF.length, actualF.length);
+      for (int row = 0; row < expectedF.length; row++)
+         assertEquals(expectedF[row], actualF[row], DELTA);
+
+      // fourth test on 3 by 3 array
+      a = new double[][] { new double[] { 2, -1, 1 }, new double[] { -1, 2, 1 },
+         new double[] { 1, -1, 2 } };
+      expectedF = new double[] { 1, -6, 11, -6 };
+      actualF = Matrices.faddeev(a);
+
+      assertEquals(expectedF.length, actualF.length);
+      for (int row = 0; row < expectedF.length; row++)
+         assertEquals(expectedF[row], actualF[row], DELTA);
+
+      // fifth test on 4 by 4 array
+      a = new double[][] { new double[] { 8, -1, 3, -1 }, new double[] { -1, 6, 2, 0 },
+         new double[] { 3, 2, 9, 1 }, new double[] { -1, 0, 1, 7 } };
+      expectedF = new double[] { 1, -30, 319, -1410, 2138 };
+      actualF = Matrices.faddeev(a);
+
+      assertEquals(expectedF.length, actualF.length);
+      for (int row = 0; row < expectedF.length; row++)
+         assertEquals(expectedF[row], actualF[row], DELTA);
+
+      try {
+         // array a is null
+         testF = Matrices.faddeev(null);
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testF);
+      }
+
+      try {
+         // matrix a does contain null column
+         testF = Matrices.faddeev(new double[][] { null });
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testF);
+      }
+
+      try {
+         // matrix a must does not have as many columns as rows
+         testF = Matrices.faddeev(
+            new double[][] { new double[] { 0, 0 }, new double[] { 0, 0 }, new double[] { 0, 0 } });
+         fail();
+      } catch (IllegalArgumentException ex) {
+         assertNull(testF);
+      }
+   }
+
 }

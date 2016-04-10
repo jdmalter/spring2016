@@ -368,4 +368,84 @@ public class Matrices {
       return sum;
    }
 
+   /**
+    * Assumes row by column array representation of matrix. Computes
+    * coefficients of the characteristic polynomial whose roots are eigenvalues
+    * of given matrix a. The first element, or coefficient, of the resulting
+    * array is 1. Returns n+1 array of double.
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
+    * {@code (a.length != a[row].length)} where length is number of rows and
+    * a[row].length is number of columns on any row.
+    * 
+    * Credit to http://ktuce.ktu.edu.tr/~pehlivan/numerical_analysis/chap08/
+    * FaddeevLeverrier.pdf for providing examples and simply explaining how this
+    * algorithm computes the coefficients.
+    * 
+    * @param a
+    *        n by n array of double
+    * @return n+1 array of double
+    */
+   public static double[] faddeev(double[][] a) {
+      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row])
+            throw new IllegalArgumentException("matrix a must not contain null column");
+
+         else if (a.length != a[row].length)
+            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+
+      double[] polynomial = new double[a.length + 1];
+      polynomial[0] = 1;
+
+      double[][] b = new double[a.length][a.length];
+
+      for (int n = 0; n < a.length; n++) {
+
+         double[][] next = new double[a.length][a.length];
+         for (int row = 0; row < a.length; row++)
+            for (int col = 0; col < a.length; col++) {
+
+               next[row][col] = b[row][col];
+               if (row == col) next[row][col] += polynomial[n];
+
+               // when n = 0, this loop creates identity matrix which results in
+               // the elements of b matching the elements of a
+            }
+
+         // inline matrix multiply
+
+         // find dot products of every row and column combination
+
+         for (int row = 0; row < a.length; row++) {
+            for (int col = 0; col < a.length; col++) {
+
+               // inline dot product
+
+               double sum = 0;
+
+               for (int brow = 0; brow < b.length; brow++)
+                  sum += a[row][brow] * next[brow][col];
+
+               b[row][col] = sum;
+            }
+         }
+
+         // inline trace
+
+         double trace = 0;
+
+         // accumulate diagonal components
+
+         for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
+            trace -= b[cmpnt][cmpnt];
+
+         polynomial[n + 1] = trace / (n + 1);
+      }
+
+      return polynomial;
+   }
+
 }
