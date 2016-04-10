@@ -16,7 +16,7 @@ public class Constrained {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is the
+    * Assumes row by column array representation of matrix. Given that x is the
     * first element of the resulting array and e is the second element of the
     * resulting array, a*x - b = e where the magnitude of e is minimized.
     * Returns array of array of n by 1 and m by 1 array of double,
@@ -256,7 +256,7 @@ public class Constrained {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is
+    * Assumes row by column array representation of matrix. Given that x is
     * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
     * Returns n by 1 array of double.
     * 
@@ -475,7 +475,7 @@ public class Constrained {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is the
+    * Assumes row by column array representation of matrix. Given that x is the
     * first element of the resulting array and e is the second element of the
     * resulting array, a*x - b = e where the magnitude of e is minimized.
     * Returns array of array of n by 1 and m by 1 array of double,
@@ -768,7 +768,7 @@ public class Constrained {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is the
+    * Assumes row by column array representation of matrix. Given that x is the
     * first element of the resulting array and e is the second element of the
     * resulting array, a*x - b = e where the magnitude of e is minimized.
     * Returns array of array of n by 1 and m by 1 array of double,
@@ -968,7 +968,7 @@ public class Constrained {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is the
+    * Assumes row by column array representation of matrix. Given that x is the
     * first element of the resulting array and e is the second element of the
     * resulting array, a*x - b = e where the magnitude of e is minimized.
     * Returns array of array of n by 1 and m by 1 array of double,
@@ -1367,7 +1367,7 @@ public class Constrained {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is
+    * Assumes row by column array representation of matrix. Given that x is
     * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
     * Returns n by 1 array of double.
     * 

@@ -16,7 +16,7 @@ public class Decomposition {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that l is the
+    * Assumes row by column array representation of matrix. Given that l is the
     * first element of the resulting array and u is the second element of the
     * resulting array, l*u - a = 0. Returns array of n by n and n by n array of
     * double.
@@ -75,7 +75,7 @@ public class Decomposition {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that l is
+    * Assumes row by column array representation of matrix. Given that l is
     * resulting matrix and lt is transpose of resulting matrix, l*lt - a = 0.
     * Returns n by n array of double.
     * 
@@ -140,7 +140,7 @@ public class Decomposition {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that q is the
+    * Assumes row by column array representation of matrix. Given that q is the
     * first element of the resulting array and r is the second element of the
     * resulting array, q*r - a = 0. Given that qt is tranpose of q, qt*q - I = 0
     * where I is identity matrix. r is be upper triangular. Returns array of m
@@ -204,7 +204,7 @@ public class Decomposition {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that l is the
+    * Assumes row by column array representation of matrix. Given that l is the
     * first element of the resulting array and v is the second element of the
     * resulting array, a*v - v*l = 0, or given that (v^-1) is the inverse of v,
     * a - v*l*(v^-1) = 0. Returns array of n by n and n by n array of double.
@@ -425,7 +425,7 @@ public class Decomposition {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given the resulting
+    * Assumes row by column array representation of matrix. Given the resulting
     * array, the first element is matrix u, the second element is matrix s, and
     * the third element is matrix v. Given that ut is tranpose of u, ut*u - I =
     * 0 where I is identity matrix. Given that vt is tranpose of v, vt*v - I = 0

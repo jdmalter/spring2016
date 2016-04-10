@@ -15,7 +15,7 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Columns 0 through x
+    * Assumes row by column array representation of matrix. Columns 0 through x
     * of the resulting matrix contain array a, and columns x through y of the
     * resulting matrix contain array b. Returns n by x+y array of double.
     * 
@@ -81,7 +81,7 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Creates new matrix
+    * Assumes row by column array representation of matrix. Creates new matrix
     * equal to given matrix a except the lower triangular is set to 0. Returns n
     * by m array of double.
     * 
@@ -139,7 +139,7 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Creates new matrix
+    * Assumes row by column array representation of matrix. Creates new matrix
     * equal to given matrix a except the upper triangular is set to 0. Returns n
     * by m array of double.
     * 
@@ -197,7 +197,7 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that row
+    * Assumes row by column array representation of matrix. Given that row
     * echlon form is where all zeros belong to the highest rows and lowest
     * columns and the leftmost nonzero number is in a higher column that the
     * leftmost nonzero number in the column above, the resulting matrix is in
@@ -288,7 +288,7 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is the
+    * Assumes row by column array representation of matrix. Given that x is the
     * resulting matrix, a*x - b = 0. Returns n by 1 array of double.
     * 
     * Throws IllegalArgumentException if any of the following is true:
@@ -405,14 +405,14 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. In the first
-    * element in the resulting array, each column, or variable, besides the
-    * furthest right column, has a lead variable of 1. Above the 1 in each
-    * column, any variable may have non-zero numbers which can be multipled by
-    * any value of their respective variable while maintaining row echlon form.
-    * Supports multiple solutions for linear equations. Given that x is the
-    * combination of the two matrices in the resulting array, a*x - b = 0.
-    * Returns array of n by n and n by 1 array of double.
+    * Assumes row by column array representation of matrix. In the first element
+    * in the resulting array, each column, or variable, besides the furthest
+    * right column, has a lead variable of 1. Above the 1 in each column, any
+    * variable may have non-zero numbers which can be multipled by any value of
+    * their respective variable while maintaining row echlon form. Supports
+    * multiple solutions for linear equations. Given that x is the combination
+    * of the two matrices in the resulting array, a*x - b = 0. Returns array of
+    * n by n and n by 1 array of double.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -553,7 +553,7 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is the
+    * Assumes row by column array representation of matrix. Given that x is the
     * resulting matrix, a*x - b = 0. Returns n by 1 array of double.
     * 
     * Throws IllegalArgumentException if any of the following is true:
@@ -615,7 +615,7 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that x is the
+    * Assumes row by column array representation of matrix. Given that x is the
     * resulting matrix, a*x - I = 0 where I is identity matrix. Returns n by n
     * array of double.
     * 

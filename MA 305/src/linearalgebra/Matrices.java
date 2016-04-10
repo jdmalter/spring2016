@@ -15,7 +15,7 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Returns amount of
+    * Assumes row by column array representation of matrix. Returns amount of
     * "sofu" enclosed in linear object defined by matrix a.
     * 
     * This implementation does not use recursion when number of rows is less
@@ -117,7 +117,7 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Resulting matrix
+    * Assumes row by column array representation of matrix. Resulting matrix
     * does not contain row at skipRow or column at skipCol of given matrix a.
     * Returns n-1 by m-1 array of double.
     * 
@@ -185,8 +185,8 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Returns n by p
-    * array of double.
+    * Assumes row by column array representation of matrix. Returns n by p array
+    * of double.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == b)}, {@code (null == a[row])} where
@@ -250,7 +250,7 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Rows become
+    * Assumes row by column array representation of matrix. Rows become
     * respective columns, and columns become respective rows. Alternatively,
     * flip element of matrix a over its diagonal. Returns m by n array of
     * double.
@@ -289,7 +289,7 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Returns amount of
+    * Assumes row by column array representation of matrix. Returns amount of
     * "sofu" defined by n vectors enclosing a linear object in m-th dimensional
     * space with m components.
     * 
@@ -336,13 +336,8 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by columnn array representation of matrix. Given that the
-    * elements of the resulting array are coefficients of a polynomial, the
-    * roots of this polynomial are eigenvalues of given matrix a. Returns n+1
-    * array of double.
-    * 
-    * This implementation does not use recursion when number of rows is less
-    * than four.
+    * Assumes row by column array representation of matrix. Returns sum of
+    * diagonal components.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
@@ -351,9 +346,9 @@ public class Matrices {
     * 
     * @param a
     *        n by n array of double
-    * @return n+1 array of double
+    * @return sum of diagonal components
     */
-   public static double[] characteristic(double[][] a) {
+   public static double trace(double[][] a) {
       if (null == a) throw new IllegalArgumentException("matrix a must not be null");
 
       for (int row = 0; row < a.length; row++)
@@ -363,21 +358,14 @@ public class Matrices {
          else if (a.length != a[row].length)
             throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
-      if (a.length == 0) return new double[] { 1 };
+      double sum = 0;
 
-      else if (a.length == 1) return new double[] { 1, -a[0][0] };
+      // accumulate diagonal components
 
-      else if (a.length == 2)
-         return new double[] { 1, -a[0][0] - a[1][1], a[0][0] * a[1][1] - a[0][1] * a[1][0] };
+      for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
+         sum += a[cmpnt][cmpnt];
 
-      else if (a.length == 3) return new double[] { 1, a[0][0] + a[1][1] + a[2][2],
-         -(a[0][0] * a[1][1] - a[0][1] * a[1][0]) - (a[0][0] * a[2][2] - a[0][2] * a[2][0])
-            - (a[1][1] * a[2][2] - a[1][2] * a[2][1]),
-         (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
-            - (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
-            + (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0])) };
-
-      throw new UnsupportedOperationException("Not yet");
+      return sum;
    }
 
 }

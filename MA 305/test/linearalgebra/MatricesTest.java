@@ -492,76 +492,76 @@ public class MatricesTest {
    }
 
    /**
-    * Test method for {@link Matrices#characteristic(double[][])}.
+    * Test method for {@link Matrices#trace(double[][])}.
     */
    @Test
-   public void testCharacteristic() {
+   public void testTrace() {
       // variables required for testing
       double[][] a;
-      double[] expectedC;
-      double[] actualC;
-      double[] testC = null;
+      double expectedTrace;
+      double actualTrace;
+      double testTrace = 0;
 
       // first test on 0 by 0 array
       a = new double[][] {};
-      expectedC = new double[] { 1 };
-      actualC = Matrices.characteristic(a);
+      expectedTrace = 0;
+      actualTrace = Matrices.trace(a);
 
-      assertEquals(expectedC.length, actualC.length);
-      for (int row = 0; row < expectedC.length; row++)
-         assertEquals(expectedC[row], actualC[row], DELTA);
+      assertEquals(expectedTrace, actualTrace, DELTA);
 
       // second test on 1 by 1 array
-      a = new double[][] { new double[] { 5 } };
-      expectedC = new double[] { 1, -5 };
-      actualC = Matrices.characteristic(a);
+      a = new double[][] { new double[] { 1 } };
+      expectedTrace = 1;
+      actualTrace = Matrices.trace(a);
 
-      assertEquals(expectedC.length, actualC.length);
-      for (int row = 0; row < expectedC.length; row++)
-         assertEquals(expectedC[row], actualC[row], DELTA);
+      assertEquals(expectedTrace, actualTrace, DELTA);
 
       // third test on 2 by 2 array
-      a = new double[][] { new double[] { -1, 6 }, new double[] { -2, 6 } };
-      expectedC = new double[] { 1, -5, 6 };
-      actualC = Matrices.characteristic(a);
+      a = new double[][] { new double[] { 1, 2 }, new double[] { 3, 4 } };
+      expectedTrace = 5;
+      actualTrace = Matrices.trace(a);
 
-      assertEquals(expectedC.length, actualC.length);
-      for (int row = 0; row < expectedC.length; row++)
-         assertEquals(expectedC[row], actualC[row], DELTA);
+      assertEquals(expectedTrace, actualTrace, DELTA);
 
       // fourth test on 3 by 3 array
-      a = new double[][] { new double[] { 2, 3, -3 }, new double[] { -2, -1, 2 },
-         new double[] { 2, 4, -3 } };
-      expectedC = new double[] { 1, -2, 1, 2 };
-      actualC = Matrices.characteristic(a);
+      a = new double[][] { new double[] { 1, 2, 3 }, new double[] { 4, 5, 6 },
+         new double[] { 7, 8, 9 } };
+      expectedTrace = 15;
+      actualTrace = Matrices.trace(a);
 
-      assertEquals(expectedC.length, actualC.length);
-      for (int row = 0; row < expectedC.length; row++)
-         assertEquals(expectedC[row], actualC[row], DELTA);
+      assertEquals(expectedTrace, actualTrace, DELTA);
+
+      // fifth test on 4 by 4 array
+      a = new double[][] { new double[] { 1, 2, 3, 4 }, new double[] { 5, 6, 7, 8 },
+         new double[] { 9, 10, 11, 12 }, new double[] { 13, 14, 15, 16 } };
+      expectedTrace = 34;
+      actualTrace = Matrices.trace(a);
+
+      assertEquals(expectedTrace, actualTrace, DELTA);
 
       try {
          // array a is null
-         testC = Matrices.characteristic(null);
+         testTrace = Matrices.trace(null);
          fail();
       } catch (IllegalArgumentException ex) {
-         assertNull(testC);
+         assertEquals(0, testTrace, DELTA);
       }
 
       try {
          // matrix a does contain null column
-         testC = Matrices.characteristic(new double[][] { null });
+         testTrace = Matrices.trace(new double[][] { null });
          fail();
       } catch (IllegalArgumentException ex) {
-         assertNull(testC);
+         assertEquals(0, testTrace, DELTA);
       }
 
       try {
          // matrix a must does not have as many columns as rows
-         testC = Matrices.characteristic(
+         testTrace = Matrices.trace(
             new double[][] { new double[] { 0, 0 }, new double[] { 0, 0 }, new double[] { 0, 0 } });
          fail();
       } catch (IllegalArgumentException ex) {
-         assertNull(testC);
+         assertEquals(0, testTrace, DELTA);
       }
    }
 
