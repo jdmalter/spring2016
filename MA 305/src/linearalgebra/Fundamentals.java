@@ -231,16 +231,15 @@ public class Fundamentals {
          } else if (acol != a[row].length)
             throw new IllegalArgumentException("matrix a row width must remain constant");
 
-      if (a.length == 0)
-         // there are no numbers to work with
-         return new double[][] {};
+      // there are no numbers to work with
+      if (a.length == 0) return new double[][] {};
 
-      else if (a.length == 1) if (a[0][0] == 0)
+      else if (a.length == 1)
          // prevent 0 from dividing by itself
-         return new double[][] { new double[] { 0 } };
-      else
+         if (a[0][0] == 0) return new double[][] { new double[] { 0 } };
+
          // otherwise, result is always 1
-         return new double[][] { new double[] { 1 } };
+         else return new double[][] { new double[] { 1 } };
 
       // copy array a into array c
 
@@ -348,10 +347,15 @@ public class Fundamentals {
 
       // inline rref
 
+      // there are no numbers to work with
       if (ab.length == 0) return new double[][] {};
 
-      else if (ab.length == 1) if (ab[0][0] == 0) return new double[][] { new double[] { 0 } };
-      else return new double[][] { new double[] { 1 } };
+      else if (ab.length == 1)
+         // prevent 0 from dividing by itself
+         if (ab[0][0] == 0) return new double[][] { new double[] { 0 } };
+
+         // otherwise, result is always 1
+         else return new double[][] { new double[] { 1 } };
 
       // copy array ab into array c
 
@@ -647,14 +651,13 @@ public class Fundamentals {
       double[][] adjugate = new double[a.length][a.length];
       double determinant = 0;
 
-      if (a.length == 0) {
+      if (a.length == 0)
 
          // inline matrix determinant on point
 
-         // matrix is singular
          throw new ArithmeticException("divide by 0");
 
-      } else if (a.length == 1) {
+      else if (a.length == 1) {
 
          // inline matrix determinant on line
 
@@ -781,65 +784,84 @@ public class Fundamentals {
          else if (a.length != a[row].length)
             throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
-      double[] polynomial = new double[a.length + 1];
-      polynomial[0] = 1;
-
-      double[][] b = new double[a.length][a.length];
-
       // finding inverse of given matrix a requires one more step beyond faddeev
+      double[] polynomial;
+      double[][] inverse;
 
-      double[][] inverse = new double[a.length][a.length];
+      // x^0
+      if (a.length == 0) throw new ArithmeticException("divide by 0");
 
-      for (int n = 0; n < a.length; n++) {
+      // x^1 + determinant(a)*x^0
+      else if (a.length == 1) {
+         polynomial = new double[] { 1, -a[0][0] };
+         inverse = new double[][] { new double[] { 1 } };
+      }
 
-         double[][] next = new double[a.length][a.length];
-         for (int row = 0; row < a.length; row++)
-            for (int col = 0; col < a.length; col++) {
+      // x^2 - trace(a)*x^1 + determinant(a)*x^0
+      else if (a.length == 2) {
+         polynomial = new double[] { 1, -a[0][0] - a[1][1], a[0][0] * a[1][1] - a[0][1] * a[1][0] };
+         inverse = new double[][] { new double[] { a[0][0] + polynomial[1], a[0][1] },
+            new double[] { a[1][0], a[1][1] + polynomial[1] } };
 
-               next[row][col] = b[row][col];
-               if (row == col) next[row][col] += polynomial[n];
+      } else {
 
-               // when n = 0, this loop creates identity matrix which results in
-               // the elements of b matching the elements of a
-            }
+         polynomial = new double[a.length + 1];
+         polynomial[0] = 1;
+         inverse = new double[a.length][a.length];
 
-         // inline matrix multiply
+         double[][] b = new double[a.length][a.length];
 
-         // find dot products of every row and column combination
+         for (int n = 0; n < a.length; n++) {
 
-         for (int row = 0; row < a.length; row++)
-            for (int col = 0; col < a.length; col++) {
-
-               // inline dot product
-
-               double sum = 0;
-
-               for (int brow = 0; brow < b.length; brow++)
-                  sum += a[row][brow] * next[brow][col];
-
-               b[row][col] = sum;
-            }
-
-         // inline trace
-
-         double trace = 0;
-
-         // accumulate diagonal components
-
-         for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
-            trace -= b[cmpnt][cmpnt];
-
-         polynomial[n + 1] = trace / (n + 1);
-
-         // extra step is here
-
-         if (n == a.length - 2) {
+            double[][] next = new double[a.length][a.length];
             for (int row = 0; row < a.length; row++)
                for (int col = 0; col < a.length; col++) {
 
-                  inverse[row][col] = b[row][col];
-                  if (row == col) inverse[row][col] += polynomial[a.length - 1];
+                  next[row][col] = b[row][col];
+                  if (row == col) next[row][col] += polynomial[n];
+
+                  // when n = 0, this loop creates identity matrix which results
+                  // in the elements of b matching the elements of a
                }
+
+            // inline matrix multiply
+
+            // find dot products of every row and column combination
+
+            for (int row = 0; row < a.length; row++)
+               for (int col = 0; col < a.length; col++) {
+
+                  // inline dot product
+
+                  double sum = 0;
+
+                  for (int brow = 0; brow < b.length; brow++)
+                     sum += a[row][brow] * next[brow][col];
+
+                  b[row][col] = sum;
+               }
+
+            // inline trace
+
+            double trace = 0;
+
+            // accumulate diagonal components
+
+            for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
+               trace -= b[cmpnt][cmpnt];
+
+            polynomial[n + 1] = trace / (n + 1);
+
+            // extra step is here
+
+            if (n == a.length - 2) {
+               for (int row = 0; row < a.length; row++)
+                  for (int col = 0; col < a.length; col++) {
+
+                     inverse[row][col] = b[row][col];
+                     if (row == col) inverse[row][col] += polynomial[a.length - 1];
+                  }
+            }
          }
       }
 

@@ -40,23 +40,19 @@ public class Matrices {
          else if (a.length != a[row].length)
             throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
-      if (a.length == 0)
-         // point with no dimensions
-         return 0;
+      // point with no dimensions
+      if (a.length == 0) return 0;
 
-      else if (a.length == 1)
-         // length of line
-         return a[0][0];
+      // length of line
+      else if (a.length == 1) return a[0][0];
 
-      else if (a.length == 2)
-         // area between vectors
-         return a[0][0] * a[1][1] - a[0][1] * a[1][0];
+      // area between vectors
+      else if (a.length == 2) return a[0][0] * a[1][1] - a[0][1] * a[1][0];
 
-      else if (a.length == 3)
-         // volume inside triple product of vectors
-         return (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
-            - (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
-            + (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
+      // volume inside triple product of vectors
+      else if (a.length == 3) return (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
+         - (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
+         + (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
 
       double determinant = 0;
 
@@ -81,7 +77,7 @@ public class Matrices {
          else determinant -= a[0][col] * determinant(minor);
       }
 
-      // other dimensional "sofu"
+      // other dimensional quantity
       return determinant;
    }
 
@@ -397,55 +393,76 @@ public class Matrices {
          else if (a.length != a[row].length)
             throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
 
-      double[] polynomial = new double[a.length + 1];
-      polynomial[0] = 1;
+      // x^0
+      if (a.length == 0) return new double[] { 1 };
 
-      double[][] b = new double[a.length][a.length];
+      // x^1 + determinant(a)*x^0
+      else if (a.length == 1) return new double[] { 1, -a[0][0] };
 
-      for (int n = 0; n < a.length; n++) {
+      // x^2 - trace(a)*x^1 + determinant(a)*x^0
+      else if (a.length == 2)
+         return new double[] { 1, -a[0][0] - a[1][1], a[0][0] * a[1][1] - a[0][1] * a[1][0] };
 
-         double[][] next = new double[a.length][a.length];
-         for (int row = 0; row < a.length; row++)
-            for (int col = 0; col < a.length; col++) {
+      // x^3 - trace(a)*x^2 + (determinant of traces)*x^1 - determinant(a)*x^0
+      else if (a.length == 3) return new double[] { 1, -a[0][0] - a[1][1] - a[2][2],
+         ((a[0][0] + 1) * (a[1][1] + a[2][2])) - (a[0][1] * a[1][0]) - (a[0][2] * a[2][0])
+            - (a[1][2] * a[2][1]),
+         -(a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
+            + (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
+            - (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0])) };
 
-               next[row][col] = b[row][col];
-               if (row == col) next[row][col] += polynomial[n];
+      else {
 
-               // when n = 0, this loop creates identity matrix which results in
-               // the elements of b matching the elements of a
+         double[] polynomial = new double[a.length + 1];
+         polynomial[0] = 1;
+
+         double[][] b = new double[a.length][a.length];
+
+         for (int n = 0; n < a.length; n++) {
+
+            double[][] next = new double[a.length][a.length];
+            for (int row = 0; row < a.length; row++)
+               for (int col = 0; col < a.length; col++) {
+
+                  next[row][col] = b[row][col];
+                  if (row == col) next[row][col] += polynomial[n];
+
+                  // when n = 0, this loop creates identity matrix which results
+                  // in the elements of b matching the elements of a
+               }
+
+            // inline matrix multiply
+
+            // find dot products of every row and column combination
+
+            for (int row = 0; row < a.length; row++) {
+               for (int col = 0; col < a.length; col++) {
+
+                  // inline dot product
+
+                  double sum = 0;
+
+                  for (int brow = 0; brow < b.length; brow++)
+                     sum += a[row][brow] * next[brow][col];
+
+                  b[row][col] = sum;
+               }
             }
 
-         // inline matrix multiply
+            // inline trace
 
-         // find dot products of every row and column combination
+            double trace = 0;
 
-         for (int row = 0; row < a.length; row++) {
-            for (int col = 0; col < a.length; col++) {
+            // accumulate diagonal components
 
-               // inline dot product
+            for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
+               trace -= b[cmpnt][cmpnt];
 
-               double sum = 0;
-
-               for (int brow = 0; brow < b.length; brow++)
-                  sum += a[row][brow] * next[brow][col];
-
-               b[row][col] = sum;
-            }
+            polynomial[n + 1] = trace / (n + 1);
          }
 
-         // inline trace
-
-         double trace = 0;
-
-         // accumulate diagonal components
-
-         for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
-            trace -= b[cmpnt][cmpnt];
-
-         polynomial[n + 1] = trace / (n + 1);
+         return polynomial;
       }
-
-      return polynomial;
    }
 
 }
