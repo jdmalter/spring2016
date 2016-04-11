@@ -234,45 +234,48 @@ public class Decomposition {
       double[][] l = new double[a.length][a.length];
       double[][] v = new double[a.length][a.length];
 
-      if (a.length == 1) {
+      if (a.length == 0) return new double[][][] { l, v };
 
-         // assumed double a = -1;
-         double b = a[0][0];
+      else if (a.length == 1) {
 
-         l[0][0] = b;
-
+         // x - det(a) = 0
+         l[0][0] = a[0][0];
          v[0][0] = 1;
+         return new double[][][] { l, v };
 
       } else if (a.length == 2) {
 
-         // assumed double a = 1;
-         double b = -a[0][0] - a[1][1];
-         double c = a[0][0] * a[1][1] - a[0][1] * a[1][0];
-         double sqrt = Math.sqrt((b * b) - (4 * c));
+         // x^2 + bx + det(a) = 0
+         double b = a[0][0] + a[1][1];
+         double sqrt = Math.sqrt(b * b - 4 * (a[0][0] * a[1][1] - a[0][1] * a[1][0]));
 
-         l[0][0] = (-b + sqrt) / 2;
-         l[1][1] = (-b - sqrt) / 2;
+         // quadratic formula
+         l[0][0] = (b + sqrt) / 2;
+         l[1][1] = (b - sqrt) / 2;
 
+         // simplied rref
          for (int row = 0; row < a.length; row++) {
             v[0][row] = -a[0][1] / (a[0][0] - l[row][row]);
             v[1][row] = 1;
          }
 
+         // divide elements in each row by magnitude of vector
          for (int row = 0; row < a.length; row++) {
             double mag = Math.sqrt((v[0][row] * v[0][row]) + 1);
             v[0][row] /= mag;
             v[1][row] /= mag;
          }
 
+         return new double[][][] { l, v };
+
       } else if (a.length == 3) {
 
-         // assumed double a = -1;
-         double b = a[0][0] + a[1][1] + a[2][2];
-         double c = -(a[0][0] * a[1][1]) - (a[0][0] * a[2][2]) - (a[1][1] * a[2][2])
-            + (a[0][1] * a[1][0]) + (a[0][2] * a[2][0]) + (a[1][2] * a[2][1]);
-         double d = (a[2][0] * a[0][1] * a[1][2]) + (a[1][0] * a[2][1] * a[0][2])
-            - (a[0][0] * a[2][1] * a[1][2]) - (a[1][1] * a[2][0] * a[0][2])
-            - (a[2][2] * a[1][0] * a[0][1]) + (a[0][0] * a[1][1] * a[2][2]);
+         // find characterisitc equation -x^3 + trace(a)*x^2 - (determinant of
+         // traces)*x^1 + determinant(a)*x^0
+         double[] polynomial = Matrices.faddeev(a);
+         double b = -polynomial[1];
+         double c = -polynomial[2];
+         double d = -polynomial[3];
 
          double f = (-(3 * c) - (b * b)) / 3;
          double g = (-(2 * b * b * b) - (9 * b * c) - (27 * d)) / 27;
@@ -287,8 +290,6 @@ public class Decomposition {
          double q = 2 * j * Math.cos(k / 3) + (b / 3);
          double r = -j * (m + n) + p;
          double s = -j * (m - n) + p;
-
-         // 19 variables...
 
          if (q > r && q > s) {
 
@@ -354,72 +355,70 @@ public class Decomposition {
             }
          }
 
-         // for each eigen value
+      } else {
+         throw new UnsupportedOperationException("Not yet");
+      }
 
-         for (int row = 0; row < a.length; row++) {
+      // for each eigen value
 
-            // copy array a into array x
+      for (int row = 0; row < a.length; row++) {
 
-            double[][] x = new double[a.length - 1][a.length];
-            for (int xrow = 0; xrow < x.length; xrow++)
-               for (int xcol = 0; xcol < a.length; xcol++) {
-                  x[xrow][xcol] = a[xrow][xcol];
-                  if (xrow == xcol)
-                     // if on the diagonal, then subtract lambda
-                     x[xrow][xcol] -= l[row][row];
-               }
+         // copy array a into array x
 
-            // inline forward elimination
-
-            for (int diag = 0; diag < x.length - 1; diag++) {
-               if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
-
-               for (int xrow = diag + 1; xrow < x.length; xrow++) {
-                  double quotient = x[xrow][diag] / x[diag][diag];
-
-                  for (int xcol = 0; xcol < x[xrow].length; xcol++)
-                     x[xrow][xcol] -= (quotient * x[diag][xcol]);
-               }
+         double[][] x = new double[a.length - 1][a.length];
+         for (int xrow = 0; xrow < x.length; xrow++)
+            for (int xcol = 0; xcol < a.length; xcol++) {
+               x[xrow][xcol] = a[xrow][xcol];
+               if (xrow == xcol)
+                  // if on the diagonal, then subtract lambda
+                  x[xrow][xcol] -= l[row][row];
             }
 
-            // inline backward elimination
+         // inline forward elimination
 
-            for (int diag = x.length - 1; diag > 0; diag--) {
-               if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
+         for (int diag = 0; diag < x.length - 1; diag++) {
+            if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-               for (int xrow = diag - 1; xrow >= 0; xrow--) {
-                  double quotient = x[xrow][diag] / x[diag][diag];
+            for (int xrow = diag + 1; xrow < x.length; xrow++) {
+               double quotient = x[xrow][diag] / x[diag][diag];
 
-                  for (int xcol = 0; xcol < x[xrow].length; xcol++)
-                     x[xrow][xcol] -= (quotient * x[diag][xcol]);
-               }
+               for (int xcol = 0; xcol < x[xrow].length; xcol++)
+                  x[xrow][xcol] -= (quotient * x[diag][xcol]);
             }
-
-            // solve for "z" where z is on row 5
-
-            v[0][row] = -x[0][2] / x[0][0];
-            v[1][row] = -x[1][2] / x[1][1];
-            v[2][row] = 1;
          }
 
-         // normalize by row
+         // inline backward elimination
 
-         for (int row = 0; row < a.length; row++) {
+         for (int diag = x.length - 1; diag > 0; diag--) {
+            if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
-            // determinant on vector
+            for (int xrow = diag - 1; xrow >= 0; xrow--) {
+               double quotient = x[xrow][diag] / x[diag][diag];
 
-            double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
-
-            v[0][row] /= det;
-            v[1][row] /= det;
-            v[2][row] /= det;
+               for (int xcol = 0; xcol < x[xrow].length; xcol++)
+                  x[xrow][xcol] -= (quotient * x[diag][xcol]);
+            }
          }
 
-         return new double[][][] { l, v };
+         // solve for "z" where z is on row 5
 
-      } else
-         // because finding zeros of larger polynomials is difficult
-         throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
+         v[0][row] = -x[0][2] / x[0][0];
+         v[1][row] = -x[1][2] / x[1][1];
+         v[2][row] = 1;
+      }
+
+      // normalize by row
+
+      for (int row = 0; row < a.length; row++) {
+
+         // determinant on vector
+
+         double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
+
+         v[0][row] /= det;
+         v[1][row] /= det;
+         v[2][row] /= det;
+      }
 
       return new double[][][] { l, v };
    }
@@ -484,200 +483,14 @@ public class Decomposition {
          }
       }
 
-      // inline eigen
-
-      double[][] l = new double[ata.length][ata.length];
-      double[][] v = new double[ata.length][ata.length];
-
-      if (ata.length == 1) {
-
-         // assumed double a = -1;
-         double b = ata[0][0];
-
-         l[0][0] = b;
-
-         v[1][0] = 1;
-
-      } else if (ata.length == 2) {
-
-         // assumed double a = 1;
-         double b = -ata[0][0] - ata[1][1];
-         double c = ata[0][0] * ata[1][1] - ata[0][1] * ata[1][0];
-         double sqrt = Math.sqrt((b * b) - (4 * c));
-
-         l[0][0] = (-b + sqrt) / 2;
-         l[1][1] = (-b - sqrt) / 2;
-
-         for (int row = 0; row < ata.length; row++) {
-            v[0][row] = -ata[0][1] / (ata[0][0] - l[row][row]);
-            v[1][row] = 1;
-         }
-
-         for (int row = 0; row < ata.length; row++) {
-            double mag = Math.sqrt((v[0][row] * v[0][row]) + 1);
-            v[0][row] /= mag;
-            v[1][row] /= mag;
-         }
-
-      } else if (ata.length == 3) {
-
-         // assumed double a = -1;
-         double b = ata[0][0] + ata[1][1] + ata[2][2];
-         double c = -(ata[0][0] * ata[1][1]) - (ata[0][0] * ata[2][2]) - (ata[1][1] * ata[2][2])
-            + (ata[0][1] * ata[1][0]) + (ata[0][2] * ata[2][0]) + (ata[1][2] * ata[2][1]);
-         double d = (ata[2][0] * ata[0][1] * ata[1][2]) + (ata[1][0] * ata[2][1] * ata[0][2])
-            - (ata[0][0] * ata[2][1] * ata[1][2]) - (ata[1][1] * ata[2][0] * ata[0][2])
-            - (ata[2][2] * ata[1][0] * ata[0][1]) + (ata[0][0] * ata[1][1] * ata[2][2]);
-
-         double f = (-(3 * c) - (b * b)) / 3;
-         double g = (-(2 * b * b * b) - (9 * b * c) - (27 * d)) / 27;
-         double h = (g * g / 4) + (f * f * f / 27);
-         double i = Math.sqrt((g * g / 4) - h);
-         double j = Math.pow(i, 1d / 3);
-         double k = Math.acos(-g / (2 * i));
-
-         double m = Math.cos(k / 3);
-         double n = Math.sqrt(3) * Math.sin(k / 3);
-         double p = (b / 3);
-         double q = 2 * j * Math.cos(k / 3) + (b / 3);
-         double r = -j * (m + n) + p;
-         double s = -j * (m - n) + p;
-
-         // more than 19 variables
-
-         if (q > r && q > s) {
-
-            // q is greatest root
-
-            l[0][0] = q;
-
-            if (r > s) {
-
-               // s is least root
-
-               l[1][1] = r;
-               l[2][2] = s;
-
-            } else {
-
-               // r is least root
-
-               l[1][1] = s;
-               l[2][2] = r;
-            }
-
-         } else if (r > s) {
-
-            // r is greatest root
-
-            l[0][0] = r;
-
-            if (q > s) {
-
-               // s is least root
-
-               l[1][1] = q;
-               l[2][2] = s;
-
-            } else {
-
-               // q is least root
-
-               l[1][1] = s;
-               l[2][2] = q;
-            }
-
-         } else {
-
-            // s is greatest root
-
-            l[0][0] = s;
-
-            if (q > r) {
-
-               // r is least root
-
-               l[1][1] = q;
-               l[2][2] = r;
-
-            } else {
-
-               // q is least root
-
-               l[1][1] = r;
-               l[2][2] = q;
-            }
-         }
-
-         for (int row = 0; row < ata.length; row++) {
-
-            // copy array sig into array x
-
-            double[][] x = new double[ata.length - 1][ata.length];
-            for (int xrow = 0; xrow < x.length; xrow++)
-               for (int xcol = 0; xcol < ata.length; xcol++) {
-                  x[xrow][xcol] = ata[xrow][xcol];
-                  if (xrow == xcol)
-                     // if on the diagonal, then subtract lambda
-                     x[xrow][xcol] -= l[row][row];
-               }
-
-            // inline forward elimination
-
-            for (int diag = 0; diag < x.length - 1; diag++) {
-               if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
-
-               for (int xrow = diag + 1; xrow < x.length; xrow++) {
-                  double quotient = x[xrow][diag] / x[diag][diag];
-
-                  for (int xcol = 0; xcol < x[xrow].length; xcol++)
-                     x[xrow][xcol] -= (quotient * x[diag][xcol]);
-               }
-            }
-
-            // inline backward elimination
-
-            for (int diag = x.length - 1; diag > 0; diag--) {
-               if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
-
-               for (int xrow = diag - 1; xrow >= 0; xrow--) {
-                  double quotient = x[xrow][diag] / x[diag][diag];
-
-                  for (int xcol = 0; xcol < x[xrow].length; xcol++)
-                     x[xrow][xcol] -= (quotient * x[diag][xcol]);
-               }
-            }
-
-            // solve for "z" where z is on row 5
-
-            v[0][row] = -x[0][2] / x[0][0];
-            v[1][row] = -x[1][2] / x[1][1];
-            v[2][row] = 1;
-         }
-
-         // normalize by row
-
-         for (int row = 0; row < ata.length; row++) {
-
-            // determinant on vector
-
-            double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
-            v[0][row] /= det;
-            v[1][row] /= det;
-            v[2][row] /= det;
-         }
-
-      } else
-         // because finding zeros of larger polynomials is difficult
-         throw new UnsupportedOperationException("Cannot handle matrices larger than 3 by 3");
-
-      // copy array v into array usv
+      double[][][] lv = eigen(ata);
+      double[][] l = lv[0];
+      double[][] v = lv[1];
 
       double[][] sigma = new double[ata.length][ata.length];
 
       for (int row = 0; row < ata.length; row++)
-         for (int col = 0; col < ata.length; col++)
-            sigma[row][col] = Math.sqrt(l[row][col]);
+         sigma[row][row] = Math.sqrt(l[row][row]);
 
       double[][] inverse = new double[ata.length][ata.length];
 
@@ -727,8 +540,6 @@ public class Decomposition {
             u[row][col] = sum;
          }
       }
-
-      // 27 variables NOT counting any variable declared inside for loop
 
       return new double[][][] { u, sigma, v };
    }

@@ -234,56 +234,34 @@ public class Fundamentals {
       // there are no numbers to work with
       if (a.length == 0) return new double[][] {};
 
-      else if (a.length == 1)
+      else if (a.length == 1) {
          // prevent 0 from dividing by itself
          if (a[0][0] == 0) return new double[][] { new double[] { 0 } };
 
          // otherwise, result is always 1
          else return new double[][] { new double[] { 1 } };
 
-      // copy array a into array c
+      } else {
+         // copy array a into array c
 
-      double[][] c = new double[acol - 1][acol];
-      for (int row = 0; row < c.length; row++)
-         for (int col = 0; col < acol; col++)
-            c[row][col] = a[row][col];
+         double[][] c = new double[acol - 1][acol];
+         for (int row = 0; row < c.length; row++)
+            for (int col = 0; col < acol; col++)
+               c[row][col] = a[row][col];
 
-      // inline forward elimination
+         c = backwardEliminate(forwardEliminate(c));
 
-      for (int diag = 0; diag < c.length - 1; diag++) {
-         if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
+         // normalize c
 
-         for (int row = diag + 1; row < c.length; row++) {
-            double quotient = c[row][diag] / c[diag][diag];
+         double[][] rref = new double[a.length][acol];
 
-            for (int col = 0; col < c[row].length; col++)
-               c[row][col] -= (quotient * c[diag][col]);
+         for (int row = 0; row < c.length; row++) {
+            rref[row][acol - 1] = c[row][acol - 1] / c[row][row];
+            rref[row][row] = 1;
          }
+
+         return rref;
       }
-
-      // inline backward elimination
-
-      for (int diag = c.length - 1; diag > 0; diag--) {
-         if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
-
-         for (int row = diag - 1; row >= 0; row--) {
-            double quotient = c[row][diag] / c[diag][diag];
-
-            for (int col = 0; col < c[row].length; col++)
-               c[row][col] -= (quotient * c[diag][col]);
-         }
-      }
-
-      // normalize c
-
-      double[][] rref = new double[a.length][acol];
-
-      for (int row = 0; row < c.length; row++) {
-         rref[row][acol - 1] = c[row][acol - 1] / c[row][row];
-         rref[row][row] = 1;
-      }
-
-      return rref;
    }
 
    /**
@@ -333,71 +311,7 @@ public class Fundamentals {
          else if (1 != b[row].length)
             throw new IllegalArgumentException("matrix b must contain only one column");
 
-      // inline augment
-
-      double[][] ab = new double[a.length][a[0].length + b[0].length];
-
-      for (int row = 0; row < a.length; row++)
-         for (int col = 0; col < a[0].length; col++)
-            ab[row][col] = a[row][col];
-
-      for (int row = 0; row < b.length; row++)
-         for (int col = 0; col < b[0].length; col++)
-            ab[row][col + a[0].length] = b[row][col];
-
-      // inline rref
-
-      // there are no numbers to work with
-      if (ab.length == 0) return new double[][] {};
-
-      else if (ab.length == 1)
-         // prevent 0 from dividing by itself
-         if (ab[0][0] == 0) return new double[][] { new double[] { 0 } };
-
-         // otherwise, result is always 1
-         else return new double[][] { new double[] { 1 } };
-
-      // copy array ab into array c
-
-      double[][] c = new double[ab[0].length - 1][ab[0].length];
-      for (int row = 0; row < c.length; row++)
-         for (int col = 0; col < ab[0].length; col++)
-            c[row][col] = ab[row][col];
-
-      // inline forward elimination
-
-      for (int diag = 0; diag < c.length - 1; diag++) {
-         if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
-
-         for (int row = diag + 1; row < c.length; row++) {
-            double quotient = c[row][diag] / c[diag][diag];
-
-            for (int col = 0; col < c[row].length; col++)
-               c[row][col] -= (quotient * c[diag][col]);
-         }
-      }
-
-      // inline backward elimination
-
-      for (int diag = c.length - 1; diag > 0; diag--) {
-         if (c[diag][diag] == 0) throw new ArithmeticException("divide by 0");
-
-         for (int row = diag - 1; row >= 0; row--) {
-            double quotient = c[row][diag] / c[diag][diag];
-
-            for (int col = 0; col < c[row].length; col++)
-               c[row][col] -= (quotient * c[diag][col]);
-         }
-      }
-
-      // normalize c
-
-      double[][] rref = new double[a.length][ab[0].length];
-
-      for (int row = 0; row < c.length; row++) {
-         rref[row][ab[0].length - 1] = c[row][ab[0].length - 1] / c[row][row];
-         rref[row][row] = 1;
-      }
+      double[][] rref = rref(augment(a, b));
 
       // copy last column of results into array x
 
@@ -460,17 +374,7 @@ public class Fundamentals {
          else if (1 != b[row].length)
             throw new IllegalArgumentException("matrix b must contain only one column");
 
-      // inline augment
-
-      double[][] ab = new double[a.length][a[0].length + b[0].length];
-
-      for (int row = 0; row < a.length; row++)
-         for (int col = 0; col < a[0].length; col++)
-            ab[row][col] = a[row][col];
-
-      for (int row = 0; row < b.length; row++)
-         for (int col = 0; col < b[0].length; col++)
-            ab[row][col + a[0].length] = b[row][col];
+      double[][] ab = augment(a, b);
 
       // keep track of columns ignore in computation
 
@@ -706,7 +610,6 @@ public class Fundamentals {
          adjugate[2][2] = (a[0][0] * a[1][1] - a[0][1] * a[1][0]);
 
       } else {
-
          determinant = Matrices.determinant(a);
          if (determinant == 0)
             // matrix is singular
@@ -804,7 +707,6 @@ public class Fundamentals {
             new double[] { a[1][0], a[1][1] + polynomial[1] } };
 
       } else {
-
          polynomial = new double[a.length + 1];
          polynomial[0] = 1;
          inverse = new double[a.length][a.length];

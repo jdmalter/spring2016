@@ -50,35 +50,24 @@ public class Matrices {
       else if (a.length == 2) return a[0][0] * a[1][1] - a[0][1] * a[1][0];
 
       // volume inside triple product of vectors
-      else if (a.length == 3) return (a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
+      else if (a.length == 3) return ((a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1])))
          - (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
          + (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
 
-      double determinant = 0;
+      else {
+         double determinant = 0;
 
-      for (int col = 0; col < a.length; col++) {
+         for (int col = 0; col < a.length; col++) {
+            // since skipRow is 0, parity is positive when col is even
+            if (col % 2 == 0) determinant += a[0][col] * determinant(minor(a, 0, col));
 
-         // inline matrix minor where skipRow eqauls 0
-
-         double[][] minor = new double[a.length - 1][a.length - 1];
-
-         for (int row = 0; row < minor.length; row++) {
-            for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
-               if (col == mcol)
-                  // ignore column being skipped and access new col
-                  scol++;
-
-               minor[row][mcol] = a[row + 1][scol];
-            }
+            // since skipRow is 0, parity is negative when col is odd
+            else determinant -= a[0][col] * determinant(minor(a, 0, col));
          }
 
-         if (col % 2 == 0) determinant += a[0][col] * determinant(minor);
-
-         else determinant -= a[0][col] * determinant(minor);
+         // other dimensional quantity
+         return determinant;
       }
-
-      // other dimensional quantity
-      return determinant;
    }
 
    /**
@@ -160,18 +149,15 @@ public class Matrices {
             "skipCol must not be greater than or equal to number of columns");
 
       // minor has one less row and column than original
-
       double[][] minor = new double[a.length - 1][a.length - 1];
 
       for (int row = 0, srow = 0; row < minor.length; row++, srow++) {
-         if (skipRow == row)
-            // ignore row being skipped and access new row
-            srow++;
+         // ignore row being skipped and access new row
+         if (skipRow == row) srow++;
 
          for (int col = 0, scol = 0; col < minor.length; col++, scol++) {
-            if (skipCol == col)
-               // ignore column being skipped and access new col
-               scol++;
+            // ignore column being skipped and access new col
+            if (skipCol == col) scol++;
 
             minor[row][col] = a[srow][scol];
          }
@@ -405,14 +391,13 @@ public class Matrices {
 
       // x^3 - trace(a)*x^2 + (determinant of traces)*x^1 - determinant(a)*x^0
       else if (a.length == 3) return new double[] { 1, -a[0][0] - a[1][1] - a[2][2],
-         ((a[0][0] + 1) * (a[1][1] + a[2][2])) - (a[0][1] * a[1][0]) - (a[0][2] * a[2][0])
-            - (a[1][2] * a[2][1]),
-         -(a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]))
+         ((a[0][0] * a[1][1]) + (a[0][0] * a[2][2]) + (a[1][1] * a[2][2]) - (a[0][1] * a[1][0])
+            - (a[0][2] * a[2][0]) - (a[1][2] * a[2][1])),
+         -((a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1])))
             + (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
             - (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0])) };
 
       else {
-
          double[] polynomial = new double[a.length + 1];
          polynomial[0] = 1;
 
@@ -431,34 +416,8 @@ public class Matrices {
                   // in the elements of b matching the elements of a
                }
 
-            // inline matrix multiply
-
-            // find dot products of every row and column combination
-
-            for (int row = 0; row < a.length; row++) {
-               for (int col = 0; col < a.length; col++) {
-
-                  // inline dot product
-
-                  double sum = 0;
-
-                  for (int brow = 0; brow < b.length; brow++)
-                     sum += a[row][brow] * next[brow][col];
-
-                  b[row][col] = sum;
-               }
-            }
-
-            // inline trace
-
-            double trace = 0;
-
-            // accumulate diagonal components
-
-            for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
-               trace -= b[cmpnt][cmpnt];
-
-            polynomial[n + 1] = trace / (n + 1);
+            b = multiply(a, next);
+            polynomial[n + 1] = -trace(b) / (n + 1);
          }
 
          return polynomial;

@@ -619,6 +619,12 @@ public class MatricesTest {
       expectedF = new double[] { 1, -30, 319, -1410, 2138 };
       actualF = Matrices.faddeev(a);
 
+      // sixth test on 3 by 3 array
+      a = new double[][] { new double[] { 2, 3, -3 }, new double[] { -2, -1, 2 },
+         new double[] { 2, 4, -3 } };
+      expectedF = new double[] { 1, 2, -1, -2 };
+      actualF = Matrices.faddeev(a);
+
       assertEquals(expectedF.length, actualF.length);
       for (int row = 0; row < expectedF.length; row++)
          assertEquals(expectedF[row], actualF[row], DELTA);
