@@ -44,55 +44,39 @@ public class Constrained {
     * @return array of n by 1 and m by 1 array of double
     */
    public static double[][][] overconstrainedPI(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
-            if (a.length <= acol)
-               throw new IllegalArgumentException("matrix a must contain more rows than columns");
+            if (a.length <= acol) throw new IllegalArgumentException(
+               "matrix a must contain more rows than columns");
 
-         } else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         } else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must only contain one column");
 
-      // inline matrix multiply and tranpose
-
-      double[][] ata = new double[acol][acol];
-
-      // find dot products of every row and column combination
-
-      for (int row = 0; row < acol; row++) {
-         for (int col = 0; col < acol; col++) {
-
-            // inline dot product
-
-            double sum = 0;
-
-            for (int brow = 0; brow < a.length; brow++)
-               sum += a[brow][row] * a[brow][col];
-
-            ata[row][col] = sum;
-         }
-      }
-
-      double[][] x =
-         Matrices.multiply(Matrices.multiply(Fundamentals.invert(ata), Matrices.transpose(a)), b);
+      double[][] x = Matrices.multiply(
+         Matrices.multiply(Fundamentals.invert(Matrices.multiplyATA(a)),
+            Matrices.transpose(a)),
+         b);
 
       // inline matrix multiply on vector
 
@@ -145,54 +129,38 @@ public class Constrained {
     * @return n by 1 array of double
     */
    public static double[][] underconstrainedPI(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
-            if (a.length >= acol)
-               throw new IllegalArgumentException("matrix a must contain less rows than columns");
+            if (a.length >= acol) throw new IllegalArgumentException(
+               "matrix a must contain less rows than columns");
 
-         } else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         } else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must only contain one column");
 
-      // inline matrix multiply and tranpose
-
-      double[][] aat = new double[a.length][a.length];
-
-      // find dot products of every row and column combination
-
-      for (int row = 0; row < aat.length; row++) {
-         for (int col = 0; col < aat[row].length; col++) {
-
-            // inline dot product
-
-            double sum = 0;
-
-            for (int brow = 0; brow < a[0].length; brow++)
-               sum += a[row][brow] * a[col][brow];
-
-            aat[row][col] = sum;
-         }
-      }
-
-      return Matrices.multiply(Matrices.multiply(Matrices.transpose(a), Fundamentals.invert(aat)),
+      double[][] at = Matrices.transpose(a);
+      return Matrices.multiply(
+         Matrices.multiply(at, Fundamentals.invert(Matrices.multiplyATA(at))),
          b);
    }
 
@@ -227,57 +195,40 @@ public class Constrained {
     * @return array of n by 1 and m by 1 array of double
     */
    public static double[][][] overconstrainedCD(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
-            if (a.length <= acol)
-               throw new IllegalArgumentException("matrix a must contain more rows than columns");
+            if (a.length <= acol) throw new IllegalArgumentException(
+               "matrix a must contain more rows than columns");
 
-         } else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         } else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must only contain one column");
 
-      // inline matrix multiply and tranpose
+      double[][] l = Decomposition.cholesky(Matrices.multiplyATA(a));
 
-      double[][] ata = new double[acol][acol];
-
-      // find dot products of every row and column combination
-
-      for (int row = 0; row < acol; row++) {
-         for (int col = 0; col < acol; col++) {
-
-            // inline dot product
-
-            double sum = 0;
-
-            for (int brow = 0; brow < a.length; brow++)
-               sum += a[brow][row] * a[brow][col];
-
-            ata[row][col] = sum;
-         }
-      }
-
-      double[][] l = Decomposition.cholesky(ata);
-
-      double[][] x = Fundamentals.gaussJordan(Matrices.transpose(l),
-         Fundamentals.gaussJordan(l, Matrices.multiply(Matrices.transpose(a), b)));
+      double[][] x =
+         Fundamentals.gaussJordan(Matrices.transpose(l), Fundamentals
+            .gaussJordan(l, Matrices.multiply(Matrices.transpose(a), b)));
 
       // inline matrix multiply on vector
 
@@ -333,38 +284,41 @@ public class Constrained {
     * @return array of n by 1 and m by 1 array of double
     */
    public static double[][][] overconstrainedQR(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
-            if (a.length <= acol)
-               throw new IllegalArgumentException("matrix a must contain more rows than columns");
+            if (a.length <= acol) throw new IllegalArgumentException(
+               "matrix a must contain more rows than columns");
 
-         } else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         } else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must only contain one column");
 
       double[][][] qr = Decomposition.qr(a);
       double[][] q = qr[0];
       double[][] r = qr[1];
 
-      double[][] x = Fundamentals.gaussJordan(r, Matrices.multiply(Matrices.transpose(q), b));
+      double[][] x = Fundamentals.gaussJordan(r,
+         Matrices.multiply(Matrices.transpose(q), b));
 
       // inline matrix multiply on vector
 
@@ -420,44 +374,47 @@ public class Constrained {
     * @return array of n by 1 and m by 1 array of double
     */
    public static double[][][] overconstrainedSV(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
-            if (a.length <= acol)
-               throw new IllegalArgumentException("matrix a must contain more rows than columns");
+            if (a.length <= acol) throw new IllegalArgumentException(
+               "matrix a must contain more rows than columns");
 
-         } else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         } else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must only contain one column");
 
       double[][][] usv = Decomposition.singularValue(a);
       double[][] u = usv[0];
       double[][] s = usv[1];
       double[][] v = usv[2];
 
+      // simple inverse because sigma is diagonal array
       double[][] inverse = new double[acol][acol];
       for (int row = 0; row < acol; row++)
          inverse[row][row] = 1 / s[row][row];
 
-      double[][] x = Matrices
-         .multiply(Matrices.multiply(Matrices.multiply(v, inverse), Matrices.transpose(u)), b);
+      double[][] x = Matrices.multiply(Matrices
+         .multiply(Matrices.multiply(v, inverse), Matrices.transpose(u)), b);
 
       // inline matrix multiply on vector
 
@@ -513,44 +470,47 @@ public class Constrained {
     * @return n by 1 array of double
     */
    public static double[][] underconstrainedSV(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
-            if (a.length >= acol)
-               throw new IllegalArgumentException("matrix a must contain less rows than columns");
+            if (a.length >= acol) throw new IllegalArgumentException(
+               "matrix a must contain less rows than columns");
 
-         } else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         } else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must only contain one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must only contain one column");
 
       double[][][] usv = Decomposition.singularValue(Matrices.transpose(a));
       double[][] u = usv[0];
       double[][] s = usv[1];
       double[][] v = usv[2];
 
+      // simple inverse because sigma is diagonal array
       double[][] inverse = new double[a.length][a.length];
       for (int row = 0; row < a.length; row++)
          inverse[row][row] = 1 / s[row][row];
 
-      return Matrices
-         .multiply(Matrices.multiply(Matrices.multiply(u, inverse), Matrices.transpose(v)), b);
+      return Matrices.multiply(Matrices.multiply(Matrices.multiply(u, inverse),
+         Matrices.transpose(v)), b);
    }
 
 }

@@ -15,72 +15,6 @@ public class Fundamentals {
    }
 
    /**
-    * Assumes row by column array representation of matrix. Columns 0 through x
-    * of the resulting matrix contain array a, and columns x through y of the
-    * resulting matrix contain array b. Returns n by x+y array of double.
-    * 
-    * Throws IllegalArgumentException if any of the following is true:
-    * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
-    * where length is number of rows, {@code (null == a[row])} where a[row] is
-    * any row, {@code (null == b[row])} where b[row] is any row,
-    * {@code (acol != a[row].length)} where acol is number of columns on first
-    * row and a[row].length is number of columns, or
-    * {@code (bcol != b[row].length)} where bcol is number of columns on first
-    * row and b[row].length is number of columns on any row.
-    * 
-    * @param a
-    *        n by x array of double
-    * @param b
-    *        n by y array of double
-    * @return n by x+y array of double
-    */
-   public static double[][] augment(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
-
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
-
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
-
-      int acol = -1;
-      int bcol = -1;
-
-      for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
-
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
-
-         else if (row == 0) {
-            acol = a[0].length;
-            bcol = b[0].length;
-         }
-
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
-
-         else if (bcol != b[row].length)
-            throw new IllegalArgumentException("matrix b row width must remain constant");
-
-      double[][] aug = new double[a.length][acol + bcol];
-
-      // fill in left rows of augment
-
-      for (int row = 0; row < a.length; row++)
-         for (int col = 0; col < acol; col++)
-            aug[row][col] = a[row][col];
-
-      // fill in right rows of augment
-
-      for (int row = 0; row < b.length; row++)
-         for (int col = 0; col < bcol; col++)
-            aug[row][col + acol] = b[row][col];
-
-      return aug;
-   }
-
-   /**
     * Assumes row by column array representation of matrix. Creates new matrix
     * equal to given matrix a except the lower triangular is set to 0. Returns n
     * by m array of double.
@@ -98,13 +32,14 @@ public class Fundamentals {
     * @return n by m array of double
     */
    public static double[][] forwardEliminate(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
@@ -112,8 +47,8 @@ public class Fundamentals {
                "matrix a must contain as many or more columns than rows");
          }
 
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
       // copy array a into forward
 
@@ -156,13 +91,14 @@ public class Fundamentals {
     * @return n by m array of double
     */
    public static double[][] backwardEliminate(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
@@ -170,8 +106,8 @@ public class Fundamentals {
                "matrix a must contain as many or more columns than rows");
          }
 
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
       // copy a into backward
 
@@ -215,21 +151,22 @@ public class Fundamentals {
     * @return n by m array of double
     */
    public static double[][] rref(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
             if (a.length > acol) throw new IllegalArgumentException(
                "matrix a must contain as many or more columns than rows");
 
-         } else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         } else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
       // there are no numbers to work with
       if (a.length == 0) return new double[][] {};
@@ -291,27 +228,45 @@ public class Fundamentals {
     * @return n by 1 array of double
     */
    public static double[][] gaussJordan(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must contain only one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must contain only one column");
 
-      double[][] rref = rref(augment(a, b));
+      // combine array a and array b into one array
+
+      double[][] ab = new double[a.length][a.length + 1];
+
+      // fill in left rows of ab
+
+      for (int row = 0; row < a.length; row++)
+         for (int col = 0; col < a.length; col++)
+            ab[row][col] = a[row][col];
+
+      // fill in right rows of ab
+
+      for (int row = 0; row < b.length; row++)
+         for (int col = 0; col < 1; col++)
+            ab[row][col + a.length] = b[row][col];
+
+      double[][] rref = rref(ab);
 
       // copy last column of results into array x
 
@@ -354,27 +309,43 @@ public class Fundamentals {
     * @return array of n by n and n by 1 array of double
     */
    public static double[][][] gaussJordanMany(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must contain only one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must contain only one column");
 
-      double[][] ab = augment(a, b);
+      // combine array a and array b into one array
+
+      double[][] ab = new double[a.length][a.length + 1];
+
+      // fill in left rows of ab
+
+      for (int row = 0; row < a.length; row++)
+         for (int col = 0; col < a.length; col++)
+            ab[row][col] = a[row][col];
+
+      // fill in right rows of ab
+
+      for (int row = 0; row < b.length; row++)
+         for (int col = 0; col < 1; col++)
+            ab[row][col + a.length] = b[row][col];
 
       // keep track of columns ignore in computation
 
@@ -480,25 +451,27 @@ public class Fundamentals {
     * @return n by 1 array of double
     */
    public static double[][] cramer(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of rows must be equal");
+      else if (a.length != b.length) throw new IllegalArgumentException(
+         "matrix a and b number of rows must be equal");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+         else if (null == b[row]) throw new IllegalArgumentException(
+            "matrix b must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
-         else if (1 != b[row].length)
-            throw new IllegalArgumentException("matrix b must contain only one column");
+         else if (1 != b[row].length) throw new IllegalArgumentException(
+            "matrix b must contain only one column");
 
       double denominator = Matrices.determinant(a);
 
@@ -543,14 +516,15 @@ public class Fundamentals {
     * @return n by n array of double
     */
    public static double[][] invert(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
       double[][] adjugate = new double[a.length][a.length];
       double determinant = 0;
@@ -622,12 +596,14 @@ public class Fundamentals {
 
                double[][] minor = new double[a.length - 1][a.length - 1];
 
-               for (int mrow = 0, srow = 0; mrow < minor.length; mrow++, srow++) {
+               for (int mrow = 0, srow = 0; mrow < minor.length;
+                  mrow++, srow++) {
                   if (row == mrow)
                      // ignore row being skipped and access new row
                      srow++;
 
-                  for (int mcol = 0, scol = 0; mcol < minor.length; mcol++, scol++) {
+                  for (int mcol = 0, scol = 0; mcol < minor.length;
+                     mcol++, scol++) {
                      if (col == mcol)
                         // ignore column being skipped and access new
                         // col
@@ -678,14 +654,15 @@ public class Fundamentals {
     * @return n by n array of double
     */
    public static double[][] invertFaddeev(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
       // finding inverse of given matrix a requires one more step beyond faddeev
       double[] polynomial;
@@ -697,14 +674,15 @@ public class Fundamentals {
       // x^1 + determinant(a)*x^0
       else if (a.length == 1) {
          polynomial = new double[] { 1, -a[0][0] };
-         inverse = new double[][] { new double[] { 1 } };
+         inverse = new double[][] { { 1 } };
       }
 
       // x^2 - trace(a)*x^1 + determinant(a)*x^0
       else if (a.length == 2) {
-         polynomial = new double[] { 1, -a[0][0] - a[1][1], a[0][0] * a[1][1] - a[0][1] * a[1][0] };
-         inverse = new double[][] { new double[] { a[0][0] + polynomial[1], a[0][1] },
-            new double[] { a[1][0], a[1][1] + polynomial[1] } };
+         polynomial = new double[] { 1, -a[0][0] - a[1][1],
+            a[0][0] * a[1][1] - a[0][1] * a[1][0] };
+         inverse = new double[][] { { a[0][0] + polynomial[1], a[0][1] },
+            { a[1][0], a[1][1] + polynomial[1] } };
 
       } else {
          polynomial = new double[a.length + 1];
@@ -726,31 +704,11 @@ public class Fundamentals {
                   // in the elements of b matching the elements of a
                }
 
-            // inline matrix multiply
-
-            // find dot products of every row and column combination
-
-            for (int row = 0; row < a.length; row++)
-               for (int col = 0; col < a.length; col++) {
-
-                  // inline dot product
-
-                  double sum = 0;
-
-                  for (int brow = 0; brow < b.length; brow++)
-                     sum += a[row][brow] * next[brow][col];
-
-                  b[row][col] = sum;
-               }
-
-            // inline trace
+            b = Matrices.multiply(a, next);
 
             double trace = 0;
-
-            // accumulate diagonal components
-
-            for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
-               trace -= b[cmpnt][cmpnt];
+            for (int row = 0; row < a.length; row++)
+               trace -= b[row][row];
 
             polynomial[n + 1] = trace / (n + 1);
 
@@ -761,13 +719,15 @@ public class Fundamentals {
                   for (int col = 0; col < a.length; col++) {
 
                      inverse[row][col] = b[row][col];
-                     if (row == col) inverse[row][col] += polynomial[a.length - 1];
+                     if (row == col)
+                        inverse[row][col] += polynomial[a.length - 1];
                   }
             }
          }
       }
 
-      if (polynomial[a.length] == 0) throw new ArithmeticException("divide by 0");
+      if (polynomial[a.length] == 0)
+         throw new ArithmeticException("divide by 0");
 
       // divide inverse elements by polynomial
 

@@ -34,14 +34,15 @@ public class Decomposition {
     * @return array of n by n and n by n array of double
     */
    public static double[][][] lu(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
       double[][] l = new double[a.length][a.length];
       double[][] u = new double[a.length][a.length];
@@ -64,6 +65,7 @@ public class Decomposition {
          if (u[diag][diag] == 0) throw new ArithmeticException("divide by 0");
 
          for (int row = diag + 1; row < u.length; row++) {
+            // inline is necessary because array l holds quotients
             l[row][diag] = u[row][diag] / u[diag][diag];
 
             for (int col = 0; col < u[row].length; col++)
@@ -99,29 +101,29 @@ public class Decomposition {
     * @return n by n array of double
     */
    public static double[][] cholesky(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
       for (int row = 0; row < a.length; row++)
          for (int col = 0; col < a.length; col++)
-            if (a[row][col] != a[col][row])
-               throw new IllegalArgumentException("matrix a must have symmetry across diagonal");
+            if (a[row][col] != a[col][row]) throw new IllegalArgumentException(
+               "matrix a must have symmetry across diagonal");
 
       double[][] l = new double[a.length][a.length];
 
       for (int row = 0; row < a.length; row++) {
          double sum = 0;
 
-         // inline determinant on vector
-
          for (int col = 0; col < row; col++)
             sum += l[row][col] * l[row][col];
+         // l[row][row] is not exactly determinant on vector
          l[row][row] = Math.sqrt(a[row][row] - sum);
 
          for (int lrow = row + 1; lrow < a.length; lrow++) {
@@ -157,13 +159,14 @@ public class Decomposition {
     * @return array of m by n and n by n array of double
     */
    public static double[][][] qr(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
@@ -171,8 +174,8 @@ public class Decomposition {
                "matrix a must contain as many or more rows than columns");
          }
 
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
       double[][] q = new double[a.length][acol];
       double[][] r = new double[acol][acol];
@@ -189,8 +192,6 @@ public class Decomposition {
             for (int wrow = 0; wrow < col; wrow++)
                w[row] -= (r[wrow][col] * q[row][wrow]);
          }
-
-         // inline determinant on vector
 
          for (int row = 0; row < a.length; row++)
             r[col][col] += w[row] * w[row];
@@ -222,14 +223,15 @@ public class Decomposition {
     * @return array of n by n and n by n array of double
     */
    public static double[][][] eigen(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
       double[][] l = new double[a.length][a.length];
       double[][] v = new double[a.length][a.length];
@@ -247,7 +249,8 @@ public class Decomposition {
 
          // x^2 + bx + det(a) = 0
          double b = a[0][0] + a[1][1];
-         double sqrt = Math.sqrt(b * b - 4 * (a[0][0] * a[1][1] - a[0][1] * a[1][0]));
+         double sqrt =
+            Math.sqrt(b * b - 4 * (a[0][0] * a[1][1] - a[0][1] * a[1][0]));
 
          // quadratic formula
          l[0][0] = (b + sqrt) / 2;
@@ -270,8 +273,8 @@ public class Decomposition {
 
       } else if (a.length == 3) {
 
-         // find characterisitc equation -x^3 + trace(a)*x^2 - (determinant of
-         // traces)*x^1 + determinant(a)*x^0
+         // find characterisitc equation of the form -x^3 + trace(a)*x^2 -
+         // (determinant of traces)*x^1 + determinant(a)*x^0
          double[] polynomial = Matrices.faddeev(a);
          double b = -polynomial[1];
          double c = -polynomial[2];
@@ -374,50 +377,23 @@ public class Decomposition {
                   x[xrow][xcol] -= l[row][row];
             }
 
-         // inline forward elimination
+         x = Fundamentals.rref(x);
 
-         for (int diag = 0; diag < x.length - 1; diag++) {
-            if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
-
-            for (int xrow = diag + 1; xrow < x.length; xrow++) {
-               double quotient = x[xrow][diag] / x[diag][diag];
-
-               for (int xcol = 0; xcol < x[xrow].length; xcol++)
-                  x[xrow][xcol] -= (quotient * x[diag][xcol]);
-            }
-         }
-
-         // inline backward elimination
-
-         for (int diag = x.length - 1; diag > 0; diag--) {
-            if (x[diag][diag] == 0) throw new ArithmeticException("divide by 0");
-
-            for (int xrow = diag - 1; xrow >= 0; xrow--) {
-               double quotient = x[xrow][diag] / x[diag][diag];
-
-               for (int xcol = 0; xcol < x[xrow].length; xcol++)
-                  x[xrow][xcol] -= (quotient * x[diag][xcol]);
-            }
-         }
-
-         // solve for "z" where z is on row 5
+         // solve for "z" where z is on last row
 
          v[0][row] = -x[0][2] / x[0][0];
          v[1][row] = -x[1][2] / x[1][1];
-         v[2][row] = 1;
+         v[x.length][row] = 1;
       }
 
       // normalize by row
 
       for (int row = 0; row < a.length; row++) {
-
-         // determinant on vector
-
-         double det = Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
-
-         v[0][row] /= det;
-         v[1][row] /= det;
-         v[2][row] /= det;
+         double determinant =
+            Math.sqrt((v[0][row] * v[0][row]) + (v[1][row] * v[1][row]) + 1);
+         v[0][row] /= determinant;
+         v[1][row] /= determinant;
+         v[2][row] /= determinant;
       }
 
       return new double[][][] { l, v };
@@ -448,13 +424,14 @@ public class Decomposition {
     * @return array of m by n, n by n, and n by n array of double
     */
    public static double[][][] singularValue(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
@@ -462,86 +439,25 @@ public class Decomposition {
                "matrix a must contain as many or more rows than columns");
          }
 
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
-      // inline matrix multiplication and tranpose
-
-      double[][] ata = new double[acol][acol];
-
-      for (int row = 0; row < ata.length; row++) {
-         for (int col = 0; col < ata[row].length; col++) {
-
-            // inline dot product
-
-            double sum = 0;
-
-            for (int brow = 0; brow < a.length; brow++)
-               sum += a[brow][row] * a[brow][col];
-
-            ata[row][col] = sum;
-         }
-      }
-
-      double[][][] lv = eigen(ata);
+      double[][][] lv = eigen(Matrices.multiplyATA(a));
       double[][] l = lv[0];
       double[][] v = lv[1];
 
-      double[][] sigma = new double[ata.length][ata.length];
+      double[][] sigma = new double[acol][acol];
 
-      for (int row = 0; row < ata.length; row++)
+      for (int row = 0; row < acol; row++)
          sigma[row][row] = Math.sqrt(l[row][row]);
 
-      double[][] inverse = new double[ata.length][ata.length];
+      // simple inverse because sigma is diagonal array
+      double[][] inverse = new double[acol][acol];
+      for (int row = 0; row < acol; row++)
+         inverse[row][row] = 1 / sigma[row][row];
 
-      for (int row = 0; row < ata.length; row++)
-         for (int col = 0; col < ata.length; col++) {
-            if (sigma[row][col] == 0)
-               // prevent divides by 0
-               inverse[row][col] = 0;
-
-            else
-               // inverse is simple inverse since sigma is diagonal
-               inverse[row][col] = 1 / sigma[row][col];
-         }
-
-      // inline matrix multiply
-
-      double[][] av = new double[a.length][v[0].length];
-
-      for (int row = 0; row < av.length; row++) {
-         for (int col = 0; col < av[row].length; col++) {
-
-            // inline dot product
-
-            double sum = 0;
-
-            for (int brow = 0; brow < v.length; brow++)
-               sum += a[row][brow] * v[brow][col];
-
-            av[row][col] = sum;
-         }
-      }
-
-      // inline matrix multiply
-
-      double[][] u = new double[av.length][inverse[0].length];
-
-      for (int row = 0; row < u.length; row++) {
-         for (int col = 0; col < u[row].length; col++) {
-
-            // inline dot product
-
-            double sum = 0;
-
-            for (int brow = 0; brow < inverse.length; brow++)
-               sum += av[row][brow] * inverse[brow][col];
-
-            u[row][col] = sum;
-         }
-      }
-
-      return new double[][][] { u, sigma, v };
+      return new double[][][] {
+         Matrices.multiply(Matrices.multiply(a, v), inverse), sigma, v };
    }
 
 }

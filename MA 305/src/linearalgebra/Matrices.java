@@ -15,8 +15,15 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by column array representation of matrix. Returns amount of
-    * "sofu" enclosed in linear object defined by matrix a.
+    * Assumes row by column array representation of matrix. The resulting array
+    * has some properties. Given that I is identity matrix, the determinant of I
+    * is 1. Given that at is tranpose of some matrix a, the determinant of at
+    * equals the determinant of a. Given that a^-1 is inverse of some matrix a,
+    * the determinant of a^-1 equals inverse of the determinant of a. Given that
+    * c is some number and n is the number of rows of some given matrix a, the
+    * determinant of cA equals the product of c^n and the determinant of a.
+    * Given that a is traingular matrix, the determinant is the product of
+    * diagonal elements. Returns a number.
     * 
     * This implementation does not use recursion when number of rows is less
     * than four.
@@ -26,79 +33,50 @@ public class Matrices {
     * {@code (a.length != a[row].length)} where length is number of rows and
     * a[row].length is number of columns on any row.
     * 
+    * Credit to
+    * https://en.wikipedia.org/wiki/Determinant#Properties_of_the_determinant
+    * for identifying properties of determinants.
+    * 
     * @param a
     *        n by n array of double
-    * @return amount of "sofu" enclosed in linear object defined by matrix a
+    * @return a number
     */
    public static double determinant(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
-      // point with no dimensions
       if (a.length == 0) return 0;
 
-      // length of line
       else if (a.length == 1) return a[0][0];
 
-      // area between vectors
-      else if (a.length == 2) return a[0][0] * a[1][1] - a[0][1] * a[1][0];
+      else if (a.length == 2) return (a[0][0] * a[1][1]) - (a[0][1] * a[1][0]);
 
-      // volume inside triple product of vectors
-      else if (a.length == 3) return ((a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1])))
-         - (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
-         + (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
+      else if (a.length == 3)
+         return ((a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1])))
+            - (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
+            + (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]));
 
       else {
          double determinant = 0;
 
          for (int col = 0; col < a.length; col++) {
             // since skipRow is 0, parity is positive when col is even
-            if (col % 2 == 0) determinant += a[0][col] * determinant(minor(a, 0, col));
+            if (col % 2 == 0)
+               determinant += a[0][col] * determinant(minor(a, 0, col));
 
             // since skipRow is 0, parity is negative when col is odd
             else determinant -= a[0][col] * determinant(minor(a, 0, col));
          }
 
-         // other dimensional quantity
          return determinant;
       }
-   }
-
-   /**
-    * Returns sum of products of respective components.
-    * 
-    * Throws IllegalArgumentException if any of the following is true:
-    * {@code (null == a)}, {@code (null == b)}, or
-    * {@code (a.length != b.length)} where length is number of components.
-    * 
-    * @param a
-    *        n component array
-    * @param b
-    *        n component array
-    * @return sum of products of respective components
-    */
-   public static double dotProduct(double[] a, double[] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
-
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
-
-      else if (a.length != b.length)
-         throw new IllegalArgumentException("matrix a and b number of components must be equal");
-
-      double sum = 0;
-
-      // multiply respective components and accumulate
-
-      for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
-         sum += (a[cmpnt] * b[cmpnt]);
-
-      return sum;
    }
 
    /**
@@ -123,13 +101,14 @@ public class Matrices {
     * @return n-1 by m-1 array of double
     */
    public static double[][] minor(double[][] a, int skipRow, int skipCol) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (skipRow < 0)
-         throw new IllegalArgumentException("skipRow must not be less than zero");
+      else if (skipRow < 0) throw new IllegalArgumentException(
+         "skipRow must not be less than zero");
 
-      else if (skipCol < 0)
-         throw new IllegalArgumentException("skipCol must not be less than zero");
+      else if (skipCol < 0) throw new IllegalArgumentException(
+         "skipCol must not be less than zero");
 
       else if (skipRow >= a.length) throw new IllegalArgumentException(
          "skipRow must not be greater than or equal to number of rows");
@@ -137,13 +116,13 @@ public class Matrices {
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row == 0) acol = a[0].length;
 
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
          else if (skipCol >= acol) throw new IllegalArgumentException(
             "skipCol must not be greater than or equal to number of columns");
@@ -167,8 +146,9 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by column array representation of matrix. Returns n by p array
-    * of double.
+    * Assumes row by column array representation of matrix. The resulting array
+    * contains the products of each respective row of given matrix a and each
+    * respective column of given matrix b. Returns n by p array of double.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == b)}, {@code (null == a[row])} where
@@ -185,27 +165,30 @@ public class Matrices {
     * @return n by p array of double
     */
    public static double[][] multiply(double[][] a, double[][] b) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
-      else if (null == b) throw new IllegalArgumentException("matrix b must not be null");
+      else if (null == b)
+         throw new IllegalArgumentException("matrix b must not be null");
 
       int acol = -1;
       int bcol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row < b.length && null == b[row])
-            throw new IllegalArgumentException("matrix b must not contain null column");
+            throw new IllegalArgumentException(
+               "matrix b must not contain null column");
 
          else if (row == 0) {
             acol = a[0].length;
             bcol = b[0].length;
          }
 
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
          else if (b.length != a[row].length) throw new IllegalArgumentException(
             "matrix b number of rows must equal matrix a number of columns");
@@ -232,6 +215,58 @@ public class Matrices {
    }
 
    /**
+    * Assumes row by column array representation of matrix. Given that at is
+    * tranpose of given matrix a, the resulting array equals at*a. Returns m by
+    * m array of double.
+    * 
+    * Throws IllegalArgumentException if any of the following is true:
+    * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
+    * {@code (acol != a[row].length)} where acol is number of columns on first
+    * row and a[row].length is number of columns.
+    * 
+    * @param a
+    *        n by m array of double
+    * @return m by m array of double
+    */
+   public static double[][] multiplyATA(double[][] a) {
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
+
+      int acol = -1;
+
+      for (int row = 0; row < a.length; row++)
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
+
+         else if (row == 0) acol = a[0].length;
+
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
+
+      double[][] mul = new double[acol][acol];
+
+      // find dot products of every row and column combination
+
+      for (int row = 0; row < mul.length; row++) {
+         for (int col = 0; col < mul[row].length; col++) {
+
+            // inline dot product
+
+            double sum = 0;
+
+            for (int brow = 0; brow < a.length; brow++)
+               // brow and row are reverse because multiplier must be tranpose
+               // of given matrix a
+               sum += a[brow][row] * a[brow][col];
+
+            mul[row][col] = sum;
+         }
+      }
+
+      return mul;
+   }
+
+   /**
     * Assumes row by column array representation of matrix. Rows become
     * respective columns, and columns become respective rows. Alternatively,
     * flip element of matrix a over its diagonal. Returns m by n array of
@@ -247,18 +282,19 @@ public class Matrices {
     * @return m by n array of double
     */
    public static double[][] transpose(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row == 0) acol = a[0].length;
 
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
       double[][] at = new double[acol][a.length];
 
@@ -271,9 +307,10 @@ public class Matrices {
    }
 
    /**
-    * Assumes row by column array representation of matrix. Returns amount of
-    * "sofu" defined by n vectors enclosing a linear object in m-th dimensional
-    * space with m components.
+    * Assumes row by column array representation of matrix. Sofu is length,
+    * area, volume, or some other dimensional quantity. Returns amount of "sofu"
+    * defined by n vectors enclosing a linear object in m-th dimensional space
+    * with m components.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
@@ -286,68 +323,21 @@ public class Matrices {
     *         m-th dimensional space with m components
     */
    public static double sofu(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       int acol = -1;
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
          else if (row == 0) acol = a[0].length;
 
-         else if (acol != a[row].length)
-            throw new IllegalArgumentException("matrix a row width must remain constant");
+         else if (acol != a[row].length) throw new IllegalArgumentException(
+            "matrix a row width must remain constant");
 
-      // inline matrix multiply and tranpose
-
-      double[][] ata = new double[a[0].length][a[0].length];
-
-      for (int row = 0; row < ata.length; row++) {
-         for (int col = 0; col < ata[row].length; col++) {
-            double sum = 0;
-
-            for (int brow = 0; brow < a.length; brow++)
-               sum += a[brow][row] * a[brow][col];
-
-            ata[row][col] = sum;
-         }
-      }
-
-      return Math.sqrt(determinant(ata));
-   }
-
-   /**
-    * Assumes row by column array representation of matrix. Returns sum of
-    * diagonal components.
-    * 
-    * Throws IllegalArgumentException if any of the following is true:
-    * {@code (null == a)}, {@code (null == a[row])} where a[row] is any row, or
-    * {@code (a.length != a[row].length)} where length is number of rows and
-    * a[row].length is number of columns on any row.
-    * 
-    * @param a
-    *        n by n array of double
-    * @return sum of diagonal components
-    */
-   public static double trace(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
-
-      for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
-
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
-
-      double sum = 0;
-
-      // accumulate diagonal components
-
-      for (int cmpnt = 0; cmpnt < a.length; cmpnt++)
-         sum += a[cmpnt][cmpnt];
-
-      return sum;
+      return Math.sqrt(determinant(multiplyATA(a)));
    }
 
    /**
@@ -370,14 +360,15 @@ public class Matrices {
     * @return n+1 array of double
     */
    public static double[] faddeev(double[][] a) {
-      if (null == a) throw new IllegalArgumentException("matrix a must not be null");
+      if (null == a)
+         throw new IllegalArgumentException("matrix a must not be null");
 
       for (int row = 0; row < a.length; row++)
-         if (null == a[row])
-            throw new IllegalArgumentException("matrix a must not contain null column");
+         if (null == a[row]) throw new IllegalArgumentException(
+            "matrix a must not contain null column");
 
-         else if (a.length != a[row].length)
-            throw new IllegalArgumentException("matrix a number of rows and columns must be equal");
+         else if (a.length != a[row].length) throw new IllegalArgumentException(
+            "matrix a number of rows and columns must be equal");
 
       // x^0
       if (a.length == 0) return new double[] { 1 };
@@ -386,13 +377,14 @@ public class Matrices {
       else if (a.length == 1) return new double[] { 1, -a[0][0] };
 
       // x^2 - trace(a)*x^1 + determinant(a)*x^0
-      else if (a.length == 2)
-         return new double[] { 1, -a[0][0] - a[1][1], a[0][0] * a[1][1] - a[0][1] * a[1][0] };
+      else if (a.length == 2) return new double[] { 1, -a[0][0] - a[1][1],
+         a[0][0] * a[1][1] - a[0][1] * a[1][0] };
 
       // x^3 - trace(a)*x^2 + (determinant of traces)*x^1 - determinant(a)*x^0
-      else if (a.length == 3) return new double[] { 1, -a[0][0] - a[1][1] - a[2][2],
-         ((a[0][0] * a[1][1]) + (a[0][0] * a[2][2]) + (a[1][1] * a[2][2]) - (a[0][1] * a[1][0])
-            - (a[0][2] * a[2][0]) - (a[1][2] * a[2][1])),
+      else if (a.length == 3) return new double[] { 1,
+         -a[0][0] - a[1][1] - a[2][2],
+         ((a[0][0] * a[1][1]) + (a[0][0] * a[2][2]) + (a[1][1] * a[2][2])
+            - (a[0][1] * a[1][0]) - (a[0][2] * a[2][0]) - (a[1][2] * a[2][1])),
          -((a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1])))
             + (a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]))
             - (a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0])) };
@@ -417,7 +409,13 @@ public class Matrices {
                }
 
             b = multiply(a, next);
-            polynomial[n + 1] = -trace(b) / (n + 1);
+
+            // trace is sum of diagonal elements
+            double trace = 0;
+            for (int row = 0; row < a.length; row++)
+               trace -= b[row][row];
+
+            polynomial[n + 1] = trace / (n + 1);
          }
 
          return polynomial;
