@@ -144,8 +144,8 @@ public class Decomposition {
    /**
     * Assumes row by column array representation of matrix. Given that q is the
     * first element of the resulting array and r is the second element of the
-    * resulting array, q*r - a = 0. Given that qt is tranpose of q, qt*q - I = 0
-    * where I is identity matrix. r is be upper triangular. Returns array of m
+    * resulting array, q*r - a = 0. Given that qt is transpose of q, qt*q - I =
+    * 0 where I is identity matrix. r is be upper triangular. Returns array of m
     * by n and n by n array of double.
     * 
     * Throws IllegalArgumentException if any of the following is true:
@@ -256,7 +256,7 @@ public class Decomposition {
          l[0][0] = (b + sqrt) / 2;
          l[1][1] = (b - sqrt) / 2;
 
-         // simplied rref
+         // simplified reduced row echelon form
          for (int row = 0; row < a.length; row++) {
             v[0][row] = -a[0][1] / (a[0][0] - l[row][row]);
             v[1][row] = 1;
@@ -273,7 +273,7 @@ public class Decomposition {
 
       } else if (a.length == 3) {
 
-         // find characterisitc equation of the form -x^3 + trace(a)*x^2 -
+         // find characteristic equation of the form -x^3 + trace(a)*x^2 -
          // (determinant of traces)*x^1 + determinant(a)*x^0
          double[] polynomial = Matrices.faddeev(a);
          double b = -polynomial[1];
@@ -402,9 +402,9 @@ public class Decomposition {
    /**
     * Assumes row by column array representation of matrix. Given the resulting
     * array, the first element is matrix u, the second element is matrix s, and
-    * the third element is matrix v. Given that ut is tranpose of u, ut*u - I =
-    * 0 where I is identity matrix. Given that vt is tranpose of v, vt*v - I = 0
-    * where I is identity matrix. s is diagonal such that elements on diagonal
+    * the third element is matrix v. Given that ut is transpose of u, ut*u - I =
+    * 0 where I is identity matrix. Given that vt is transpose of v, vt*v - I =
+    * 0 where I is identity matrix. s is diagonal such that elements on diagonal
     * are non-zero and elements not on diagonal equal zero. From the
     * specifications, it is given that matrix a equals u*s*vt. Returns array of
     * m by n, n by n, and n by n array of double.

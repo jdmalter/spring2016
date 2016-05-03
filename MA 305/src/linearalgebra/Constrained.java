@@ -1,8 +1,8 @@
 package linearalgebra;
 
 /**
- * Contains functions which compute overconstrained and underconstrained systems
- * through multiple implementations.
+ * Contains functions which compute over-constrained and under-constrained
+ * systems through multiple implementations.
  * 
  * @author Jacob Malter
  *
@@ -21,8 +21,8 @@ public class Constrained {
     * resulting array, a*x - b = e where the magnitude of e is minimized.
     * Returns array of array of n by 1 and m by 1 array of double,
     * 
-    * Given that at is tranpose of given matrix a, this implementation finds the
-    * pseudo-inverse of matrix a by solving ((at*a)^-1)*at.
+    * Given that at is transpose of given matrix a, this implementation finds
+    * the pseudo-inverse of matrix a by solving ((at*a)^-1)*at.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -106,8 +106,8 @@ public class Constrained {
     * resulting matrix, a*x - b = 0 where the magnitude of x is minimized.
     * Returns n by 1 array of double.
     * 
-    * Given that at is tranpose of given matrix a, this implementation finds the
-    * pseudo-inverse of matrix a by solving at*((a*at)^-1).
+    * Given that at is transpose of given matrix a, this implementation finds
+    * the pseudo-inverse of matrix a by solving at*((a*at)^-1).
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -170,10 +170,10 @@ public class Constrained {
     * resulting array, a*x - b = e where the magnitude of e is minimized.
     * Returns array of array of n by 1 and m by 1 array of double,
     * 
-    * This implementation finds x in two steps. It is given that at is tranpose
+    * This implementation finds x in two steps. It is given that at is transpose
     * of given matrix a, l is the cholesky decomposition of a, and lt is
-    * tranpose of l. First, y is found by solving l*y = at*b. Second, x is found
-    * by solving lt*x = y.
+    * transpose of l. First, y is found by solving l*y = at*b. Second, x is
+    * found by solving lt*x = y.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -261,8 +261,8 @@ public class Constrained {
     * 
     * This implementation finds x in two steps. First, array qr is the resulting
     * array from qr decomposition on given matrix a where q is the first element
-    * of qr and r is the second element of qr. Second, given that qt is tranpose
-    * of q, x is found by solving r*x = qt*b.
+    * of qr and r is the second element of qr. Second, given that qt is
+    * transpose of q, x is found by solving r*x = qt*b.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -350,9 +350,10 @@ public class Constrained {
     * Returns array of array of n by 1 and m by 1 array of double,
     * 
     * This implementation finds x in one step. Given that array usv is the
-    * resulting array of sv decomposition on given matrix a where ut is tranpose
-    * of the first element of usv, (s^-1) is the inverse of the second element
-    * of usv, v is the third element of usv, x is equal to v*(s^-1)*ut*b.
+    * resulting array of sv decomposition on given matrix a where ut is
+    * transpose of the first element of usv, (s^-1) is the inverse of the second
+    * element of usv, v is the third element of usv, x is equal to
+    * v*(s^-1)*ut*b.
     * 
     * Throws IllegalArgumentException if any of the following is true:
     * {@code (null == a)}, {@code (null == b)}, {@code (a.length != b.length)}
@@ -445,9 +446,9 @@ public class Constrained {
     * Returns n by 1 array of double.
     * 
     * This implementation finds x in one step. Given that array usv is the
-    * resulting array of sv decomposition on tranpose of the given matrix a
+    * resulting array of sv decomposition on transpose of the given matrix a
     * where u is the first element of usv, (s^-1) is the inverse of the second
-    * element of usv, vt is tranpose of the third element of usv, x is found by
+    * element of usv, vt is transpose of the third element of usv, x is found by
     * solving u*(s^-1)*vt*b.
     * 
     * Throws IllegalArgumentException if any of the following is true:

@@ -17,12 +17,12 @@ public class Matrices {
    /**
     * Assumes row by column array representation of matrix. The resulting array
     * has some properties. Given that I is identity matrix, the determinant of I
-    * is 1. Given that at is tranpose of some matrix a, the determinant of at
+    * is 1. Given that at is transpose of some matrix a, the determinant of at
     * equals the determinant of a. Given that a^-1 is inverse of some matrix a,
     * the determinant of a^-1 equals inverse of the determinant of a. Given that
     * c is some number and n is the number of rows of some given matrix a, the
     * determinant of cA equals the product of c^n and the determinant of a.
-    * Given that a is traingular matrix, the determinant is the product of
+    * Given that a is triangular matrix, the determinant is the product of
     * diagonal elements. Returns a number.
     * 
     * This implementation does not use recursion when number of rows is less
@@ -216,7 +216,7 @@ public class Matrices {
 
    /**
     * Assumes row by column array representation of matrix. Given that at is
-    * tranpose of given matrix a, the resulting array equals at*a. Returns m by
+    * transpose of given matrix a, the resulting array equals at*a. Returns m by
     * m array of double.
     * 
     * Throws IllegalArgumentException if any of the following is true:
@@ -255,7 +255,7 @@ public class Matrices {
             double sum = 0;
 
             for (int brow = 0; brow < a.length; brow++)
-               // brow and row are reverse because multiplier must be tranpose
+               // brow and row are reverse because multiplier must be transpose
                // of given matrix a
                sum += a[brow][row] * a[brow][col];
 

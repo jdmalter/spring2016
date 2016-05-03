@@ -134,7 +134,7 @@ public class Fundamentals {
 
    /**
     * Assumes row by column array representation of matrix. Given that row
-    * echlon form is where all zeros belong to the highest rows and lowest
+    * echelon form is where all zeros belong to the highest rows and lowest
     * columns and the leftmost nonzero number is in a higher column that the
     * leftmost nonzero number in the column above, the resulting matrix is in
     * row echelon form and every row's leftmost number is 1 which is the only
@@ -279,10 +279,10 @@ public class Fundamentals {
 
    /**
     * Assumes row by column array representation of matrix. In the first element
-    * in the resulting array, each column, or variable, besides the furthest
+    * in the resulting array, each column, or variable, besides the farthest
     * right column, has a lead variable of 1. Above the 1 in each column, any
-    * variable may have non-zero numbers which can be multipled by any value of
-    * their respective variable while maintaining row echlon form. Supports
+    * variable may have non-zero numbers which can be multiplied by any value of
+    * their respective variable while maintaining row echelon form. Supports
     * multiple solutions for linear equations. Given that x is the combination
     * of the two matrices in the resulting array, a*x - b = 0. Returns array of
     * n by n and n by 1 array of double.
